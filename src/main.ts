@@ -37,7 +37,7 @@ const chapters = scenes.map((s, i) => {
   player.master.call(() => s.onEnter?.(), [], at)
   player.master.call(() => s.onLeave?.(), [], at + dur - 0.05)
   cursor = at + dur - OVERLAP
-  return { id: s.id, title: s.title.replace(/^Escena \d · /, ''), time: at }
+  return { id: s.id, title: s.title.replace(/^Escena \d · /, ''), time: i > 0 ? at + 0.5 : 0 }
 })
 player.setChapters(chapters)
 
@@ -66,3 +66,6 @@ splash.querySelector('.play')!.addEventListener('click', () => {
   document.fonts?.ready.then(() => player.play())
 })
 app.append(splash)
+
+// Acceso para depuración / automatización (p. ej. render a video con Playwright): window.__player.seek(t)
+;(window as unknown as { __player: Player }).__player = player

@@ -68,7 +68,7 @@ export function recepcionScene(): Scene {
       // Desarme "explode": ring / carrier / sun se separan
       tl.to(q('#rfd-housing'), { x: -140, duration: 1.2, ease: 'power3.inOut' }, openAt + 1.2)
       tl.to(q('#rfd-ringgear'), { x: -50, duration: 1.2, ease: 'power3.inOut' }, openAt + 1.2)
-      tl.to(q('#rfd-carrier'), { x: 60, rotation: 30, transformOrigin: '0 0', duration: 1.2, ease: 'power3.inOut' }, openAt + 1.2)
+      tl.to(q('#rfd-carrier'), { x: 60, rotation: 30, transformOrigin: '50% 50%', duration: 1.2, ease: 'power3.inOut' }, openAt + 1.2)
       tl.to(q('#rfd-sun'), { x: 170, duration: 1.2, ease: 'power3.inOut' }, openAt + 1.2)
       tl.fromTo(panel, { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: 0.9, ease: 'power3.out' }, openAt + 1.4)
       tl.fromTo(panel.querySelectorAll('.row'), { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.5, stagger: 0.7, ease: 'power2.out' }, openAt + 1.8)

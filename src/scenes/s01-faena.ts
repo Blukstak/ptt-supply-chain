@@ -70,21 +70,21 @@ export function faenaScene(): Scene {
       // Camión entra por la derecha, en marcha hacia la izquierda
       tl.set(truck, { attr: { transform: 'translate(2100 560) scale(.72)' } }, at)
       tl.to(truck, { attr: { transform: 'translate(560 560) scale(.72)' }, duration: 7, ease: 'power2.out' }, at + 0.6)
-      tl.to(wheels, { rotation: -900, transformOrigin: '0 0', duration: 8, ease: 'power2.out' }, at + 0.6)
+      tl.to(wheels, { rotation: -900, transformOrigin: '50% 50%', duration: 8, ease: 'power2.out' }, at + 0.6)
       // Vibración sutil del cuerpo
       tl.to(q('#t-bed'), { y: 2, duration: 0.15, repeat: 40, yoyo: true, ease: 'sine.inOut' }, at + 0.6)
 
       // Zoom sobre rueda trasera → corte del mando final
       const zoomAt = at + 8.4
-      tl.to(truckSvg, { scale: 3.2, x: -3156, y: -2058, transformOrigin: '0 0', duration: 2.2, ease: 'power3.inOut' }, zoomAt)
-      tl.to([bg, dust.canvas], { scale: 3.2, x: -3156, y: -2058, transformOrigin: '0 0', duration: 2.2, ease: 'power3.inOut' }, zoomAt)
+      tl.to(truckSvg, { scale: 3.2, x: -3156, y: -2058, transformOrigin: '50% 50%', duration: 2.2, ease: 'power3.inOut' }, zoomAt)
+      tl.to([bg, dust.canvas], { scale: 3.2, x: -3156, y: -2058, transformOrigin: '50% 50%', duration: 2.2, ease: 'power3.inOut' }, zoomAt)
       tl.to(bg, { filter: 'blur(14px) brightness(.4)', duration: 1.2 }, zoomAt + 1)
       tl.to(truckSvg, { opacity: 0, duration: 0.8 }, zoomAt + 1.4)
       tl.to(q('#fd-bgrect'), { opacity: 0.92, duration: 1 }, zoomAt + 1.4)
       tl.fromTo(q('#fd-wrap'), { attr: { transform: 'translate(620 540) scale(.3)' }, opacity: 0 }, { attr: { transform: 'translate(620 540) scale(1)' }, opacity: 1, duration: 1.4, ease: 'power4.out' }, zoomAt + 1.6)
-      tl.to(q('#fd-ringgear'), { rotation: 60, transformOrigin: '0 0', duration: 20, ease: 'none' }, zoomAt + 1.6)
-      tl.to(q('#fd-carrier'), { rotation: -180, transformOrigin: '0 0', duration: 20, ease: 'none' }, zoomAt + 1.6)
-      tl.to(q('#fd-sun'), { rotation: 540, transformOrigin: '0 0', duration: 20, ease: 'none' }, zoomAt + 1.6)
+      tl.to(q('#fd-ringgear'), { rotation: 60, transformOrigin: '50% 50%', duration: 20, ease: 'none' }, zoomAt + 1.6)
+      tl.to(q('#fd-carrier'), { rotation: -180, transformOrigin: '50% 50%', duration: 20, ease: 'none' }, zoomAt + 1.6)
+      tl.to(q('#fd-sun'), { rotation: 540, transformOrigin: '50% 50%', duration: 20, ease: 'none' }, zoomAt + 1.6)
       tl.to(q('#fd-callouts'), { opacity: 1, duration: 0.8 }, zoomAt + 2.6)
 
       // Gauge de horas: 0 → 18.420 / 20.000
@@ -112,7 +112,7 @@ export function faenaScene(): Scene {
       tl.fromTo(panel.querySelectorAll('.row'), { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.5, stagger: 0.14, ease: 'power2.out' }, pAt + 0.6)
       tl.fromTo(q('#new-wrap'), { opacity: 0, attr: { transform: 'translate(560 560) scale(.5)' } }, { opacity: 1, attr: { transform: 'translate(560 560) scale(.9)' }, duration: 1.2, ease: 'back.out(1.4)' }, pAt + 1.2)
       tl.to(q('#nfd-hubface'), { opacity: 1, duration: 0.8 }, pAt + 1.8)
-      tl.to(q('#new-wrap'), { rotation: 8, transformOrigin: '0 0', duration: 6, ease: 'sine.inOut' }, pAt + 1.2)
+      tl.to(q('#new-wrap'), { rotation: 8, transformOrigin: '50% 50%', duration: 6, ease: 'sine.inOut' }, pAt + 1.2)
       tl.fromTo(panel.querySelector('#p-status')!, { scale: 1.6, color: '#ffffff' }, { scale: 1, color: '#4ade80', duration: 0.6, ease: 'back.out(2)' }, pAt + 1.7)
       pop(tl, tagNew, pAt + 2.2)
 

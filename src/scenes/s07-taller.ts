@@ -44,9 +44,9 @@ export function tallerScene(): Scene {
       tl.set(steps, { opacity: 1 }, at + 0.8); pop(tl, stepEls, at + 1)
       // Piezas fuera de lugar (explosión inicial) → convergen
       tl.set(q('#tfd-housing'), { x: -520, y: -60, opacity: 0.9 }, at)
-      tl.set(q('#tfd-ringgear'), { x: -220, y: 240, rotation: 40, transformOrigin: '0 0' }, at)
-      tl.set(q('#tfd-carrier'), { x: 260, y: 260, rotation: -50, transformOrigin: '0 0' }, at)
-      tl.set(q('#tfd-sun'), { x: 520, y: -100, transformOrigin: '0 0' }, at)
+      tl.set(q('#tfd-ringgear'), { x: -220, y: 240, rotation: 40, transformOrigin: '50% 50%' }, at)
+      tl.set(q('#tfd-carrier'), { x: 260, y: 260, rotation: -50, transformOrigin: '50% 50%' }, at)
+      tl.set(q('#tfd-sun'), { x: 520, y: -100, transformOrigin: '50% 50%' }, at)
       tl.set(q('#tfd-hubface'), { opacity: 0 }, at)
       tl.add(activate(0), at + 2)
       const aAt = at + 3.2
@@ -60,9 +60,9 @@ export function tallerScene(): Scene {
       // Pruebas dinámicas: rotación
       const pAt = aAt + 3.4
       tl.add(activate(2), pAt)
-      tl.to(q('#tfd-ringgear'), { rotation: 120, transformOrigin: '0 0', duration: 5, ease: 'power1.in' }, pAt)
-      tl.to(q('#tfd-carrier'), { rotation: -360, transformOrigin: '0 0', duration: 5, ease: 'power1.in' }, pAt)
-      tl.to(q('#tfd-sun'), { rotation: 1080, transformOrigin: '0 0', duration: 5, ease: 'power1.in' }, pAt)
+      tl.to(q('#tfd-ringgear'), { rotation: 120, transformOrigin: '50% 50%', duration: 5, ease: 'power1.in' }, pAt)
+      tl.to(q('#tfd-carrier'), { rotation: -360, transformOrigin: '50% 50%', duration: 5, ease: 'power1.in' }, pAt)
+      tl.to(q('#tfd-sun'), { rotation: 1080, transformOrigin: '50% 50%', duration: 5, ease: 'power1.in' }, pAt)
       // Certificación: tapa CAT + sello
       const cAt = pAt + 3.2
       tl.add(activate(3), cAt)

@@ -51,7 +51,7 @@ export function planificacionScene(): Scene {
     <div class="tag info" style="position:relative;margin-bottom:14px">Punto de reorden por componente</div>
     <div class="tag ok" style="position:relative">Reserva de stock con 90 días de anticipación</div>
   ` })
-  Object.assign(bullets.style, { left: '120px', top: '200px' })
+  Object.assign(bullets.style, { left: '1160px', top: '600px' })
   root.append(bg, flow.canvas, ...nodeEls, lt, panel, bullets, q1)
 
   return {
@@ -65,15 +65,17 @@ export function planificacionScene(): Scene {
       showLowerThird(tl, lt, at + 1, 4.5)
       // Nodos: contraer hacia la izquierda para dar espacio al panel
       const shiftAt = at + 6.5
-      tl.to(nodeEls, { x: (i) => -nodes[i].x * 0.42 + 40, y: (i) => (nodes[i].y - 540) * 0.1, scale: 0.85, duration: 1.2, ease: 'power3.inOut' }, shiftAt)
-      tl.to(flow.canvas, { scaleX: 0.58, scaleY: 1.2, x: -400, y: 0, transformOrigin: '0 50%', duration: 1.2, ease: 'power3.inOut' }, shiftAt)
+      // Escala uniforme (0.6) alrededor de (0, 540): nodos y canvas comparten el mismo espacio de coordenadas
+      const S = 0.6
+      tl.to(nodeEls, { x: (i) => nodes[i].x * (S - 1), y: (i) => (nodes[i].y - 540) * (S - 1), scale: 0.85, duration: 1.2, ease: 'power3.inOut' }, shiftAt)
+      tl.to(flow.canvas, { scale: S, transformOrigin: '0 50%', duration: 1.2, ease: 'power3.inOut' }, shiftAt)
       tl.fromTo(panel, { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: 0.9, ease: 'power3.out' }, shiftAt + 0.6)
       const v = { n: 0 }
       const valEl = panel.querySelector('#pf-val')!
       tl.to(v, { n: 14, duration: 1.8, ease: 'power2.out', onUpdate: () => { valEl.textContent = String(Math.round(v.n)) } }, shiftAt + 1)
       tl.fromTo(panel.querySelectorAll('#pf-bars rect'), { scaleY: 0, transformOrigin: '50% 100%' }, { scaleY: 1, duration: 0.6, stagger: 0.06, ease: 'power3.out' }, shiftAt + 1.1)
       tl.set(bullets, { opacity: 1 }, shiftAt + 1.4)
-      tl.to(nodeEls, { opacity: 0.25, duration: 0.6 }, shiftAt + 1.4)
+      tl.to(nodeEls, { opacity: 0.6, duration: 0.6 }, shiftAt + 1.4)
       tl.to(flow, { intensity: 0.35, duration: 0.6 }, shiftAt + 1.4)
       pop(tl, Array.from(bullets.children), shiftAt + 1.6)
       // Cita
@@ -81,7 +83,7 @@ export function planificacionScene(): Scene {
       tl.to([panel, bullets], { opacity: 0, y: -20, duration: 0.6, ease: 'power2.in' }, qAt - 0.5)
       tl.to(nodeEls, { opacity: 0, duration: 0.4 }, qAt - 0.5)
       tl.to(flow, { intensity: 1, duration: 1 }, qAt - 0.5)
-      tl.to(flow.canvas, { scaleX: 1, scaleY: 1, x: 0, y: 0, duration: 1.2, ease: 'power3.inOut' }, qAt - 0.5)
+      tl.to(flow.canvas, { scale: 1, duration: 1.2, ease: 'power3.inOut' }, qAt - 0.5)
       const end = revealQuote(tl, q1, qAt, 3.6)
       sceneLeave(tl, root, end + 0.1, 1)
       return end + 1.2 - at

@@ -23,7 +23,7 @@ export function introScene(): Scene {
   const logo = el('div', { class: 'headline abs', html: 'PTT<em>.</em>' })
   Object.assign(logo.style, { left: '116px', top: '430px', fontSize: '200px' })
   const title = el('div', { class: 'abs', html: '<div class="kicker" style="color:var(--ink-2)">Supply Chain</div><div class="headline" style="font-size:64px;margin-top:10px">El ciclo de vida de un <em>Mando Final CAT 797</em></div>' })
-  Object.assign(title.style, { left: '120px', top: '650px', maxWidth: '1000px' })
+  Object.assign(title.style, { left: '120px', top: '650px', maxWidth: '1300px' })
   const line = el('div', { class: 'abs' })
   Object.assign(line.style, { left: '120px', top: '630px', width: '0px', height: '4px', background: 'var(--amber)' })
 
@@ -45,9 +45,9 @@ export function introScene(): Scene {
       const sun = bg.querySelector('#in-fdrive-sun')!
       sceneEnter(tl, root, at, 1.4)
       tl.fromTo(fd, { opacity: 0, scale: 0.8, rotation: -20, transformOrigin: '50% 50%' }, { opacity: 0.35, scale: 1.35, rotation: 0, duration: 3, ease: 'power3.out' }, at)
-      tl.to(ring, { rotation: 40, transformOrigin: '0 0', duration: 12, ease: 'none' }, at)
-      tl.to(carrier, { rotation: -120, transformOrigin: '0 0', duration: 12, ease: 'none' }, at)
-      tl.to(sun, { rotation: 360, transformOrigin: '0 0', duration: 12, ease: 'none' }, at)
+      tl.to(ring, { rotation: 40, transformOrigin: '50% 50%', duration: 12, ease: 'none' }, at)
+      tl.to(carrier, { rotation: -120, transformOrigin: '50% 50%', duration: 12, ease: 'none' }, at)
+      tl.to(sun, { rotation: 360, transformOrigin: '50% 50%', duration: 12, ease: 'none' }, at)
       tl.fromTo(hud, { opacity: 0 }, { opacity: 1, duration: 0.8, stagger: 0.1 }, at + 0.6)
       tl.fromTo(kicker, { opacity: 0, letterSpacing: '.8em' }, { opacity: 1, letterSpacing: '.32em', duration: 1.2, ease: 'power3.out' }, at + 1)
       tl.fromTo(logo, { opacity: 0, y: 60, clipPath: 'inset(0 100% 0 0)' }, { opacity: 1, y: 0, clipPath: 'inset(0 0% 0 0)', duration: 1.2, ease: 'power4.out' }, at + 1.5)

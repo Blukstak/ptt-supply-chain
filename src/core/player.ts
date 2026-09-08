@@ -34,6 +34,7 @@ export class Player {
     root.append(this.wrap, this.ui)
 
     window.addEventListener('resize', () => this.fit())
+    new ResizeObserver(() => this.fit()).observe(this.wrap)
     this.fit()
     this.bindKeys()
     this.wrap.addEventListener('mousemove', () => this.wakeUI())
@@ -64,13 +65,14 @@ export class Player {
   play() { this.master.play(); this.updatePlayIcon(); this.wakeUI() }
   pause() { this.master.pause(); this.updatePlayIcon(); this.wakeUI() }
   toggle() { this.master.paused() ? this.play() : this.pause() }
-  seek(t: number) { this.master.seek(Math.max(0, Math.min(t, this.master.duration()))); this.sync(); if (this.master.paused()) this.updatePlayIcon() }
+  seek(t: number) { this.master.seek(Math.max(0, Math.min(t, this.master.duration())), false); this.sync(); if (this.master.paused()) this.updatePlayIcon() }
   restart() { this.master.restart(); this.updatePlayIcon() }
 
   private onEnd() { this.updatePlayIcon(); this.wakeUI(true) }
 
   private fit() {
-    const s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080)
+    const w = this.wrap.clientWidth || window.innerWidth, h = this.wrap.clientHeight || window.innerHeight
+    const s = Math.max(0.05, Math.min(w / 1920, h / 1080))
     this.stage.style.transform = `scale(${s})`
   }
 

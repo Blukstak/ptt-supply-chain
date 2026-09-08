@@ -14,7 +14,7 @@ export function cierreScene(): Scene {
   dawn.style.background = 'linear-gradient(to bottom, rgba(245,166,35,.22), rgba(0,0,0,0) 55%)'
   const dust = new Dust({ count: 140, color: '201, 162, 122', speed: 0.5, size: [1, 4], area: { x: 0, y: 500, w: 1920, h: 600 } })
   const art = fullSvg(`
-    <g id="cl-semi" transform="translate(-1000 780) scale(.9)">${semiTruck('cls')}<g transform="translate(120 -40)">${crate('clc', 260, 130, 'PTT · FD-797 · REP.')}</g></g>
+    <g id="cl-semi" transform="translate(-1000 700) scale(.9)">${semiTruck('cls')}<g transform="translate(120 -40)">${crate('clc', 260, 130, 'PTT · FD-797 · REP.')}</g></g>
     <g id="cl-797" transform="translate(2100 560) scale(.72)">${truck797('c7')}</g>
     <g id="cl-fd" transform="translate(1180 812) scale(.15)" opacity="0">${finalDrive('cfd', 250)}</g>
   `)
@@ -58,12 +58,12 @@ export function cierreScene(): Scene {
       sceneEnter(tl, root, at, 1.4)
       showLowerThird(tl, lt, at + 0.6, 4)
       // Camión de reparto entra y se detiene
-      tl.to(q('#cl-semi'), { attr: { transform: 'translate(120 780) scale(.9)' }, duration: 4.5, ease: 'power2.out' }, at + 0.3)
-      tl.to(['#cls-w0', '#cls-w1', '#cls-w2', '#cls-w3', '#cls-w4'].map(q), { rotation: 900, transformOrigin: '0 0', duration: 4.5, ease: 'power2.out' }, at + 0.3)
+      tl.to(q('#cl-semi'), { attr: { transform: 'translate(640 700) scale(.9)' }, duration: 4.5, ease: 'power2.out' }, at + 0.3)
+      tl.to(['#cls-w0', '#cls-w1', '#cls-w2', '#cls-w3', '#cls-w4'].map(q), { rotation: 900, transformOrigin: '50% 50%', duration: 4.5, ease: 'power2.out' }, at + 0.3)
       pop(tl, tagDel, at + 4.2)
       // 797 entra y el mando final "se instala" (tapa CAT en la rueda)
       tl.to(q('#cl-797'), { attr: { transform: 'translate(560 560) scale(.72)' }, duration: 4, ease: 'power2.out' }, at + 5)
-      tl.to(['#c7-w1', '#c7-w2', '#c7-w3'].map(q), { rotation: -600, transformOrigin: '0 0', duration: 4, ease: 'power2.out' }, at + 5)
+      tl.to(['#c7-w1', '#c7-w2', '#c7-w3'].map(q), { rotation: -600, transformOrigin: '50% 50%', duration: 4, ease: 'power2.out' }, at + 5)
       tl.to(q('#cl-semi'), { opacity: 0, duration: 0.8 }, at + 6)
       tl.set(q('#cfd-hubface'), { opacity: 1 }, at)
       tl.fromTo(q('#cl-fd'), { opacity: 0, attr: { transform: 'translate(1180 812) scale(.6)' } }, { opacity: 1, attr: { transform: 'translate(1180 812) scale(.15)' }, duration: 1.2, ease: 'power3.in' }, at + 9)
@@ -71,7 +71,7 @@ export function cierreScene(): Scene {
       tl.to(tagDel, { opacity: 0, duration: 0.4 }, at + 10)
       // El 797 retoma la operación: sale por la izquierda
       tl.to([q('#cl-797'), q('#cl-fd')], { x: -1800, duration: 6, ease: 'power2.in' }, at + 11)
-      tl.to(['#c7-w1', '#c7-w2', '#c7-w3'].map(q), { rotation: -1600, transformOrigin: '0 0', duration: 6, ease: 'power2.in' }, at + 11)
+      tl.to(['#c7-w1', '#c7-w2', '#c7-w3'].map(q), { rotation: -1600, transformOrigin: '50% 50%', duration: 6, ease: 'power2.in' }, at + 11)
       const end = revealQuote(tl, q1, at + 12.6, 3.6)
       // End card
       const eAt = end + 0.2
@@ -79,9 +79,9 @@ export function cierreScene(): Scene {
       tl.to([bg, dawn, dust.canvas, art], { opacity: 0, duration: 1 }, eAt)
       tl.to(q('#ec-arc'), { strokeDashoffset: 0, duration: 3, ease: 'power2.inOut' }, eAt + 0.6)
       tl.fromTo(ringSvg.querySelectorAll('.ec-node'), { opacity: 0 }, { opacity: 1, duration: 0.5, stagger: 0.38 }, eAt + 0.8)
-      tl.to(q('#ecfd-ringgear'), { rotation: 90, transformOrigin: '0 0', duration: 14, ease: 'none' }, eAt)
-      tl.to(q('#ecfd-carrier'), { rotation: -270, transformOrigin: '0 0', duration: 14, ease: 'none' }, eAt)
-      tl.to(q('#ecfd-sun'), { rotation: 810, transformOrigin: '0 0', duration: 14, ease: 'none' }, eAt)
+      tl.to(q('#ecfd-ringgear'), { rotation: 90, transformOrigin: '50% 50%', duration: 14, ease: 'none' }, eAt)
+      tl.to(q('#ecfd-carrier'), { rotation: -270, transformOrigin: '50% 50%', duration: 14, ease: 'none' }, eAt)
+      tl.to(q('#ecfd-sun'), { rotation: 810, transformOrigin: '50% 50%', duration: 14, ease: 'none' }, eAt)
       tl.fromTo(brand, { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 1.2, ease: 'power3.out' }, eAt + 1.4)
       tl.to({}, { duration: 0.1 }, eAt + 9)
       return eAt + 9.2 - at

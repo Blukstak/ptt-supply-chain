@@ -67,7 +67,7 @@ export function retiroScene(): Scene {
       tl.to([tagId, tagGD], { opacity: 0, duration: 0.5 }, s4)
       tl.to(q('#rt-crate-big'), { opacity: 0, attr: { transform: 'translate(760 420) scale(.3)' }, duration: 0.9, ease: 'power3.in' }, s4)
       tl.to(q('#rt-semi'), { attr: { transform: 'translate(2200 760) scale(.95)' }, duration: 8, ease: 'power1.inOut' }, s4 + 0.6)
-      tl.to(['#semi-w0', '#semi-w1', '#semi-w2', '#semi-w3', '#semi-w4'].map(q), { rotation: 1400, transformOrigin: '0 0', duration: 8, ease: 'power1.inOut' }, s4 + 0.6)
+      tl.to(['#semi-w0', '#semi-w1', '#semi-w2', '#semi-w3', '#semi-w4'].map(q), { rotation: 1400, transformOrigin: '50% 50%', duration: 8, ease: 'power1.inOut' }, s4 + 0.6)
       // Cita mientras el camión avanza
       tl.to(steps, { opacity: 0, y: -20, duration: 0.5 }, s4 + 2)
       const end = revealQuote(tl, q1, s4 + 2.6, 4)

@@ -64,7 +64,7 @@ export function importacionScene(): Scene {
       showLowerThird(tl, lt, at + 0.6, 4)
       tl.fromTo(q('#im-map'), { attr: { transform: 'translate(160 90) scale(1.75)' }, opacity: 0 }, { attr: { transform: 'translate(160 90) scale(1.6)' }, opacity: 1, duration: 2, ease: 'power3.out' }, at)
       tl.to(q('#im-cl'), { opacity: 1, duration: 0.5 }, at + 1)
-      tl.fromTo(q('#im-cl-ping'), { attr: { r: 12 }, opacity: 1 }, { attr: { r: 40 }, opacity: 0, duration: 1.4, repeat: -1, ease: 'power2.out' }, at + 1)
+      tl.fromTo(q('#im-cl-ping'), { attr: { r: 12 }, opacity: 1 }, { attr: { r: 40 }, opacity: 0, duration: 1.4, repeat: 12, ease: 'power2.out' }, at + 1)
       tl.set(steps, { opacity: 1 }, at + 1)
       pop(tl, stepEls, at + 1.2)
       // 01 OC
@@ -107,7 +107,7 @@ export function importacionScene(): Scene {
       tl.to([q('#im-map'), panel, ...labels], { opacity: 0.25, duration: 0.8 }, ttAt)
       tl.to(q('#im-semi'), { opacity: 1, duration: 0.3 }, ttAt)
       tl.to(q('#im-semi'), { attr: { transform: 'translate(2100 820) scale(.8)' }, duration: 5, ease: 'power1.inOut' }, ttAt)
-      tl.to(['#ims-w0', '#ims-w1', '#ims-w2', '#ims-w3', '#ims-w4'].map(q), { rotation: 1600, transformOrigin: '0 0', duration: 5, ease: 'power1.inOut' }, ttAt)
+      tl.to(['#ims-w0', '#ims-w1', '#ims-w2', '#ims-w3', '#ims-w4'].map(q), { rotation: 1600, transformOrigin: '50% 50%', duration: 5, ease: 'power1.inOut' }, ttAt)
       // Cita
       const qAt = ttAt + 1.6
       tl.to([steps, panel, ...labels], { opacity: 0, duration: 0.5 }, qAt - 0.4)
