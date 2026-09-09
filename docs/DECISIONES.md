@@ -2,6 +2,22 @@
 
 Bitácora de decisiones de diseño y contenido. Lo más reciente arriba.
 
+## 2026-09-09 — v2.3: segunda pasada de equipos (Codex GPT-6 Astra, razonamiento medio)
+
+Gala pidió acercar los equipos a un 1:1 con las fotos. Codex comparó cada render (Swift/AppKit) con su foto e iteró. Solo `src/art/index.ts`; firmas e ids preservados; sin cambios de escenas ni duración.
+
+| Función | Rasgos incorporados | Límite vectorial declarado |
+|---|---|---|
+| `truck797` | Visera trapezoidal CATERPILLAR, nervaduras, marca 797F rojo/negro, puerta, barandas blancas, dual trasero visible | Más alargado y lateral que la foto (3/4) |
+| `motorGrader` | Orientación de la foto, bastidor, hoja inclinada, hidráulicos, barandas | Escorzo de hoja/ejes simplificado |
+| `bulldozer` | Neumáticos (como la foto), pala más ancha con borde atornillado, espejo, rejillas | Curvatura de pala aproximada |
+| `drillRig` | Mástil continuo, cabina baja, doble oruga, tirantes, estabilizadores | Cableado y perspectiva simplificados |
+| `komatsuTruck` | Visera plana rotulada, cabina cuadrada, ruedas mayores, rejilla, escaleras | Frente 3/4 y proporción global distintos |
+| `finalDriveSide` | Cuerpo cónico, 96 dientes por corona, pernos, tapas, placa PTT discreta | Volumen de bridas aproximado |
+| `lowboyTruck` | Cabina ensanchada, deflector, espejos, escape, eje trasero extra, repuestos | Perspectiva frontal distinta a la foto |
+
+Decisión: las ilustraciones son vista lateral por diseño (las escenas animan traslación y ruedas); un 1:1 real exigiría fotos o render 3D, no vector plano. Si el cliente lo quiere, la vía es `public/media/` con imágenes licenciadas.
+
 ## 2026-09-09 — v2.2: equipos vectoriales rediseñados con Codex (GPT-6 Astra)
 
 Gala pidió que ChatGPT/Codex (modelo `gpt-6-astra`, razonamiento medio, vía plugin `codex` en Claude Code) mejorara las ilustraciones de equipos usando las fotos de referencia de Romina. Solo se tocó `src/art/index.ts`; firmas, parámetros e ids de sub-elementos se conservaron, por lo que ninguna escena cambió.
