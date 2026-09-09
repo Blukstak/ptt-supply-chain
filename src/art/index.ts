@@ -165,14 +165,15 @@ export function truck797(id = 'truck') {
  * Mando Final (vista exterior, como el componente real): cilindro amarillo con bridas dentadas
  * en ambos extremos. Longitud ≈ 520 px, centrado en (0,0), eje horizontal.
  */
-export function finalDriveSide(id = 'fds', label = 'FD-797') {
+export function finalDriveSide(id = 'fds', label = 'PTT') {
   const flange = (x: number, r: number, w: number, fid: string) => {
     const n = Math.round(r / 5)
     const teeth = Array.from({ length: n }, (_, i) => {
       const y = -r + (i / n) * 2 * r
       return `<rect x="${x - w / 2 - 6}" y="${y}" width="${w + 12}" height="${(2 * r) / n * 0.5}" fill="#8a6a00" opacity=".7"/>`
     }).join('')
-    return `<g id="${fid}">${teeth}<rect x="${x - w / 2}" y="${-r}" width="${w}" height="${2 * r}" rx="6" fill="url(#${id}-g)"/><ellipse cx="${x + w / 2}" cy="0" rx="${w * 0.35}" ry="${r}" fill="url(#${id}-g)"/><ellipse cx="${x + w / 2}" cy="0" rx="${w * 0.22}" ry="${r * 0.72}" fill="#c99d05"/><circle cx="${x + w / 2}" cy="0" r="${r * 0.2}" fill="#2a3441"/></g>`
+    const bolts = Array.from({ length: 14 }, (_, i) => { const a = (i / 14) * Math.PI * 2; return `<ellipse cx="${x + w / 2 + Math.cos(a) * w * 0.3}" cy="${Math.sin(a) * r * 0.86}" rx="3" ry="4" fill="#3a3000"/>` }).join('')
+    return `<g id="${fid}">${teeth}<rect x="${x - w / 2}" y="${-r}" width="${w}" height="${2 * r}" rx="6" fill="url(#${id}-g)"/><ellipse cx="${x + w / 2}" cy="0" rx="${w * 0.35}" ry="${r}" fill="url(#${id}-g)"/>${bolts}<ellipse cx="${x + w / 2}" cy="0" rx="${w * 0.22}" ry="${r * 0.72}" fill="#c99d05"/><circle cx="${x + w / 2}" cy="0" r="${r * 0.2}" fill="#2a3441"/></g>`
   }
   return `
   <defs>
@@ -190,7 +191,8 @@ export function finalDriveSide(id = 'fds', label = 'FD-797') {
     <g><rect x="60" y="-80" width="26" height="160" rx="4" fill="#c99d05"/></g>
     <!-- brida pequeña (lado eje) -->
     ${flange(200, 84, 40, `${id}-fl2`)}
-    <text x="-20" y="10" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="30" fill="#111" opacity=".8">${label}</text>
+    <rect x="-70" y="-22" width="100" height="44" rx="4" fill="#e0262b"/>
+    <text x="-20" y="11" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="30" fill="#fff" letter-spacing="2">${label}</text>
   </g>`
 }
 
@@ -241,8 +243,8 @@ export function finalDrive(id = 'fd', r = 260) {
       <circle r="${r * 1.06}" fill="url(#${id}-hub)"/>
       ${Array.from({ length: 12 }, (_, i) => { const a = (i / 12) * Math.PI * 2; return `<circle cx="${Math.cos(a) * r * 0.78}" cy="${Math.sin(a) * r * 0.78}" r="${r * 0.05}" fill="#111418"/>` }).join('')}
       <circle r="${r * 0.36}" fill="#1a1e24"/>
-      <circle r="${r * 0.3}" fill="${C.cat}"/>
-      <text text-anchor="middle" y="${r * 0.08}" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="${r * 0.22}" fill="#111">CAT</text>
+      <circle r="${r * 0.3}" fill="#e0262b"/>
+      <text text-anchor="middle" y="${r * 0.08}" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="${r * 0.22}" fill="#fff" letter-spacing="1">PTT</text>
     </g>
   </g>`
 }
@@ -459,7 +461,7 @@ export function worldMap(id = 'map') {
 /* ---------------------------------------------------------------- */
 
 /** Tracto rojo con cama baja (Imagen 4). Mide ~900 px de largo; el componente va sobre la cama en (620, 160). */
-export function lowboyTruck(id = 'lowboy') {
+export function lowboyTruck(id = 'lowboy', cargo = false) {
   const wheel = (x: number, y: number, r: number, wid: string) => `<g id="${wid}" transform="translate(${x} ${y})"><circle r="${r}" fill="#0d0f12"/><circle r="${r * 0.55}" fill="#8a8f98"/><circle r="${r * 0.22}" fill="#2a2f36"/></g>`
   return `
   <defs>
@@ -475,6 +477,10 @@ export function lowboyTruck(id = 'lowboy') {
       ${[120, 220, 320, 420].map((x) => `<rect x="${x}" y="240" width="60" height="6" fill="#5a4600"/>`).join('')}
       <rect x="0" y="180" width="60" height="20" fill="#8a6a00"/>
     </g>
+    ${cargo ? `<g id="${id}-cargo">
+      ${[[80, 150, 130], [220, 130, 140], [360, 110, 150]].map(([x, w, h], i) => `<g transform="translate(${x} ${240 - h})">${crate(`${id}-cr${i}`, w, h, ['EE.UU.', 'EUROPA', 'ASIA'][i])}</g>`).join('')}
+      <rect x="60" y="100" width="500" height="6" fill="#111" opacity=".6"/><rect x="60" y="160" width="500" height="6" fill="#111" opacity=".6"/>
+    </g>` : ''}
     ${wheel(100, 270, 28, `${id}-w0`)}${wheel(160, 270, 28, `${id}-w1`)}${wheel(220, 270, 28, `${id}-w2`)}
     <!-- tracto rojo -->
     <g id="${id}-cab">
@@ -522,7 +528,7 @@ export function pttWorker(id = 'w', withTablet = true, shirt = '#1e2126') {
 export function pttWorkshop(id = 'ws', stations = ['D1', 'D2', 'D3']) {
   const ribs = Array.from({ length: 48 }, (_, i) => `<rect x="${i * 40}" y="0" width="20" height="600" fill="#ffffff" opacity=".035"/>`).join('')
   const trusses = [200, 700, 1200, 1700].map((x) => `<path d="M${x - 250} 130 L${x} 40 L${x + 250} 130 M${x - 250} 130 L${x + 250} 130 M${x - 125} 85 L${x - 125} 130 M${x + 125} 85 L${x + 125} 130 M${x} 40 L${x} 130" stroke="#b9bec6" stroke-width="5" fill="none" opacity=".7"/>`).join('')
-  const signs = stations.map((s, i) => { const x = 380 + i * 560; return `<g><rect x="${x - 90}" y="250" width="180" height="70" rx="4" fill="#f4f4f2" stroke="#c9ccd1" stroke-width="2"/><text x="${x}" y="279" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="30" fill="#111">${s}</text><text x="${x}" y="305" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" fill="#555" letter-spacing="2">ESTACIÓN DE DESARME</text></g>` }).join('')
+  const signs = stations.map((s, i) => { const x = 380 + i * 560; return `<g><rect x="${x - 130}" y="250" width="260" height="74" rx="4" fill="#f4f4f2" stroke="#c9ccd1" stroke-width="2"/><rect x="${x - 130}" y="250" width="8" height="74" fill="#e0262b"/><text x="${x}" y="281" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="30" fill="#111">${s}</text><text x="${x}" y="308" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="600" font-size="16" fill="#555" letter-spacing="1.5">ESTACIÓN DE DESARME</text></g>` }).join('')
   const table = (x: number) => `<g><rect x="${x}" y="720" width="340" height="16" fill="#2a2f36"/><rect x="${x + 10}" y="736" width="14" height="120" fill="#1d2229"/><rect x="${x + 316}" y="736" width="14" height="120" fill="#1d2229"/><rect x="${x + 10}" y="800" width="320" height="8" fill="#1d2229"/></g>`
   const cart = (x: number) => `<g><rect x="${x}" y="760" width="110" height="110" rx="4" fill="#e0262b"/>${[0, 1, 2, 3].map((i) => `<rect x="${x + 8}" y="${768 + i * 26}" width="94" height="20" fill="#b3181d"/><rect x="${x + 44}" y="${775 + i * 26}" width="22" height="5" fill="#f1f1f1"/>`).join('')}<circle cx="${x + 20}" cy="878" r="8" fill="#111"/><circle cx="${x + 90}" cy="878" r="8" fill="#111"/></g>`
   return `
@@ -589,4 +595,155 @@ export function pttLogoSvg(id = 'logo', size = 60) {
     <text y="${size * 1.82}" font-size="${size * 0.62}" fill="#8a8f98">TECHNOLOGIES</text>
     <text x="${size * 1.4}" y="${size * 2.2}" text-anchor="middle" font-family="Inter, sans-serif" font-size="${size * 0.3}" fill="#e0262b">Marubeni Group</text>
   </g>`
+}
+
+
+/* ---------------------------------------------------------------- */
+/* R2 — Ronda 2 de observaciones (docs/referencias/r2-*)              */
+/* ---------------------------------------------------------------- */
+
+/** Mapa de Chile simplificado (caja 260×900). Marcadores: Antofagasta (150,150), Santiago (128,380). */
+export function chileMap(id = 'cl') {
+  const d = 'M118 0 L162 12 L172 60 L166 130 L160 200 L158 270 L152 330 L146 390 L142 450 L138 510 L134 570 L128 630 L118 690 L110 750 L104 810 L120 860 L150 890 L110 900 L70 880 L60 830 L64 770 L72 710 L80 650 L88 590 L94 530 L100 470 L104 410 L110 350 L112 290 L114 220 L112 150 L110 80 Z'
+  return `
+  <defs>
+    <linearGradient id="${id}-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4453"/><stop offset="1" stop-color="#1e2530"/></linearGradient>
+  </defs>
+  <g id="${id}">
+    <path d="${d}" fill="url(#${id}-g)" stroke="#8a99ad" stroke-width="2" stroke-opacity=".7"/>
+    <path d="${d}" fill="none" stroke="#e0262b" stroke-width="1" stroke-opacity=".25" transform="translate(6 6)"/>
+  </g>`
+}
+
+/** Marcador de ubicación (pin) con anillo pulsante. */
+export function pin(id = 'pin', label = '') {
+  return `<g id="${id}">
+    <circle id="${id}-ring" r="18" fill="none" stroke="#e0262b" stroke-width="2" opacity=".7"/>
+    <circle r="9" fill="#e0262b" stroke="#fff" stroke-width="2"/>
+    ${label ? `<text x="30" y="8" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="30" fill="#e9eef4" letter-spacing="2">${label}</text>` : ''}
+  </g>`
+}
+
+/** Galpón de taller PTT dentro de la faena (contrato de mantención). Ancho ~1100, alto ~420; origen esquina inferior izquierda. */
+export function fieldWorkshop(id = 'fw') {
+  return `
+  <g id="${id}">
+    <path d="M0 0 L0 -300 L60 -340 L1040 -340 L1100 -300 L1100 0Z" fill="#c9ccd1"/>
+    <path d="M0 -300 L60 -340 L1040 -340 L1100 -300Z" fill="#9aa0a8"/>
+    ${Array.from({ length: 27 }, (_, i) => `<rect x="${10 + i * 40}" y="-300" width="18" height="300" fill="#fff" opacity=".18"/>`).join('')}
+    <rect x="0" y="-300" width="1100" height="14" fill="#e0262b"/>
+    <rect x="80" y="-250" width="940" height="250" fill="#1a1e24"/>
+    <rect x="80" y="-250" width="940" height="250" fill="url(#${id}-in)"/>
+    <clipPath id="${id}-clip"><rect x="80" y="-250" width="940" height="250"/></clipPath>
+    <g clip-path="url(#${id}-clip)"><g id="${id}-door"><rect x="80" y="-250" width="940" height="250" fill="#3a3f47"/>${Array.from({ length: 6 }, (_, i) => `<rect x="84" y="${-246 + i * 41}" width="932" height="36" fill="#4b525c"/>`).join('')}</g></g>
+    <rect x="360" y="-330" width="380" height="60" rx="4" fill="#f4f4f2"/>
+    <rect x="360" y="-330" width="10" height="60" fill="#e0262b"/>
+    <text x="550" y="-306" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="24" fill="#e0262b" letter-spacing="2">TALLER PTT EN FAENA</text>
+    <text x="550" y="-282" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="600" font-size="15" fill="#444" letter-spacing="1.5">CONTRATO DE MANTENCIÓN · DENTRO DE LA MINERA</text>
+  </g>
+  <defs><linearGradient id="${id}-in" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff5d6" stop-opacity=".12"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient></defs>`
+}
+
+/** Motoniveladora (Imagen 4). Ancho ~520, ruedas en y=0. */
+export function motorGrader(id = 'mg') {
+  return `<g id="${id}">
+    <ellipse cx="260" cy="4" rx="280" ry="10" fill="#000" opacity=".4"/>
+    <path d="M40 -60 L200 -60 L200 -30 L470 -30 L470 -60 L520 -60 L520 -10 L40 -10Z" fill="${C.cat}"/>
+    <path d="M200 -110 L200 -60 L120 -60 L120 -80Z" fill="#c99d05"/>
+    <path d="M300 -60 L300 -150 L390 -150 L410 -60Z" fill="#1d2229"/>
+    <path d="M310 -140 L385 -140 L398 -95 L310 -95Z" fill="#9fd8ff" opacity=".8"/>
+    <rect x="410" y="-120" width="90" height="60" fill="#111418"/>
+    <rect x="200" y="-90" width="100" height="30" fill="#c99d05"/>
+    <path d="M150 -30 L260 -30 L300 -20 L140 -8Z" fill="#8a99ad"/>
+    <path d="M110 -12 L300 -12 L300 -2 L110 -2Z" fill="#2a3441" transform="rotate(-10 200 -8)"/>
+    <path d="M60 -60 L20 -90 L20 -100 L110 -100" stroke="#c99d05" stroke-width="8" fill="none"/>
+    ${[60, 400, 470].map((x) => `<g><circle cx="${x}" cy="-10" r="34" fill="#0d0f12"/><circle cx="${x}" cy="-10" r="16" fill="${C.cat}"/><circle cx="${x}" cy="-10" r="6" fill="#1d2229"/></g>`).join('')}
+  </g>`
+}
+
+/** Bulldozer (Imagen 5). Ancho ~480, base en y=0. */
+export function bulldozer(id = 'bz') {
+  return `<g id="${id}">
+    <ellipse cx="240" cy="4" rx="260" ry="10" fill="#000" opacity=".4"/>
+    <path d="M0 -60 L30 -140 L110 -140 L120 -20 L0 -20Z" fill="#c99d05"/>
+    <path d="M6 -56 L34 -132 L100 -132 L108 -30 L6 -30Z" fill="${C.cat}"/>
+    <rect x="130" y="-110" width="260" height="70" fill="${C.cat}"/>
+    <path d="M200 -110 L210 -190 L320 -190 L330 -110Z" fill="#1d2229"/>
+    <path d="M215 -182 L312 -182 L320 -125 L215 -125Z" fill="#9fd8ff" opacity=".8"/>
+    <rect x="330" y="-120" width="80" height="80" fill="#111418"/>
+    <rect x="390" y="-170" width="10" height="60" fill="#333"/>
+    <path d="M120 -80 L60 -60" stroke="#8a8f98" stroke-width="10"/>
+    <rect x="120" y="-50" width="300" height="50" rx="25" fill="#1d2229"/>
+    <rect x="130" y="-40" width="280" height="30" rx="15" fill="#2a2f36"/>
+    ${[150, 210, 270, 330, 390].map((x) => `<circle cx="${x}" cy="-25" r="10" fill="#4b525c"/>`).join('')}
+  </g>`
+}
+
+/** Perforadora de tiro (Imagen 6). Ancho ~300, alto ~460, base en y=0. */
+export function drillRig(id = 'dr') {
+  return `<g id="${id}">
+    <ellipse cx="150" cy="4" rx="170" ry="10" fill="#000" opacity=".4"/>
+    <rect x="30" y="-60" width="240" height="50" rx="20" fill="#1d2229"/>
+    <rect x="40" y="-50" width="220" height="30" rx="15" fill="#2a2f36"/>
+    <rect x="40" y="-130" width="230" height="70" fill="${C.cat}"/>
+    <rect x="200" y="-190" width="70" height="60" fill="#1d2229"/>
+    <rect x="206" y="-184" width="58" height="34" fill="#9fd8ff" opacity=".8"/>
+    <rect x="60" y="-460" width="70" height="330" fill="${C.cat}"/>
+    <rect x="70" y="-450" width="50" height="310" fill="#111418"/>
+    ${Array.from({ length: 10 }, (_, i) => `<path d="M70 ${-440 + i * 30} L120 ${-410 + i * 30}" stroke="${C.cat}" stroke-width="4"/>`).join('')}
+    <rect x="90" y="-440" width="10" height="330" fill="#8a8f98"/>
+    <rect x="50" y="-470" width="90" height="14" fill="#c99d05"/>
+    <path d="M130 -420 L200 -130" stroke="${C.cat}" stroke-width="8"/>
+  </g>`
+}
+
+/** Camión de extracción Komatsu (Imagen 7): cabina cuadrada a la izquierda sobre la plataforma, tolva. Ancho ~560, base y=0. */
+export function komatsuTruck(id = 'km') {
+  return `<g id="${id}">
+    <ellipse cx="280" cy="4" rx="300" ry="10" fill="#000" opacity=".4"/>
+    <path d="M110 -170 L470 -170 L520 -230 L560 -100 L520 -60 L110 -60Z" fill="${C.cat}"/>
+    <path d="M110 -170 L470 -170 L470 -140 L110 -140Z" fill="#ffe27a"/>
+    <path d="M0 -180 L120 -180 L120 -100 L0 -100Z" fill="${C.cat}"/>
+    <path d="M10 -240 L90 -240 L100 -180 L10 -180Z" fill="#1d2229"/>
+    <path d="M16 -232 L84 -232 L92 -196 L16 -196Z" fill="#9fd8ff" opacity=".8"/>
+    <rect x="0" y="-180" width="120" height="6" fill="#fff"/>
+    <rect x="0" y="-100" width="130" height="50" fill="#1d2229"/>
+    <rect x="40" y="-90" width="60" height="16" rx="3" fill="#111"/>
+    <text x="70" y="-78" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="12" fill="#fff">KOMATSU</text>
+    <rect x="60" y="-70" width="440" height="30" fill="#111418"/>
+    ${[90, 400, 470].map((x) => `<g><circle cx="${x}" cy="-30" r="54" fill="#0d0f12"/><circle cx="${x}" cy="-30" r="24" fill="#2a2f36"/><circle cx="${x}" cy="-30" r="8" fill="#111"/></g>`).join('')}
+  </g>`
+}
+
+/** Mesa de laboratorio de Ingeniería y Desarrollo (microscopio + monitor). Origen: borde superior de la mesa, centro. */
+export function labBench(id = 'lab') {
+  return `<g id="${id}">
+    <rect x="-260" y="0" width="520" height="18" fill="#dfe3e8"/>
+    <rect x="-240" y="18" width="16" height="140" fill="#9aa0a8"/><rect x="224" y="18" width="16" height="140" fill="#9aa0a8"/>
+    <!-- microscopio -->
+    <g transform="translate(-150 0)">
+      <rect x="-40" y="-14" width="80" height="14" rx="4" fill="#2a2f36"/>
+      <path d="M20 -14 L20 -110 Q20 -130 0 -130 L-10 -130" stroke="#3d4a5a" stroke-width="12" fill="none"/>
+      <rect x="-30" y="-150" width="20" height="60" rx="4" fill="#2a3441" transform="rotate(-20 -20 -120)"/>
+      <rect x="-24" y="-60" width="14" height="24" fill="#8a99ad"/>
+    </g>
+    <!-- monitor -->
+    <g transform="translate(120 0)">
+      <rect x="-30" y="-20" width="60" height="20" fill="#2a2f36"/><rect x="-6" y="-60" width="12" height="40" fill="#2a2f36"/>
+      <rect x="-120" y="-190" width="240" height="132" rx="6" fill="#0b0f15" stroke="#3d4a5a" stroke-width="3"/>
+      <g id="${id}-screen" font-family="JetBrains Mono, monospace" font-size="11" fill="#2fd4c8">
+        <text x="-104" y="-166">MEDICIÓN · DUREZA HRC</text>
+        <polyline points="-104,-100 -80,-120 -56,-110 -32,-140 -8,-125 16,-150 40,-135 64,-155 88,-140" fill="none" stroke="#2fd4c8" stroke-width="2"/>
+        <text x="-104" y="-72" fill="#e0262b">MEJORA PROPUESTA · v2</text>
+      </g>
+    </g>
+    <!-- lupa / cuaderno -->
+    <rect x="-40" y="-8" width="80" height="8" fill="#e0262b"/>
+  </g>`
+}
+
+/** Pieza (engranaje planetario) suelta, para el laboratorio / mejora. */
+export function loosePart(id = 'part', r = 40) {
+  const teeth = Array.from({ length: 14 }, (_, i) => { const a = (i / 14) * Math.PI * 2; return `<rect x="-5" y="${-r - 8}" width="10" height="14" fill="#8a99ad" transform="rotate(${(a * 180) / Math.PI})"/>` }).join('')
+  return `<g id="${id}">${teeth}<circle r="${r}" fill="#8a99ad"/><circle r="${r * 0.7}" fill="#56657a"/><circle r="${r * 0.3}" fill="#1d2229"/></g>`
 }

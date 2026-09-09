@@ -1,6 +1,6 @@
 # Referencias visuales
 
-Imágenes adjuntas por Romina De Filippi en `../Observaciones_Video_PTT_2026-09-09.docx` (numeración del documento).
+## Ronda 1 — `../Observaciones_Video_PTT_2026-09-09.docx` (numeración del documento)
 
 | Archivo | Imagen | Uso en la animación |
 |---|---|---|
@@ -12,5 +12,23 @@ Imágenes adjuntas por Romina De Filippi en `../Observaciones_Video_PTT_2026-09-
 | `06-taller-personal.png` | 6 — Personal PTT | Uniforme negro/gris con detalle rojo |
 | `07-taller-nave.png` | 7 — Nave y puente grúa amarillo | Escenas 4/7: muros blancos ondulados, cerchas, puente grúa |
 | `08-mapa-rutas.png` | 8 — Mapa Mercator satelital | Escena 5: mapa azul/verde con grilla, rutas marítimas |
+
+## Ronda 2 — `../Observaciones_Video_PTT_R2_2026-09-09.docx` (numeración del documento)
+
+| Archivo | Imagen | Uso en la animación |
+|---|---|---|
+| `r2-01-captura-plan-mantenimiento.png` | 1 — Captura de la escena de plan de mantenimiento (v1.2) | Referencia de lo que se reemplazó por el despiece |
+| `r2-02-mando-final-vista.png` | 2 — Mando final, vista 3/4 con los engranajes en la punta | Close-up: exterior → corte con engranajes |
+| `r2-03-captura-clientes.png` | 3 — Captura "Nuestros clientes" (v1.2) | Se quitó "ESCENA 01", título más grande arriba |
+| `r2-04-motoniveladora.png` | 4 — Motoniveladora | `motorGrader` en "Nuestros clientes" |
+| `r2-05-bulldozer.png` | 5 — Bulldozer | `bulldozer` |
+| `r2-06-perforadora.png` | 6 — Perforadora | `drillRig` |
+| `r2-07-camion-komatsu.png` | 7 — Camión de extracción Komatsu | `komatsuTruck` |
+| `r2-08-captura-mando-final.png` | 8 — Captura del corte del mando final (v1.2) | Secuencia en 3 pasos |
+| `r2-09-componente-referencia.png` | 9 — Componente de referencia (mando final exterior) | `finalDriveSide` con marca PTT (escenas 3, 5, 8, 9) |
+| `r2-10-captura-plan.png` | 10 — Captura del panel de plan (v1.2) | Reemplazado por el despiece del camión |
+| `r2-11-despiece-componentes.png` | 11 — Despiece de componentes del camión | Rótulos motor / transmisión / diferencial / mandos finales / maza suspensión |
+| `r2-12-captura-red.png` | 12 — Captura de la red (v1.2) a corregir | Red reescrita: minera → una línea → PTT |
+| `r2-13-captura-forecast.png` | 13 — Bloque de forecast a eliminar | Eliminado; reemplazado por derivación de componentes |
 
 Video de referencia del mando final: https://www.youtube.com/watch?v=j4ulsFhfqaA

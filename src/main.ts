@@ -5,15 +5,15 @@ import { Player } from './core/player'
 import type { Scene } from './core/scene'
 import { wipe } from './core/scene'
 import { introScene } from './scenes/s00-intro'
-import { faenaScene } from './scenes/s01-faena'
-import { planificacionScene } from './scenes/s02-planificacion'
-import { retiroScene } from './scenes/s03-retiro'
-import { recepcionScene } from './scenes/s04-recepcion'
-import { importacionScene } from './scenes/s05-importacion'
-import { bodegaScene } from './scenes/s06-bodega'
-import { respuestaScene } from './scenes/s06b-respuesta'
-import { tallerScene } from './scenes/s07-taller'
-import { cierreScene } from './scenes/s08-cierre'
+import { empresaScene } from './scenes/s01-empresa'
+import { clientesScene } from './scenes/s02-clientes'
+import { faenaScene } from './scenes/s03-faena'
+import { redScene } from './scenes/s04-red'
+import { recepcionScene } from './scenes/s05-recepcion'
+import { importacionScene } from './scenes/s06-importacion'
+import { bodegaScene } from './scenes/s07-bodega'
+import { tallerScene } from './scenes/s08-taller'
+import { cierreScene } from './scenes/s09-cierre'
 
 gsap.defaults({ overwrite: 'auto' })
 
@@ -21,8 +21,8 @@ const app = document.getElementById('app')!
 const player = new Player(app)
 
 const scenes: Scene[] = [
-  introScene(), faenaScene(), planificacionScene(), retiroScene(),
-  recepcionScene(), importacionScene(), bodegaScene(), respuestaScene(), tallerScene(), cierreScene(),
+  introScene(), empresaScene(), clientesScene(), faenaScene(), redScene(),
+  recepcionScene(), importacionScene(), bodegaScene(), tallerScene(), cierreScene(),
 ]
 scenes.forEach((s) => player.stage.append(s.root))
 
@@ -38,7 +38,7 @@ const chapters = scenes.map((s, i) => {
   player.master.call(() => s.onEnter?.(), [], at)
   player.master.call(() => s.onLeave?.(), [], at + dur - 0.05)
   cursor = at + dur - OVERLAP
-  return { id: s.id, title: s.title.replace(/^Escena \d · /, ''), time: i > 0 ? at + 0.5 : 0 }
+  return { id: s.id, title: s.title, time: i > 0 ? at + 0.5 : 0 }
 })
 player.setChapters(chapters)
 
@@ -59,7 +59,7 @@ const splash = el('div', { class: 'splash' })
 splash.append(el('div', { class: 'card', html: `
   <div class="ptt-logo" style="font-size:64px"><span class="l1">Power</span><span class="l2">Train</span><span class="l3">Technologies</span><span class="l4">Marubeni Group</span></div>
   <div class="logo" style="font-size:34px;color:var(--ink-2)">Cadena de suministro</div>
-  <p>Cómo las áreas de la cadena de suministro de PTT trabajan integradas para asegurar la continuidad operacional de la gran minería.</p>
+  <p>Quiénes somos y cómo nuestra cadena de suministro —talleres, contrato en faena, red de abastecimiento e Ingeniería y Desarrollo— responde a la gran minería.</p>
   <button class="play">▶ Reproducir</button>
   <p style="font-size:13px;color:var(--ink-3)">Espacio: pausa · ← →: ±5 s · F: pantalla completa · 1–9: capítulos</p>
 ` }))

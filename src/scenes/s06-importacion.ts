@@ -1,0 +1,124 @@
+import { el } from '../core/dom'
+import { mercatorMap, cargoShip, airplane, lowboyTruck, pttWorker } from '../art'
+import { Scene, sceneRoot, fullSvg, sceneEnter, sceneLeave, lowerThird, showLowerThird, tag, pop } from '../core/scene'
+
+/**
+ * RED INTERNACIONAL DE ABASTECIMIENTO (R2 · obs. 9 y 10).
+ * OC en el ERP → EE.UU. y Europa por vía aérea (llegan antes) → Asia por vía marítima →
+ * camión propio cargado sale hacia bodega. Repuestos originales y desarrollados por Ingeniería y Desarrollo.
+ */
+export function importacionScene(): Scene {
+  const root = sceneRoot('import')
+  const CL = { x: 268, y: 418 }
+  const origins = [
+    { x: 190, y: 228, name: 'EE.UU. · Houston · aéreo', air: true, route: 'M190 228 Q300 300 268 418' },
+    { x: 452, y: 132, name: 'Europa · Rotterdam · aéreo', air: true, route: 'M452 132 Q420 330 268 418' },
+    { x: 782, y: 322, name: 'Asia · Singapur · marítimo', air: false, route: 'M782 322 L760 380 L700 470 L560 520 L420 520 L300 490 L268 418' },
+  ]
+  const bg = fullSvg(`
+    <rect width="1920" height="1080" fill="#07090c"/>
+    <g id="im-map" transform="translate(110 90) scale(1.7)" opacity="0">
+      ${mercatorMap('merc')}
+      ${origins.map((o, i) => `<path id="im-route-${i}" d="${o.route}" fill="none" stroke="${o.air ? '#ffffff' : '#e0262b'}" stroke-width="2.5" stroke-dasharray="6 5" opacity="0"/>`).join('')}
+      ${origins.map((o, i) => `<g id="im-o-${i}" opacity="0"><circle cx="${o.x}" cy="${o.y}" r="7" fill="#fff"/><circle cx="${o.x}" cy="${o.y}" r="14" fill="none" stroke="#fff" stroke-width="1.5" opacity=".6"/></g>`).join('')}
+      <g id="im-cl" opacity="0"><circle cx="${CL.x}" cy="${CL.y}" r="9" fill="#e0262b"/><circle id="im-cl-ping" cx="${CL.x}" cy="${CL.y}" r="16" fill="none" stroke="#e0262b" stroke-width="2"/></g>
+      ${origins.map((_o, i) => `<g id="im-oc-${i}" opacity="0" transform="translate(${CL.x} ${CL.y})"><rect x="-9" y="-11" width="18" height="22" rx="2" fill="#fff"/><rect x="-5" y="-6" width="10" height="2" fill="#e0262b"/><rect x="-5" y="-1" width="10" height="2" fill="#8a8f98"/><rect x="-5" y="4" width="10" height="2" fill="#8a8f98"/></g>`).join('')}
+      ${origins.map((o, i) => `<g id="im-v-${i}" opacity="0" transform="translate(${o.x} ${o.y})"><g id="im-vr-${i}">${o.air ? `<g transform="scale(.14) translate(-165 -40)">${airplane(`pl${i}`)}</g>` : `<g transform="scale(.13) translate(-360 -100)">${cargoShip(`sh${i}`)}</g>`}</g></g>`).join('')}
+    </g>
+    <g id="im-desk" opacity="0">
+      <rect x="0" y="0" width="1920" height="1080" fill="#0d1117"/>
+      <rect x="0" y="720" width="1920" height="360" fill="#141922"/>
+      <rect x="560" y="640" width="800" height="18" fill="#2a2f36"/><rect x="580" y="658" width="16" height="200" fill="#1d2229"/><rect x="1324" y="658" width="16" height="200" fill="#1d2229"/>
+      <g transform="translate(760 620) scale(.95)">${pttWorker('imw', false)}</g>
+      <g transform="translate(900 300)">
+        <rect width="560" height="340" rx="10" fill="#0b0f15" stroke="#2a3441" stroke-width="3"/>
+        <rect width="560" height="44" rx="10" fill="#141b24"/>
+        <text x="280" y="28" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="14" fill="#9aa7b6" letter-spacing="3">PTT · ERP · ÓRDENES DE COMPRA</text>
+        <g id="im-oc-rows" font-family="JetBrains Mono, monospace" font-size="15" fill="#e9eef4">
+          <g class="ocrow" opacity="0" transform="translate(24 84)"><text>OC-2026-1187</text><text x="200" fill="#9aa7b6">Corona planetaria</text><text x="430" fill="#e0262b">HOUSTON</text></g>
+          <g class="ocrow" opacity="0" transform="translate(24 128)"><text>OC-2026-1188</text><text x="200" fill="#9aa7b6">Kit sellos Duo-Cone</text><text x="430" fill="#e0262b">ROTTERDAM</text></g>
+          <g class="ocrow" opacity="0" transform="translate(24 172)"><text>OC-2026-1189</text><text x="200" fill="#9aa7b6">Rodamientos cónicos</text><text x="430" fill="#e0262b">SINGAPUR</text></g>
+        </g>
+        <rect id="im-oc-btn" x="24" y="270" width="512" height="46" rx="6" fill="#e0262b"/>
+        <text x="280" y="300" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="22" fill="#fff" letter-spacing="3">EMITIR ÓRDENES DE COMPRA</text>
+      </g>
+    </g>
+    <g id="im-semi" transform="translate(-1000 800) scale(.75)" opacity="0">${lowboyTruck('ims', true)}</g>
+  `)
+  const lt = lowerThird('Abastecimiento internacional', 'Red propia de repuestos')
+  const labels = origins.map((o) => {
+    const t = tag(o.name, 0, 0, 'info')
+    Object.assign(t.style, { left: `${110 + o.x * 1.7 + 22}px`, top: `${90 + o.y * 1.7 - 22}px` })
+    return t
+  })
+  const steps = el('div', { class: 'steps' })
+  ;['Orden de compra', 'Aéreo · EE.UU. y Europa', 'Marítimo · Asia', 'Camión propio a bodega'].forEach((s, i) => steps.append(el('div', { class: 'step', html: `<span class="n">0${i + 1}</span>${s}` })))
+  Object.assign(steps.style, { left: '110px', top: '150px' })
+  const tagNet = tag('Red internacional de abastecimiento de repuestos', 110, 640, 'ok')
+  const tagKind = tag('Repuestos originales + repuestos desarrollados por Ingeniería y Desarrollo', 110, 700, 'ok')
+  const tagLoad = tag('Carga de EE.UU., Europa y Asia · rumbo a bodega PTT', 1100, 700, 'info')
+  root.append(bg, lt, ...labels, steps, tagNet, tagKind, tagLoad)
+
+  return {
+    id: 'import', title: 'Abastecimiento', root,
+    build(tl, at) {
+      const q = (s: string) => root.querySelector(s) as SVGGElement
+      const stepEls = Array.from(steps.children) as HTMLElement[]
+      const activate = (i: number) => () => stepEls.forEach((s, k) => s.classList.toggle('active', k === i))
+      sceneEnter(tl, root, at, 1)
+      showLowerThird(tl, lt, at + 0.5, 3.4)
+      tl.set(steps, { opacity: 1 }, at + 0.6); pop(tl, stepEls, at + 0.8)
+      // 01 — OC en el ERP
+      tl.add(activate(0), at + 1)
+      tl.to(q('#im-desk'), { opacity: 1, duration: 0.6 }, at + 0.6)
+      tl.fromTo(root.querySelectorAll('.ocrow'), { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.4, stagger: 0.35 }, at + 1.2)
+      tl.fromTo(q('#im-oc-btn'), { fill: '#e0262b' }, { fill: '#4ade80', duration: 0.3, repeat: 1, yoyo: true }, at + 2.4)
+      // 02 — mapa: las OC vuelan a los orígenes
+      const mAt = at + 2.8
+      tl.to(q('#im-desk'), { opacity: 0, duration: 0.6 }, mAt)
+      tl.fromTo(q('#im-map'), { opacity: 0, attr: { transform: 'translate(110 90) scale(1.8)' } }, { opacity: 1, attr: { transform: 'translate(110 90) scale(1.7)' }, duration: 1, ease: 'power3.out' }, mAt)
+      tl.to(q('#im-cl'), { opacity: 1, duration: 0.3 }, mAt + 0.5)
+      tl.fromTo(q('#im-cl-ping'), { attr: { r: 12 }, opacity: 1 }, { attr: { r: 40 }, opacity: 0, duration: 1.4, repeat: 6, ease: 'power2.out' }, mAt + 0.5)
+      origins.forEach((o, i) => {
+        tl.to(q(`#im-oc-${i}`), { opacity: 1, duration: 0.2 }, mAt + 0.6 + i * 0.2)
+        tl.to(q(`#im-oc-${i}`), { attr: { transform: `translate(${o.x} ${o.y})` }, duration: 1, ease: 'power2.inOut' }, mAt + 0.6 + i * 0.2)
+        tl.to(q(`#im-oc-${i}`), { opacity: 0, duration: 0.2 }, mAt + 1.6 + i * 0.2)
+        tl.to(q(`#im-o-${i}`), { opacity: 1, duration: 0.3 }, mAt + 1.5 + i * 0.2)
+        pop(tl, labels[i], mAt + 1.6 + i * 0.2)
+      })
+      // 03 — aviones (EE.UU./Europa) llegan antes; barco (Asia) llega después
+      const sAt = mAt + 2.2
+      tl.add(activate(1), sAt)
+      tl.add(activate(2), sAt + 1.7)
+      origins.forEach((o, i) => {
+        const route = q(`#im-route-${i}`) as unknown as SVGPathElement
+        const len = route.getTotalLength ? route.getTotalLength() : 600
+        const dur = o.air ? 1.6 : 3.4
+        tl.to(route, { opacity: 0.9, duration: 0.3 }, sAt)
+        tl.fromTo(route, { strokeDasharray: len, strokeDashoffset: len }, { strokeDashoffset: 0, duration: dur, ease: 'power1.inOut' }, sAt)
+        const v = q(`#im-v-${i}`), vr = q(`#im-vr-${i}`)
+        tl.to(v, { opacity: 1, duration: 0.3 }, sAt)
+        const prog = { t: 0 }
+        tl.to(prog, { t: 1, duration: dur, ease: 'power1.inOut', onUpdate: () => {
+          const p = route.getPointAtLength(prog.t * len)
+          v.setAttribute('transform', `translate(${p.x} ${p.y})`)
+          if (o.air) { const p2 = route.getPointAtLength(Math.min(len, prog.t * len + 4)); vr.setAttribute('transform', `rotate(${(Math.atan2(p2.y - p.y, p2.x - p.x) * 180) / Math.PI})`) }
+        } }, sAt)
+        tl.to(v, { opacity: 0, duration: 0.3 }, sAt + dur)
+      })
+      pop(tl, tagNet, sAt + 1.4)
+      pop(tl, tagKind, sAt + 2.1)
+      // 04 — camión propio, claramente cargado, sale hacia bodega
+      const tAt = sAt + 3.8
+      tl.add(activate(3), tAt)
+      tl.to([q('#im-map'), ...labels], { opacity: 0.25, duration: 0.6 }, tAt)
+      tl.to(q('#im-semi'), { opacity: 1, duration: 0.3 }, tAt)
+      tl.to(q('#im-semi'), { attr: { transform: 'translate(2100 800) scale(.75)' }, duration: 3.8, ease: 'power1.inOut' }, tAt)
+      tl.to(['#ims-w0', '#ims-w1', '#ims-w2', '#ims-w3', '#ims-w4'].map(q), { rotation: 1400, transformOrigin: '50% 50%', duration: 3.8, ease: 'power1.inOut' }, tAt)
+      pop(tl, tagLoad, tAt + 1, 1.6)
+      tl.to([steps, tagNet, tagKind, ...labels], { opacity: 0, duration: 0.5 }, tAt + 2.3)
+      sceneLeave(tl, root, tAt + 2.7, 0.9)
+      return tAt + 3.6 - at
+    },
+  }
+}
