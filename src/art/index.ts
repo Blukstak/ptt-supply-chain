@@ -94,70 +94,94 @@ export function hangingLights(id = 'lights', xs = [300, 780, 1260, 1700], y = 90
     .join('')}</g>`
 }
 
+/** Materiales compartidos; cada instancia mantiene recursos SVG independientes. */
+function equipmentPaint(id: string) {
+  return `<defs>
+    <linearGradient id="${id}-paint" x2="0" y2="1"><stop stop-color="#ffdf62"/><stop offset=".42" stop-color="#ffcd11"/><stop offset="1" stop-color="#c99d05"/></linearGradient>
+    <linearGradient id="${id}-glass" x2=".8" y2="1"><stop stop-color="#7fadb8"/><stop offset=".45" stop-color="#354f5b"/><stop offset="1" stop-color="#172933"/></linearGradient>
+    <linearGradient id="${id}-metal" x2="0" y2="1"><stop stop-color="#b4bec4"/><stop offset=".45" stop-color="#697782"/><stop offset="1" stop-color="#35404a"/></linearGradient>
+  </defs>`
+}
+
+/** Banda en bloques y tornillería, centradas para las rotaciones GSAP. */
+function equipmentWheel(x: number, y: number, r: number, id: string, rim: string = C.cat) {
+  return `<g id="${id}" transform="translate(${x} ${y})">
+    <circle r="${r}" fill="#14171b"/>
+    ${Array.from({ length: 28 }, (_, i) => `<path d="M${-r * .1} ${-r * .96} l${r * .17} 0 ${r * .06} ${r * .12} -${r * .18} 0Z" fill="#34393e" transform="rotate(${i * 360 / 28})"/>`).join('')}
+    <circle r="${r * .78}" fill="#24282d" stroke="#454a4e" stroke-width="${r * .02}"/>
+    <circle r="${r * .53}" fill="${rim}" stroke="#111820" stroke-width="${r * .04}"/>
+    <circle r="${r * .43}" fill="none" stroke="#fff4bc" stroke-opacity=".45" stroke-width="${r * .035}"/>
+    <circle r="${r * .26}" fill="${rim}" stroke="#5d542b" stroke-width="${r * .04}"/>
+    ${Array.from({ length: 10 }, (_, i) => { const a = i * Math.PI / 5; return `<circle cx="${Math.cos(a) * r * .34}" cy="${Math.sin(a) * r * .34}" r="${r * .033}" fill="#394048"/>` }).join('')}
+    <circle r="${r * .12}" fill="#41464a"/>
+  </g>`
+}
+
+function equipmentTrack(x: number, y: number, w: number, h: number) {
+  return `<g transform="translate(${x} ${y})">
+    <rect width="${w}" height="${h}" rx="${h / 2}" fill="#15191d" stroke="#525b60" stroke-width="3"/>
+    <rect x="9" y="8" width="${w - 18}" height="${h - 16}" rx="${h / 2 - 8}" fill="#394146"/>
+    ${Array.from({ length: 7 }, (_, i) => `<circle cx="${h / 2 + i * (w - h) / 6}" cy="${h / 2}" r="${h * .29}" fill="#687074" stroke="#1c2328" stroke-width="3"/><circle cx="${h / 2 + i * (w - h) / 6}" cy="${h / 2}" r="${h * .1}" fill="#252c30"/>`).join('')}
+    ${Array.from({ length: Math.floor(w / 12) }, (_, i) => `<path d="M${12 + i * 11} 0 v7 M${12 + i * 11} ${h - 7} v7" stroke="#788084" stroke-width="3"/>`).join('')}
+  </g>`
+}
+
 /* ---------------------------------------------------------------- */
 /* Camión CAT 797 (vista lateral, ilustrativo)                        */
 /* ---------------------------------------------------------------- */
 export function truck797(id = 'truck') {
-  const wheel = (cx: number, cy: number, r: number, wid: string) => `
-    <g id="${wid}" transform="translate(${cx} ${cy})">
-      <circle r="${r}" fill="#0d0f12"/>
-      <circle r="${r * 0.97}" fill="none" stroke="#22262c" stroke-width="${r * 0.09}" stroke-dasharray="${r * 0.16} ${r * 0.1}"/>
-      <circle r="${r * 0.66}" fill="#262b32"/>
-      <circle r="${r * 0.5}" fill="${C.cat}"/>
-      <circle r="${r * 0.44}" fill="${C.catDark}"/>
-      <circle r="${r * 0.3}" fill="#2a2f36"/>
-      <circle r="${r * 0.12}" fill="#15181d"/>
-      ${[0, 45, 90, 135, 180, 225, 270, 315].map((a) => `<circle cx="${Math.cos((a * Math.PI) / 180) * r * 0.37}" cy="${Math.sin((a * Math.PI) / 180) * r * 0.37}" r="${r * 0.04}" fill="#15181d"/>`).join('')}
-    </g>`
-  return `
+  return `${equipmentPaint(id)}
   <defs>
-    <linearGradient id="${id}-body" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd94a"/><stop offset=".6" stop-color="${C.cat}"/><stop offset="1" stop-color="${C.catDark}"/></linearGradient>
-    <linearGradient id="${id}-bed" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffdc55"/><stop offset="1" stop-color="${C.catDark}"/></linearGradient>
-    <linearGradient id="${id}-shade" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8a6a00"/><stop offset="1" stop-color="${C.catDark}"/></linearGradient>
+    <linearGradient id="${id}-body" x2="0" y2="1"><stop stop-color="#ffdf62"/><stop offset="1" stop-color="#ffcd11"/></linearGradient>
+    <linearGradient id="${id}-bed-paint" x2="0" y2="1"><stop stop-color="#ffdc55"/><stop offset="1" stop-color="#c99d05"/></linearGradient>
+    <linearGradient id="${id}-shade"><stop stop-color="#8a6a00"/><stop offset="1" stop-color="#c99d05"/></linearGradient>
   </defs>
   <g id="${id}">
-    <ellipse cx="560" cy="470" rx="600" ry="26" fill="#000" opacity=".45"/>
-    <!-- tolva (con visera que cubre la cabina) -->
+    <ellipse cx="560" cy="486" rx="600" ry="18" fill="#000" opacity=".3"/>
+    <!-- Dos ejes: el neumático interior del dual queda detrás del exterior. -->
+    ${equipmentWheel(950, 370, 128, `${id}-w2`)}
+    <path d="M80 295 H1110 V342 H740 L650 370 H330 L260 342 H80Z" fill="#272d32"/>
+    <path d="M335 325 H875 M410 338 L555 276" stroke="#4b545b" stroke-width="18"/>
+    <path d="M550 312 L630 175" stroke="#838e96" stroke-width="18"/><path d="M550 312 L596 233" stroke="#c99d05" stroke-width="30"/>
     <g id="${id}-bed">
-      <path d="M0 40 L1100 40 L1200 -10 L1230 100 L1150 300 L330 300 L330 190 L0 100Z" fill="url(#${id}-bed)"/>
-      <path d="M0 40 L1100 40 L1100 100 L0 100Z" fill="#ffe27a"/>
-      <path d="M0 40 L1100 40 L1100 60 L0 60Z" fill="#fff0b0" opacity=".7"/>
-      <path d="M330 190 L1150 190" stroke="${C.catShadow}" stroke-width="6" opacity=".5"/>
-      ${[420, 540, 660, 780, 900, 1020].map((x) => `<path d="M${x} 110 L${x} 300" stroke="${C.catShadow}" stroke-width="8" opacity=".5"/>`).join('')}
-      <path d="M1100 40 L1200 -10 L1230 100 L1150 300 L1100 300Z" fill="url(#${id}-shade)"/>
-      <text x="1130" y="200" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="34" fill="#111" transform="rotate(-70 1130 200)">797F</text>
-      <!-- carga -->
-      <path d="M340 110 Q720 20 1090 110Z" fill="#4a3d33"/><path d="M400 110 Q720 45 1030 110Z" fill="#5f5044"/>
+      <path d="M-35 40 L365 22 L1100 60 L1200 -10 L1230 44 L1150 281 L425 281 L330 102 L-35 83Z" fill="url(#${id}-bed-paint)" stroke="#9f7c08" stroke-width="4"/>
+      <path d="M-35 40 L365 22 L1100 60 L1108 79 L355 46 L-35 61Z" fill="#ffe58a"/>
+      <path d="M-35 83 L330 102 L370 164 L307 127 L-35 101Z" fill="url(#${id}-shade)"/>
+      ${[30, 125, 220].map(x => `<path d="M${x} 63 l70 5 28 38 -19 -2Z" fill="#b38c0a"/>`).join('')}
+      <path d="M353 67 L1110 99 L1167 58 L1130 239 L445 239Z" fill="#e9b809"/>
+      ${[425, 565, 705, 845, 985].map(x => `<path d="M${x} 76 l30 2 48 176 -29 0Z" fill="#ffda45"/><path d="M${x + 30} 78 l48 176 10 -1 -45 -173Z" fill="#a88305"/>`).join('')}
+      <path d="M420 254 L1145 254 L1150 281 L425 281Z" fill="#ffcf27"/>
+      <path d="M462 277 L482 297 H1122 L1143 277" fill="#927208"/>
+      <rect x="1030" y="139" width="86" height="43" rx="3" fill="#20272c"/>
+      <text x="1073" y="170" text-anchor="middle" font-family="Arial, sans-serif" font-size="29" font-weight="700" fill="#fff">797F</text>
     </g>
-    <!-- plataforma + cabina + radiador -->
     <g id="${id}-cab">
-      <rect x="-40" y="190" width="380" height="16" fill="#3a414b"/>
-      <path d="M130 105 L130 190 L300 190 L300 105 L270 90 L150 90Z" fill="url(#${id}-body)"/>
-      <path d="M150 100 L260 100 L280 150 L150 150Z" fill="#9fd8ff" opacity=".85"/>
-      <rect x="150" y="150" width="130" height="8" fill="#1d2229"/>
-      <!-- barandas -->
-      <path d="M-40 150 L-40 190 M0 150 L0 190 M40 150 L40 190 M80 150 L80 190 M-40 150 L120 150 M-40 168 L120 168" stroke="#e9eef4" stroke-width="3" fill="none"/>
-      <path d="M310 150 L310 190 M345 150 L345 190 M310 150 L345 150 M310 168 L345 168" stroke="#e9eef4" stroke-width="3" fill="none"/>
-      <!-- radiador / frontal -->
-      <rect x="-40" y="206" width="180" height="120" fill="#2a3441"/>
-      <rect x="-30" y="214" width="160" height="104" fill="#1a2028"/>
-      ${[0, 1, 2, 3, 4, 5, 6].map((i) => `<rect x="-24" y="${220 + i * 14}" width="148" height="5" fill="#3d4a5a"/>`).join('')}
-      <rect x="-60" y="206" width="24" height="120" fill="${C.cat}"/>
-      <rect x="140" y="206" width="190" height="120" fill="url(#${id}-body)"/>
-      <rect x="180" y="220" width="120" height="50" rx="4" fill="#111418"/>
-      <text x="240" y="256" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="30" fill="${C.cat}">CAT</text>
-      <!-- escalera diagonal -->
-      <path d="M-70 440 L-40 206" stroke="#e9eef4" stroke-width="4"/><path d="M-100 440 L-70 206" stroke="#e9eef4" stroke-width="4"/>
-      ${Array.from({ length: 9 }, (_, i) => { const t = i / 8, x = -70 + 30 * t, y = 440 - 234 * t; return `<path d="M${x - 30} ${y} L${x} ${y}" stroke="#e9eef4" stroke-width="3"/>` }).join('')}
-      <rect x="-80" y="326" width="24" height="10" fill="#fff5c4"/>
-      <rect x="-80" y="340" width="24" height="6" fill="${C.amber}"/>
+      <path d="M120 192 V112 L147 102 H290 L311 125 V192Z" fill="url(#${id}-body)" stroke="#806811" stroke-width="4"/>
+      <path d="M139 113 H281 L294 135 V165 H139Z" fill="url(#${id}-glass)" stroke="#20292f" stroke-width="7"/>
+      <path d="M216 112 V168 M142 151 L192 119" stroke="#95b8be" stroke-opacity=".55" stroke-width="4"/>
+      <path d="M127 104 H298" stroke="#262d32" stroke-width="12"/>
+      <rect x="264" y="176" width="22" height="5" fill="#343b40"/>
+      <path d="M302 139 h28 v25" fill="none" stroke="#343b40" stroke-width="5"/><rect x="321" y="155" width="18" height="29" rx="3" fill="#242d33"/>
+      <path d="M338 185 V118 h22 V95" fill="none" stroke="#41494e" stroke-width="15"/>
+      <rect x="328" y="128" width="24" height="52" rx="4" fill="url(#${id}-metal)"/>
+      <path d="M-55 193 H362 V210 H-55Z" fill="#ffcd11"/>
+      <rect x="-51" y="210" width="174" height="149" fill="#b38d0a"/>
+      <rect x="-40" y="219" width="151" height="129" rx="3" fill="#182127"/>
+      ${Array.from({ length: 12 }, (_, i) => `<path d="M-34 ${226 + i * 10} H106" stroke="#4c555b" stroke-width="4"/>`).join('')}
+      <path d="M37 221 V347" stroke="#747e83" stroke-width="3"/>
+      <path d="M125 208 H351 V243 L304 250 L267 275 H125Z" fill="url(#${id}-body)"/>
+      <rect x="162" y="218" width="98" height="33" rx="3" fill="#242b30"/><text x="211" y="243" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-weight="700" font-size="26">CAT</text>
+      <path d="M-57 360 H126 V378 H-57Z" fill="#ffcd11"/>
+      ${[-36, 79, 292].map(x => `<rect x="${x}" y="${x === 292 ? 216 : 357}" width="25" height="14" rx="3" fill="#faf0d4" stroke="#363b3e" stroke-width="3"/>`).join('')}
+      <path d="M-54 191 V148 H112 M-54 168 H112 M-8 148 V191 M45 148 V191 M100 148 V191 M313 148 H359 V191 M313 170 H359 M313 148 V191" fill="none" stroke="#343b40" stroke-width="4"/>
     </g>
-    <!-- chasis -->
-    <rect x="80" y="300" width="1060" height="50" fill="#1d2229"/>
-    <rect x="60" y="340" width="1100" height="28" fill="#111418"/>
-    ${wheel(230, 370, 128, `${id}-w1`)}
-    ${wheel(870, 370, 128, `${id}-w2`)}
-    ${wheel(990, 370, 128, `${id}-w3`)}
+    ${equipmentWheel(230, 370, 128, `${id}-w1`)}
+    ${equipmentWheel(990, 370, 128, `${id}-w3`)}
+    <!-- Escalera inclinada al frente del radiador, libre del neumático. -->
+    <path d="M-96 440 L61 211 M-65 440 L92 211" stroke="#d3ac17" stroke-width="8"/>
+    ${Array.from({ length: 12 }, (_, i) => { const y = 433 - i * 19, x = -91 + i * 13; return `<path d="M${x} ${y} h31" stroke="#ffe381" stroke-width="6"/>` }).join('')}
+    <path d="M-99 420 V393 L46 180 H75 M-67 419 L91 189" fill="none" stroke="#363f45" stroke-width="4"/>
+    <path d="M366 301 v61 h-29" fill="none" stroke="#c99d05" stroke-width="8"/>
   </g>`
 }
 
@@ -167,32 +191,35 @@ export function truck797(id = 'truck') {
  */
 export function finalDriveSide(id = 'fds', label = 'PTT') {
   const flange = (x: number, r: number, w: number, fid: string) => {
-    const n = Math.round(r / 5)
-    const teeth = Array.from({ length: n }, (_, i) => {
-      const y = -r + (i / n) * 2 * r
-      return `<rect x="${x - w / 2 - 6}" y="${y}" width="${w + 12}" height="${(2 * r) / n * 0.5}" fill="#8a6a00" opacity=".7"/>`
+    const rx = 28
+    const teeth = Array.from({ length: 40 }, (_, i) => {
+      const a = i * Math.PI / 20, b = a + .065, c = a + .115
+      const point = (angle: number, radial: number) => `${x + Math.cos(angle) * (rx + radial)} ${Math.sin(angle) * (r + radial)}`
+      return `<path d="M${point(a, 0)} L${point(b, 5)} L${point(c, 5)} L${point(a + .15, 0)}Z" fill="#b28a0a" stroke="#7e6210" stroke-width=".7"/>`
     }).join('')
-    const bolts = Array.from({ length: 14 }, (_, i) => { const a = (i / 14) * Math.PI * 2; return `<ellipse cx="${x + w / 2 + Math.cos(a) * w * 0.3}" cy="${Math.sin(a) * r * 0.86}" rx="3" ry="4" fill="#3a3000"/>` }).join('')
-    return `<g id="${fid}">${teeth}<rect x="${x - w / 2}" y="${-r}" width="${w}" height="${2 * r}" rx="6" fill="url(#${id}-g)"/><ellipse cx="${x + w / 2}" cy="0" rx="${w * 0.35}" ry="${r}" fill="url(#${id}-g)"/>${bolts}<ellipse cx="${x + w / 2}" cy="0" rx="${w * 0.22}" ry="${r * 0.72}" fill="#c99d05"/><circle cx="${x + w / 2}" cy="0" r="${r * 0.2}" fill="#2a3441"/></g>`
+    return `<g id="${fid}">
+      <path d="M${x - w} ${-r} H${x} V${r} H${x - w}Z" fill="url(#${id}-g)"/>
+      ${Array.from({ length: 22 }, (_, i) => `<path d="M${x - w} ${-r + 5 + i * (2 * r - 10) / 21} h${w}" stroke="#8e6b0c" stroke-width="2"/>`).join('')}
+      ${teeth}<ellipse cx="${x}" rx="${rx}" ry="${r}" fill="url(#${id}-g)" stroke="#8a6a0b" stroke-width="3"/>
+      <ellipse cx="${x}" rx="21" ry="${r * .81}" fill="#b58c13" stroke="#ffe185" stroke-width="2"/>
+      <ellipse cx="${x}" rx="15" ry="${r * .63}" fill="url(#${id}-g)" stroke="#826613" stroke-width="3"/>
+      ${Array.from({ length: 24 }, (_, i) => { const a = i * Math.PI / 12; return `<ellipse cx="${x + Math.cos(a) * 24}" cy="${Math.sin(a) * r * .91}" rx="2.2" ry="3.3" fill="#5e501f" stroke="#ffe5a1" stroke-width=".8"/>` }).join('')}
+      <ellipse cx="${x}" rx="8" ry="${r * .27}" fill="#665522" stroke="#edbd36" stroke-width="3"/>
+    </g>`
   }
-  return `
-  <defs>
-    <linearGradient id="${id}-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe27a"/><stop offset=".45" stop-color="${C.cat}"/><stop offset="1" stop-color="#8a6a00"/></linearGradient>
-  </defs>
+  return `<defs><linearGradient id="${id}-g" x2="0" y2="1"><stop stop-color="#ffe490"/><stop offset=".3" stop-color="#ffcd11"/><stop offset=".58" stop-color="#eabb20"/><stop offset="1" stop-color="#947015"/></linearGradient></defs>
   <g id="${id}">
-    <ellipse cx="0" cy="130" rx="280" ry="18" fill="#000" opacity=".4"/>
-    <!-- cuerpo cónico -->
-    <path d="M-190 -70 L-40 -78 L60 -60 L170 -60 L170 60 L60 60 L-40 78 L-190 70Z" fill="url(#${id}-g)"/>
-    <path d="M-190 -70 L-40 -78 L60 -60 L170 -60" stroke="#fff3b8" stroke-width="3" fill="none" opacity=".6"/>
-    ${[-120, -60, 0, 110].map((x) => `<line x1="${x}" y1="-64" x2="${x}" y2="64" stroke="#8a6a00" stroke-width="3" opacity=".5"/>`).join('')}
-    <!-- brida grande (lado rueda) -->
-    ${flange(-220, 105, 50, `${id}-fl1`)}
-    <!-- brida central -->
-    <g><rect x="60" y="-80" width="26" height="160" rx="4" fill="#c99d05"/></g>
-    <!-- brida pequeña (lado eje) -->
-    ${flange(200, 84, 40, `${id}-fl2`)}
-    <rect x="-70" y="-22" width="100" height="44" rx="4" fill="#e0262b"/>
-    <text x="-20" y="11" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="30" fill="#fff" letter-spacing="2">${label}</text>
+    <ellipse cx="0" cy="130" rx="270" ry="15" fill="#000" opacity=".28"/>
+    ${flange(218, 103, 36, `${id}-fl2`)}
+    <path d="M-197 -78 L-135 -78 Q-103 -68 -70 -59 H33 Q72 -59 102 -86 L167 -89 V89 L102 86 Q72 59 33 59 H-70 Q-103 68 -135 78 H-197Z" fill="url(#${id}-g)" stroke="#a27b0f" stroke-width="2"/>
+    <ellipse cx="165" rx="24" ry="89" fill="url(#${id}-g)" stroke="#bd9318" stroke-width="4"/>
+    <path d="M143 -85 Q176 0 143 85 M111 -83 Q143 0 111 83 M-124 -72 Q-100 0 -124 72 M-101 -65 Q-78 0 -101 65" fill="none" stroke="#b38b16" stroke-width="6"/>
+    <path d="M-76 -49 H43 L78 -65 M-76 49 H43 L78 65 M-76 -34 H37 M-76 34 H37" fill="none" stroke="#ffdf69" stroke-width="5"/>
+    <path d="M-63 -53 V-37 M-12 -53 V-37 M38 -54 V-39 M-63 37 V54 M-12 37 V54 M38 39 V54" stroke="#b68b0d" stroke-width="4"/>
+    ${flange(-190, 100, 48, `${id}-fl1`)}
+    <rect x="-68" y="-21" width="98" height="42" rx="3" fill="#e0262b" stroke="#b51d24" stroke-width="2"/>
+    <text x="-19" y="10" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="28" fill="#fff" letter-spacing="2">${label}</text>
+    <circle cx="-62" cy="-15" r="2" fill="#e4e6e1"/><circle cx="24" cy="15" r="2" fill="#e4e6e1"/>
   </g>`
 }
 
@@ -462,43 +489,52 @@ export function worldMap(id = 'map') {
 
 /** Tracto rojo con cama baja (Imagen 4). Mide ~900 px de largo; el componente va sobre la cama en (620, 160). */
 export function lowboyTruck(id = 'lowboy', cargo = false) {
-  const wheel = (x: number, y: number, r: number, wid: string) => `<g id="${wid}" transform="translate(${x} ${y})"><circle r="${r}" fill="#0d0f12"/><circle r="${r * 0.55}" fill="#8a8f98"/><circle r="${r * 0.22}" fill="#2a2f36"/></g>`
-  return `
-  <defs>
-    <linearGradient id="${id}-red" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff5a5f"/><stop offset=".5" stop-color="#e0262b"/><stop offset="1" stop-color="#8f1216"/></linearGradient>
-    <linearGradient id="${id}-yel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd94a"/><stop offset="1" stop-color="#b8860b"/></linearGradient>
-  </defs>
-  <g id="${id}">
-    <ellipse cx="450" cy="292" rx="480" ry="16" fill="#000" opacity=".45"/>
-    <!-- cama baja (amarilla) con cuello de cisne -->
+  return `${equipmentPaint(id)}<defs>
+    <linearGradient id="${id}-red" x2="0" y2="1"><stop stop-color="#ef4145"/><stop offset=".5" stop-color="#cb2029"/><stop offset="1" stop-color="#921b23"/></linearGradient>
+    <linearGradient id="${id}-yel" x2="0" y2="1"><stop stop-color="#ffdb50"/><stop offset="1" stop-color="#c99d05"/></linearGradient>
+  </defs><g id="${id}">
+    <ellipse cx="450" cy="300" rx="480" ry="12" fill="#000" opacity=".28"/>
+    <path d="M598 236 H918 V259 H598Z" fill="#303a42"/>
     <g id="${id}-bed">
-      <path d="M0 200 L60 200 L60 240 L560 240 L560 200 L760 200 L760 260 L0 260Z" fill="url(#${id}-yel)"/>
-      <rect x="60" y="228" width="500" height="10" fill="#8a6a00"/>
-      ${[120, 220, 320, 420].map((x) => `<rect x="${x}" y="240" width="60" height="6" fill="#5a4600"/>`).join('')}
-      <rect x="0" y="180" width="60" height="20" fill="#8a6a00"/>
+      <path d="M0 195 H236 L270 230 H550 L595 190 H733 V214 H610 L573 260 H0Z" fill="url(#${id}-yel)" stroke="#99770b" stroke-width="2"/>
+      <path d="M0 195 H236 L270 230 H550 L595 190 H733" fill="none" stroke="#ffe694" stroke-width="5"/>
+      <path d="M268 230 H551 V237 H271Z" fill="#645640"/>
+      ${[18, 58, 98, 138, 178, 218, 290, 340, 390, 440, 490, 539].map(x => `<path d="M${x} ${x < 240 ? 206 : 242} l19 0 -9 11Z" fill="#96730c"/><rect x="${x}" y="253" width="17" height="3" fill="#faf0cf"/>`).join('')}
+      <path d="M6 194 L25 167 H53 L64 194 M74 194 L93 167 H121 L132 194" fill="#a4800e" stroke="#dfb627" stroke-width="3"/>
+      <path d="M597 205 L621 216 M637 204 L661 216 M677 204 L701 216" stroke="#9e7b09" stroke-width="5"/>
     </g>
     ${cargo ? `<g id="${id}-cargo">
-      ${[[80, 150, 130], [220, 130, 140], [360, 110, 150]].map(([x, w, h], i) => `<g transform="translate(${x} ${240 - h})">${crate(`${id}-cr${i}`, w, h, ['EE.UU.', 'EUROPA', 'ASIA'][i])}</g>`).join('')}
-      <rect x="60" y="100" width="500" height="6" fill="#111" opacity=".6"/><rect x="60" y="160" width="500" height="6" fill="#111" opacity=".6"/>
+      ${[[278, 80, 110], [365, 82, 115], [454, 85, 120]].map(([x, w, h], i) => `<g transform="translate(${x} ${230 - h})">${crate(`${id}-cr${i}`, w, h, `<tspan font-size="${w * .065}">${['EE.UU.', 'EUROPA', 'ASIA'][i]}</tspan>`)}</g>`).join('')}
+      <path d="M316 121 V230 M405 116 V230 M495 111 V230" fill="none" stroke="#343b40" stroke-width="7"/>
+      <path d="M312 211 h8 M401 211 h8 M491 211 h8" stroke="#b1b9bc" stroke-width="8"/>
     </g>` : ''}
-    ${wheel(100, 270, 28, `${id}-w0`)}${wheel(160, 270, 28, `${id}-w1`)}${wheel(220, 270, 28, `${id}-w2`)}
-    <!-- tracto rojo -->
+    ${[100, 160, 220].map((x, i) => equipmentWheel(x, 270, 28, `${id}-w${i}`, '#a4adb1')).join('')}
+    <rect x="727" y="203" width="71" height="48" rx="8" fill="url(#${id}-metal)" stroke="#333d43" stroke-width="3"/>
+    <path d="M740 204 V250 M784 204 V250" stroke="#c7cccd" stroke-width="4"/>
+    <path d="M703 197 C682 173 698 152 717 178 M693 199 C672 175 688 154 708 180" fill="none" stroke="#303b42" stroke-width="4"/>
     <g id="${id}-cab">
-      <path d="M700 260 L700 120 L740 40 L900 40 L920 90 L920 260Z" fill="url(#${id}-red)"/>
-      <path d="M760 55 L890 55 L905 100 L760 100Z" fill="#bfe7ff" opacity=".85"/>
-      <rect x="740" y="110" width="170" height="8" fill="#fff"/>
-      <rect x="720" y="180" width="200" height="60" fill="#2a2f36"/>
-      <rect x="740" y="130" width="80" height="24" rx="3" fill="#fff"/>
-      <text x="780" y="148" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="18" fill="#e0262b">PTT</text>
-      <rect x="900" y="200" width="24" height="12" fill="#fff5c4"/>
-      <rect x="760" y="20" width="16" height="20" fill="#ff9f1c"/>
-      <rect x="700" y="60" width="16" height="60" fill="#5b0e11"/>
+      <!-- Tracto cab-over rojo de la foto; el rojo PTT se reserva a su placa. -->
+      <path d="M795 244 V64 Q795 38 816 35 H886 Q911 35 916 65 L924 112 V242 H912 Q882 207 852 244Z" fill="url(#${id}-red)" stroke="#7f2028" stroke-width="2"/>
+      <path d="M799 71 H911 L917 88 H799Z" fill="#272f35"/>
+      <path d="M824 90 H887 L895 146 H824Z" fill="url(#${id}-glass)" stroke="#1e282f" stroke-width="5"/>
+      <path d="M900 91 H914 L920 143 H906Z" fill="url(#${id}-glass)" stroke="#1e282f" stroke-width="4"/>
+      <path d="M829 126 L860 94" stroke="#93b2bb" stroke-width="3" opacity=".55"/>
+      <path d="M817 87 V209 H842 M897 152 V210 M807 64 H901" stroke="#93252e" stroke-width="2" fill="none"/>
+      <rect x="828" y="157" width="19" height="5" rx="2" fill="#282f35"/>
+      <path d="M898 104 h30 v47" stroke="#28333b" stroke-width="4" fill="none"/><rect x="921" y="117" width="12" height="28" rx="4" fill="#202a31"/>
+      <path d="M899 174 H923 V217 H906Z" fill="#222c33"/>
+      ${[181, 189, 197, 205].map(y => `<path d="M906 ${y} H921" stroke="#75828a" stroke-width="3"/>`).join('')}
+      <rect x="905" y="219" width="19" height="11" rx="2" fill="#fff0ca"/>
+      <path d="M807 249 H836 M807 236 H837 M807 224 H839" stroke="#a0abb2" stroke-width="5"/>
+      <path d="M841 251 Q850 220 881 220 Q911 220 920 251" fill="none" stroke="#30383f" stroke-width="12"/>
+      <rect x="843" y="174" width="43" height="22" rx="2" fill="#e0262b" stroke="#f5d8d9"/><text x="864" y="190" text-anchor="middle" font-family="Arial" font-size="16" font-weight="700" fill="#fff">PTT</text>
+      <path d="M807 207 H843 M888 207 H898" stroke="#f6dfda" stroke-width="4"/>
+      <rect x="817" y="25" width="10" height="9" rx="3" fill="#f5a623"/>
+      <path d="M797 109 V194 H805" stroke="#9fadb4" stroke-width="6" fill="none"/>
     </g>
-    ${wheel(760, 270, 34, `${id}-w3`)}${wheel(880, 270, 34, `${id}-w4`)}
-    <!-- lanza / quinta rueda -->
-    <rect x="560" y="200" width="140" height="20" fill="#8a6a00"/>
-    <rect x="620" y="150" width="70" height="50" fill="#1d2229"/>
-    <circle cx="655" cy="140" r="22" fill="#0d0f12"/>
+    <path d="M677 248 Q686 216 714 216 Q741 216 750 248" fill="none" stroke="#657079" stroke-width="9"/>
+    ${equipmentWheel(710, 270, 34, `${id}-w3`, '#a4adb1')}${equipmentWheel(880, 270, 34, `${id}-w4`, '#a4adb1')}
+    <path d="M651 185 H701" stroke="#282f35" stroke-width="11"/><path d="M657 172 H697" stroke="#343c42" stroke-width="11"/>
   </g>`
 }
 
@@ -646,72 +682,129 @@ export function fieldWorkshop(id = 'fw') {
 
 /** Motoniveladora (Imagen 4). Ancho ~520, ruedas en y=0. */
 export function motorGrader(id = 'mg') {
-  return `<g id="${id}">
-    <ellipse cx="260" cy="4" rx="280" ry="10" fill="#000" opacity=".4"/>
-    <path d="M40 -60 L200 -60 L200 -30 L470 -30 L470 -60 L520 -60 L520 -10 L40 -10Z" fill="${C.cat}"/>
-    <path d="M200 -110 L200 -60 L120 -60 L120 -80Z" fill="#c99d05"/>
-    <path d="M300 -60 L300 -150 L390 -150 L410 -60Z" fill="#1d2229"/>
-    <path d="M310 -140 L385 -140 L398 -95 L310 -95Z" fill="#9fd8ff" opacity=".8"/>
-    <rect x="410" y="-120" width="90" height="60" fill="#111418"/>
-    <rect x="200" y="-90" width="100" height="30" fill="#c99d05"/>
-    <path d="M150 -30 L260 -30 L300 -20 L140 -8Z" fill="#8a99ad"/>
-    <path d="M110 -12 L300 -12 L300 -2 L110 -2Z" fill="#2a3441" transform="rotate(-10 200 -8)"/>
-    <path d="M60 -60 L20 -90 L20 -100 L110 -100" stroke="#c99d05" stroke-width="8" fill="none"/>
-    ${[60, 400, 470].map((x) => `<g><circle cx="${x}" cy="-10" r="34" fill="#0d0f12"/><circle cx="${x}" cy="-10" r="16" fill="${C.cat}"/><circle cx="${x}" cy="-10" r="6" fill="#1d2229"/></g>`).join('')}
+  return `${equipmentPaint(id)}<g id="${id}">
+    <ellipse cx="260" cy="23" rx="270" ry="9" fill="#000" opacity=".28"/>
+    <!-- Frente a la izquierda, tándem motor a la derecha y articulación bajo la cabina. -->
+    <path d="M48 -30 L63 -74 L119 -87 L284 -58 L327 -51 H490 V-27 H323 L274 -43 L108 -65 L77 -27Z" fill="url(#${id}-paint)" stroke="#9a7809" stroke-width="2"/>
+    <path d="M89 -73 L270 -46" stroke="#ffe991" stroke-width="3"/>
+    <path d="M185 -63 L215 -24 M244 -56 L231 -24" stroke="#343d44" stroke-width="6"/>
+    <path d="M188 -61 L204 -38 M244 -56 L237 -40" stroke="#a7b3bb" stroke-width="3"/>
+    <ellipse cx="218" cy="-25" rx="48" ry="8" fill="#887014" stroke="#ffda48" stroke-width="4"/>
+    <path d="M150 -25 Q216 -12 277 -34 L267 -6 Q204 10 145 -5Z" fill="url(#${id}-paint)" stroke="#9a7809" stroke-width="2"/>
+    <path d="M145 -5 Q204 10 267 -6" fill="none" stroke="#9ca5ac" stroke-width="5"/>
+    <path d="M300 -59 L305 -139 H375 L391 -59Z" fill="url(#${id}-paint)"/>
+    <path d="M314 -131 H365 L377 -82 H310Z" fill="url(#${id}-glass)" stroke="#222c33" stroke-width="5"/>
+    <path d="M342 -132 V-68 M309 -111 L332 -129" stroke="#7f9da6" stroke-width="2"/>
+    <path d="M300 -142 H378" stroke="#ffcd11" stroke-width="9"/>
+    <rect x="311" y="-154" width="8" height="8" rx="2" fill="#f5a623"/>
+    <path d="M387 -112 H477 L502 -95 V-51 H388Z" fill="url(#${id}-paint)" stroke="#987609" stroke-width="2"/>
+    <path d="M390 -112 H475 L484 -103 H390Z" fill="#2d3439"/>
+    ${Array.from({ length: 9 }, (_, i) => `<path d="M${416 + i * 7} -96 v26" stroke="#8b700e" stroke-width="3"/>`).join('')}
+    <path d="M456 -112 V-142 h-6" fill="none" stroke="#363e44" stroke-width="6"/>
+    <path d="M295 -53 H391 M306 -65 v-35 M391 -65 v-38 M294 -92 h12" fill="none" stroke="#333d42" stroke-width="3"/>
+    <path d="M326 -62 v35 M345 -62 v35 M326 -52 h19 M326 -41 h19 M326 -30 h19" fill="none" stroke="#a5afb5" stroke-width="3"/>
+    <path d="M378 -33 H489" stroke="#3d454b" stroke-width="15"/>
+    <path d="M499 -62 l17 8 -1 37 M507 -33 l12 0 -4 23" fill="none" stroke="#c99d05" stroke-width="8"/>
+    ${[60, 400, 470].map((x, i) => equipmentWheel(x, -10, 34, `${id}-wheel${i}`)).join('')}
+    <path d="M39 -43 L75 -39" stroke="#ffcd11" stroke-width="8"/>
+    <rect x="395" y="-99" width="17" height="11" fill="#252d32"/>
   </g>`
 }
 
 /** Bulldozer (Imagen 5). Ancho ~480, base en y=0. */
 export function bulldozer(id = 'bz') {
-  return `<g id="${id}">
-    <ellipse cx="240" cy="4" rx="260" ry="10" fill="#000" opacity=".4"/>
-    <path d="M0 -60 L30 -140 L110 -140 L120 -20 L0 -20Z" fill="#c99d05"/>
-    <path d="M6 -56 L34 -132 L100 -132 L108 -30 L6 -30Z" fill="${C.cat}"/>
-    <rect x="130" y="-110" width="260" height="70" fill="${C.cat}"/>
-    <path d="M200 -110 L210 -190 L320 -190 L330 -110Z" fill="#1d2229"/>
-    <path d="M215 -182 L312 -182 L320 -125 L215 -125Z" fill="#9fd8ff" opacity=".8"/>
-    <rect x="330" y="-120" width="80" height="80" fill="#111418"/>
-    <rect x="390" y="-170" width="10" height="60" fill="#333"/>
-    <path d="M120 -80 L60 -60" stroke="#8a8f98" stroke-width="10"/>
-    <rect x="120" y="-50" width="300" height="50" rx="25" fill="#1d2229"/>
-    <rect x="130" y="-40" width="280" height="30" rx="15" fill="#2a2f36"/>
-    ${[150, 210, 270, 330, 390].map((x) => `<circle cx="${x}" cy="-25" r="10" fill="#4b525c"/>`).join('')}
+  return `${equipmentPaint(id)}<g id="${id}">
+    <ellipse cx="240" cy="4" rx="250" ry="10" fill="#000" opacity=".28"/>
+    <!-- La referencia es un tractor topador sobre neumáticos. -->
+    <path d="M114 -86 H397 V-40 H120Z" fill="#2a3035"/>
+    <path d="M120 -137 H224 V-88 H117Z" fill="url(#${id}-paint)" stroke="#9a7809" stroke-width="2"/>
+    <rect x="119" y="-128" width="28" height="44" fill="#293237"/>
+    ${Array.from({ length: 7 }, (_, i) => `<path d="M121 ${-122 + i * 5} h23" stroke="#606b72" stroke-width="2"/>`).join('')}
+    <path d="M205 -118 L213 -186 H278 L288 -118Z" fill="#273138"/>
+    <path d="M220 -176 H270 L278 -128 H216Z" fill="url(#${id}-glass)" stroke="#abb0a0" stroke-width="3"/>
+    <path d="M247 -177 V-125 M218 -153 L243 -175" stroke="#89a4aa" stroke-width="2"/>
+    <path d="M204 -188 H282" stroke="#30393e" stroke-width="8"/>
+    <path d="M215 -190 v-12 M274 -188 v-9" stroke="#737b7d" stroke-width="2"/>
+    <path d="M286 -140 H390 L412 -124 V-85 H283Z" fill="url(#${id}-paint)"/>
+    <path d="M301 -139 v-33 h8 M327 -140 v-26 h8" stroke="#353e44" stroke-width="6" fill="none"/>
+    <path d="M293 -140 v-19 h93 v36 M320 -159 v19 M353 -159 v19" fill="none" stroke="#3d464b" stroke-width="2.5"/>
+    <path d="M132 -89 Q177 -137 222 -88 M307 -89 Q351 -139 396 -87" stroke="#ffcd11" stroke-width="12" fill="none"/>
+    ${equipmentWheel(175, -48, 49, `${id}-wheel0`)}${equipmentWheel(351, -48, 49, `${id}-wheel1`)}
+    <path d="M252 -111 V-22 M269 -111 V-22 M252 -94 h17 M252 -76 h17 M252 -58 h17 M252 -40 h17 M252 -24 h17" stroke="#8b979d" stroke-width="3" fill="none"/>
+    <path d="M285 -42 L108 -27 L68 -44" fill="none" stroke="#c99d05" stroke-width="12"/>
+    <path d="M161 -120 L86 -65" stroke="#333d44" stroke-width="11"/><path d="M126 -95 L86 -65" stroke="#b7c2c8" stroke-width="6"/>
+    <path d="M99 -142 L72 -73" stroke="#343d43" stroke-width="9"/><path d="M88 -112 L72 -73" stroke="#bec9cd" stroke-width="4"/>
+    <path d="M11 -107 Q47 -121 100 -103 L106 -10 Q56 1 0 -10 L9 -29Z" fill="url(#${id}-paint)" stroke="#aa830b" stroke-width="2"/>
+    <path d="M13 -98 Q48 -108 92 -96 L97 -20 Q50 -12 7 -19" fill="none" stroke="#ffe783" stroke-width="3"/>
+    <path d="M0 -10 Q53 1 106 -10 L111 -3 Q55 9 -2 -3Z" fill="url(#${id}-metal)"/>
+    <path d="M408 -106 L461 -12 M424 -104 L477 -12 M411 -93 h19 M420 -76 h19 M430 -59 h19 M440 -42 h19 M450 -25 h19" fill="none" stroke="#69767c" stroke-width="3"/>
+    <rect x="290" y="-120" width="28" height="16" rx="2" fill="#e0262b"/><text x="304" y="-109" fill="#fff" font-family="Arial" font-size="10" text-anchor="middle" font-weight="700">PTT</text>
   </g>`
 }
 
 /** Perforadora de tiro (Imagen 6). Ancho ~300, alto ~460, base en y=0. */
 export function drillRig(id = 'dr') {
-  return `<g id="${id}">
-    <ellipse cx="150" cy="4" rx="170" ry="10" fill="#000" opacity=".4"/>
-    <rect x="30" y="-60" width="240" height="50" rx="20" fill="#1d2229"/>
-    <rect x="40" y="-50" width="220" height="30" rx="15" fill="#2a2f36"/>
-    <rect x="40" y="-130" width="230" height="70" fill="${C.cat}"/>
-    <rect x="200" y="-190" width="70" height="60" fill="#1d2229"/>
-    <rect x="206" y="-184" width="58" height="34" fill="#9fd8ff" opacity=".8"/>
-    <rect x="60" y="-460" width="70" height="330" fill="${C.cat}"/>
-    <rect x="70" y="-450" width="50" height="310" fill="#111418"/>
-    ${Array.from({ length: 10 }, (_, i) => `<path d="M70 ${-440 + i * 30} L120 ${-410 + i * 30}" stroke="${C.cat}" stroke-width="4"/>`).join('')}
-    <rect x="90" y="-440" width="10" height="330" fill="#8a8f98"/>
-    <rect x="50" y="-470" width="90" height="14" fill="#c99d05"/>
-    <path d="M130 -420 L200 -130" stroke="${C.cat}" stroke-width="8"/>
+  return `${equipmentPaint(id)}<g id="${id}">
+    <ellipse cx="150" cy="4" rx="165" ry="10" fill="#000" opacity=".28"/>
+    ${equipmentTrack(31, -56, 238, 45)}
+    <path d="M26 -77 H281 V-57 H26Z" fill="#c99d05"/>
+    <path d="M135 -129 H263 V-78 H133Z" fill="url(#${id}-paint)" stroke="#9a7809" stroke-width="2"/>
+    <path d="M150 -137 H252 V-129 H150Z" fill="#e4bc24"/>
+    ${Array.from({ length: 10 }, (_, i) => `<path d="M${191 + i * 6} -117 v25" stroke="#97770d" stroke-width="2"/>`).join('')}
+    <rect x="153" y="-119" width="29" height="26" fill="#ffd842" stroke="#ab890f" stroke-width="2"/>
+    <path d="M247 -137 v-25 h8" fill="none" stroke="#353d42" stroke-width="6"/>
+    <path d="M58 -148 H130 V-79 H52Z" fill="url(#${id}-paint)"/>
+    <path d="M63 -141 H119 V-102 H60Z" fill="url(#${id}-glass)" stroke="#303b42" stroke-width="4"/>
+    <path d="M91 -141 V-99 M62 -118 L81 -139" stroke="#87a3aa" stroke-width="2"/>
+    <!-- Mástil calado, carro de avance y barra hasta el suelo. -->
+    <path d="M62 -148 V-461 L72 -470 H121 L131 -458 V-148" fill="none" stroke="#333c41" stroke-width="9"/>
+    ${Array.from({ length: 10 }, (_, i) => `<path d="M66 ${-455 + i * 30} L126 ${-425 + i * 30} M126 ${-455 + i * 30} L66 ${-425 + i * 30}" stroke="#626d70" stroke-width="3"/>`).join('')}
+    <path d="M73 -455 V-149 M119 -455 V-149" stroke="#a4aa9f" stroke-width="3"/>
+    <path d="M87 -452 V-8" stroke="#c7ccbf" stroke-width="5"/>
+    <path d="M81 -450 V-164" stroke="#ffcd11" stroke-width="5"/>
+    <rect x="71" y="-443" width="37" height="34" rx="3" fill="#ffcd11" stroke="#977510" stroke-width="2"/>
+    <rect x="83" y="-410" width="16" height="17" fill="#c99d05"/>
+    <path d="M102 -422 C141 -435 141 -360 136 -310 L136 -164" fill="none" stroke="#1e292f" stroke-width="5"/>
+    <path d="M126 -283 L229 -135 M126 -260 L200 -134" stroke="#d3aa0e" stroke-width="4"/>
+    <path d="M128 -211 L167 -133" stroke="#afbbc0" stroke-width="4"/>
+    <rect x="56" y="-470" width="79" height="9" fill="#3a4245"/>
+    <path d="M62 -304 H129 M61 -160 H130" stroke="#ffcd11" stroke-width="6"/>
+    <path d="M26 -77 V-105 H53 M26 -92 H53 M141 -78 V-96 H278 V-78 M168 -96 V-78 M251 -96 V-78" fill="none" stroke="#3d494f" stroke-width="2.5"/>
+    <path d="M30 -74 V-4 M276 -72 V-4" stroke="#9ca6aa" stroke-width="7"/><path d="M20 -3 H43 M266 -3 H287" stroke="#343d42" stroke-width="6"/>
+    <rect x="148" y="-85" width="26" height="5" fill="#faf0d4"/>
   </g>`
 }
 
 /** Camión de extracción Komatsu (Imagen 7): cabina cuadrada a la izquierda sobre la plataforma, tolva. Ancho ~560, base y=0. */
 export function komatsuTruck(id = 'km') {
-  return `<g id="${id}">
-    <ellipse cx="280" cy="4" rx="300" ry="10" fill="#000" opacity=".4"/>
-    <path d="M110 -170 L470 -170 L520 -230 L560 -100 L520 -60 L110 -60Z" fill="${C.cat}"/>
-    <path d="M110 -170 L470 -170 L470 -140 L110 -140Z" fill="#ffe27a"/>
-    <path d="M0 -180 L120 -180 L120 -100 L0 -100Z" fill="${C.cat}"/>
-    <path d="M10 -240 L90 -240 L100 -180 L10 -180Z" fill="#1d2229"/>
-    <path d="M16 -232 L84 -232 L92 -196 L16 -196Z" fill="#9fd8ff" opacity=".8"/>
-    <rect x="0" y="-180" width="120" height="6" fill="#fff"/>
-    <rect x="0" y="-100" width="130" height="50" fill="#1d2229"/>
-    <rect x="40" y="-90" width="60" height="16" rx="3" fill="#111"/>
-    <text x="70" y="-78" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="12" fill="#fff">KOMATSU</text>
-    <rect x="60" y="-70" width="440" height="30" fill="#111418"/>
-    ${[90, 400, 470].map((x) => `<g><circle cx="${x}" cy="-30" r="54" fill="#0d0f12"/><circle cx="${x}" cy="-30" r="24" fill="#2a2f36"/><circle cx="${x}" cy="-30" r="8" fill="#111"/></g>`).join('')}
+  return `${equipmentPaint(id)}<g id="${id}">
+    <ellipse cx="280" cy="22" rx="292" ry="10" fill="#000" opacity=".28"/>
+    ${equipmentWheel(443, -30, 54, `${id}-wheel-inner`)}
+    <path d="M60 -79 H514 V-43 H60Z" fill="#2c343a"/>
+    <path d="M203 -59 L274 -146" stroke="#aab4b9" stroke-width="8"/><path d="M203 -59 L245 -111" stroke="#b48a08" stroke-width="16"/>
+    <path d="M-8 -245 L166 -250 L492 -219 L536 -227 L560 -147 L525 -101 H193 L132 -212 L-8 -222Z" fill="url(#${id}-paint)" stroke="#9c7909" stroke-width="2"/>
+    <path d="M-8 -245 L166 -250 L493 -219 L494 -208 L159 -235 L-8 -232Z" fill="#ffe786"/>
+    <path d="M-8 -222 H132 L151 -186 L114 -208 H-8Z" fill="#a27e08"/>
+    <path d="M169 -218 L524 -190 L536 -151 L510 -126 H211Z" fill="#eabc12"/>
+    ${[212, 285, 358, 431].map(x => `<path d="M${x} ${-215 + (x - 212) * .08} l12 1 25 97 -13 0Z" fill="#ffe068"/>`).join('')}
+    <path d="M194 -116 H522 L525 -101 H193Z" fill="#c09509"/>
+    <rect x="399" y="-185" width="104" height="26" fill="#252f37"/><text x="451" y="-167" fill="#fff" font-family="Arial" font-size="15" font-weight="700" text-anchor="middle">KOMATSU</text>
+    <path d="M26 -220 H102 L114 -165 H23Z" fill="#ffcd11"/>
+    <path d="M33 -211 H95 L104 -177 H31Z" fill="url(#${id}-glass)" stroke="#273238" stroke-width="4"/>
+    <path d="M66 -211 V-177 M34 -188 L53 -208" stroke="#89a8b0" stroke-width="2"/>
+    <path d="M23 -222 H106" stroke="#283238" stroke-width="6"/>
+    <path d="M130 -169 V-216 h9" fill="none" stroke="#414b50" stroke-width="7"/>
+    <rect x="-9" y="-167" width="170" height="11" fill="#ffcd11"/>
+    <path d="M-8 -168 V-191 H20 M-8 -180 H20 M117 -165 V-190 H159 V-165 M118 -177 H159" fill="none" stroke="#303c42" stroke-width="2.5"/>
+    <rect x="-5" y="-156" width="68" height="102" fill="#ba900b"/>
+    <rect x="2" y="-147" width="56" height="85" fill="#202a30"/>
+    ${Array.from({ length: 10 }, (_, i) => `<path d="M5 ${-142 + i * 8} H55" stroke="#536168" stroke-width="2"/>`).join('')}
+    <path d="M67 -153 H156 V-126 L120 -118 H67Z" fill="#ffcd11"/>
+    <path d="M-10 -54 H69 V-42 H-10Z" fill="#ffcd11"/>
+    ${equipmentWheel(90, -30, 54, `${id}-wheel0`)}${equipmentWheel(470, -30, 54, `${id}-wheel1`)}
+    <path d="M-12 -41 L22 -158 M1 -41 L35 -158" stroke="#c6a426" stroke-width="3"/>
+    ${Array.from({ length: 9 }, (_, i) => `<path d="M${-10 + i * 3.5} ${-48 - i * 12} h13" stroke="#ffde6c" stroke-width="3"/>`).join('')}
+    <rect x="74" y="-146" width="28" height="10" rx="2" fill="#fff2c8"/>
   </g>`
 }
 

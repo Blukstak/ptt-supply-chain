@@ -2,6 +2,22 @@
 
 Bitácora de decisiones de diseño y contenido. Lo más reciente arriba.
 
+## 2026-09-09 — v2.2: equipos vectoriales rediseñados con Codex (GPT-6 Astra)
+
+Gala pidió que ChatGPT/Codex (modelo `gpt-6-astra`, razonamiento medio, vía plugin `codex` en Claude Code) mejorara las ilustraciones de equipos usando las fotos de referencia de Romina. Solo se tocó `src/art/index.ts`; firmas, parámetros e ids de sub-elementos se conservaron, por lo que ninguna escena cambió.
+
+| Función | Referencia | Qué mejoró |
+|---|---|---|
+| `truck797` | `01-camion-797.png` | Visera de tolva sobre cabina, cabina acristalada sobre plataforma con barandas, radiador con parrilla, escalera diagonal, escape, llantas amarillas con dibujo, sombra |
+| `motorGrader` | `r2-04` | Cabina, hoja central con cilindros, bastidor articulado, 6 ruedas |
+| `bulldozer` | `r2-05` | Hoja frontal, ripper, orugas con rodillos, cabina ROPS |
+| `drillRig` | `r2-06` | Mástil con barra y cables, orugas, cabina |
+| `komatsuTruck` | `r2-07` | Silueta Komatsu (cabina cuadrada, tolva ancha) con logotipo |
+| `finalDriveSide` | `02` y `r2-09` | Bridas dentadas más fieles, sin eje saliente, placa roja PTT |
+| `lowboyTruck` | `04` | Tracto rojo con detalle de cabina/escape, cama baja amarilla con cuello de cisne |
+
+Validado con capturas en Clientes, Contrato en faena, Bodega y Entrega. Sin cambios de duración (02:05).
+
 ## 2026-09-09 (noche, 2) — Ronda 3 de Romina (v2.1 / R3)
 
 Fuente: `docs/Observaciones_Video_PTT_R3_2026-09-09.docx` (Romina De Filippi, Subgerencia de Supply Chain). Capturas del documento en `docs/referencias/r3-*.png`.
