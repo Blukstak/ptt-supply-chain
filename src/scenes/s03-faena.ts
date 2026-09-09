@@ -23,11 +23,12 @@ export function faenaScene(): Scene {
   `)
   // Despiece (obs. 5): rótulos en coordenadas locales del camión
   const parts = [
-    { x: 60, y: 266, r: 78, lx: 0, ly: -120, label: 'MOTOR' },
-    { x: 470, y: 325, r: 60, lx: 470, ly: -120, label: 'TRANSMISIÓN' },
-    { x: 930, y: 330, r: 55, lx: 930, ly: -120, label: 'DIFERENCIAL' },
-    { x: 230, y: 370, r: 70, lx: 230, ly: 570, label: 'CONJUNTO MAZA SUSPENSIÓN' },
-    { x: 990, y: 370, r: 100, lx: 990, ly: 570, label: 'MANDOS FINALES' },
+    // Geometría del truck797 v2.4 (grupo interno translate(90,-24) scale(1.36)): ruedas en x≈301 / 733–756, y≈370
+    { x: 160, y: 250, r: 70, lx: 120, ly: -120, label: 'MOTOR' },
+    { x: 520, y: 335, r: 55, lx: 520, ly: -120, label: 'TRANSMISIÓN' },
+    { x: 745, y: 318, r: 48, lx: 830, ly: -120, label: 'DIFERENCIAL' },
+    { x: 301, y: 370, r: 72, lx: 301, ly: 570, label: 'CONJUNTO MAZA SUSPENSIÓN' },
+    { x: 745, y: 370, r: 100, lx: 780, ly: 570, label: 'MANDOS FINALES' },
   ]
   const truckSvg = fullSvg(`<g id="truck-wrap" transform="translate(2100 601) scale(.6)">${truck797('t')}
     <g id="dp" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="34" fill="#e9eef4" letter-spacing="2">

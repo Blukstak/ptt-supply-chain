@@ -42,3 +42,9 @@ Las tres capturas son de la **v1.2 (03:47)**; se mapearon a las escenas equivale
 | `r3-03-captura-abastecimiento.png` | 3 — Escena de abastecimiento internacional (v1.2) con los 5 pasos y "Repuestos originales, a tiempo" | Barra de 6 pasos y nuevo título en Abastecimiento; pasos 04–06 continúan en Bodega |
 
 Video de referencia del mando final: https://www.youtube.com/watch?v=j4ulsFhfqaA
+
+## Ronda 4 (2026-09-09, Gala)
+
+| Archivo | Descripción | Uso |
+|---|---|---|
+| `r4-01-cat-797f-lateral.png` | CAT 797F en **vista lateral pura** (rótulos 797F · 2104), enviada por chat y rescatada del portapapeles | Referencia principal de `truck797()` desde v2.4 |

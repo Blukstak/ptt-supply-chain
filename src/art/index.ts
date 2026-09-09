@@ -130,63 +130,108 @@ function equipmentTrack(x: number, y: number, w: number, h: number) {
 /* Camión CAT 797 (vista lateral, ilustrativo)                        */
 /* ---------------------------------------------------------------- */
 export function truck797(id = 'truck') {
+  // Photo-space coordinates preserve the lateral silhouette without stretching tires.
+  // 1.36 × 94 = 127.84; axle y = 1.36 × 290 - 24 = 370.4.
+  const wheel = (x: number, suffix: string) => `<g id="${id}-${suffix}" transform="translate(${x} 290)">
+    <circle r="94" fill="#393736" stroke="#292a29" stroke-width="2"/>
+    ${Array.from({ length: 36 }, (_, i) => `<path d="M-9 -92 L1 -95 10 -90 12 -82 4 -79 -7 -83Z" fill="${i % 2 ? '#53514d' : '#625f58'}" stroke="#363633" stroke-width="1" transform="rotate(${i * 10})"/>`).join('')}
+    <circle r="83" fill="url(#${id}-rubber)" stroke="#777168" stroke-width="1.2"/>
+    <circle r="74" fill="none" stroke="#595650" stroke-width="1"/>
+    <circle r="52" fill="#aa8010" stroke="#292b27" stroke-width="3"/>
+    <circle r="47" fill="#ffcd11" stroke="#edb91b" stroke-width="3"/>
+    <circle r="41" fill="#c79808" stroke="#ffe05b" stroke-width="2"/>
+    <path d="M-35 -21 A41 41 0 0 0 -20 36 L-8 21 3 -10Z" fill="#957016"/>
+    <circle r="34" fill="#efbb0d" stroke="#957016" stroke-width="2"/>
+    ${suffix === 'w1' ? '<path d="M-29 -17 Q-39 9 -20 29 L-7 24 1 7 -4 -16Z" fill="#ac8111"/>' : '<circle r="36" fill="none" stroke="#ffdc35" stroke-width="2"/>'}
+    <path d="M-28 -17 A33 33 0 0 1 25 -21" fill="none" stroke="#ffdb40" stroke-width="3"/>
+    <circle r="18" fill="#ffcd11" stroke="#b28c13" stroke-width="2"/>
+    ${Array.from({ length: 12 }, (_, i) => `<circle cx="${Math.cos(i * Math.PI / 6) * 27}" cy="${Math.sin(i * Math.PI / 6) * 27}" r="1.7" fill="#a27a13"/>`).join('')}
+    <circle r="8" fill="#e6b10c" stroke="#b99012" stroke-width="2"/>
+  </g>`
   return `${equipmentPaint(id)}
   <defs>
-    <linearGradient id="${id}-body" x2="0" y2="1"><stop stop-color="#ffdf62"/><stop offset="1" stop-color="#ffcd11"/></linearGradient>
-    <linearGradient id="${id}-bed-paint" x2="0" y2="1"><stop stop-color="#ffdc55"/><stop offset="1" stop-color="#c99d05"/></linearGradient>
-    <linearGradient id="${id}-shade"><stop stop-color="#8a6a00"/><stop offset="1" stop-color="#c99d05"/></linearGradient>
+    <linearGradient id="${id}-body" x2="0" y2="1"><stop stop-color="#ffdc4b"/><stop offset="1" stop-color="#ffcd11"/></linearGradient>
+    <linearGradient id="${id}-bed-paint" x2="0" y2="1"><stop stop-color="#ffda3e"/><stop offset="1" stop-color="#ecc01b"/></linearGradient>
+    <linearGradient id="${id}-shade"><stop stop-color="#96731b"/><stop offset="1" stop-color="#d5a614"/></linearGradient>
+    <radialGradient id="${id}-rubber"><stop stop-color="#45423e"/><stop offset=".8" stop-color="#514d48"/><stop offset="1" stop-color="#45433f"/></radialGradient>
   </defs>
   <g id="${id}">
-    <ellipse cx="560" cy="486" rx="600" ry="18" fill="#000" opacity=".3"/>
-    <!-- Dos ejes: el neumático interior del dual queda detrás del exterior. -->
-    ${equipmentWheel(900, 377, 119, `${id}-w2`)}
-    <path d="M874 260 H978 Q1060 370 978 496 H874 Q946 370 874 260Z" fill="#22272b"/>
-    ${Array.from({ length: 15 }, (_, i) => `<path d="M${890 + 23 * Math.sin(i * Math.PI / 14)} ${268 + i * 15} h69 l9 7 h-68" fill="none" stroke="#454b4e" stroke-width="5"/>`).join('')}
-    <path d="M80 295 H1110 V342 H740 L650 370 H330 L260 342 H80Z" fill="#272d32"/>
-    <path d="M335 325 H875 M410 338 L555 276" stroke="#4b545b" stroke-width="18"/>
-    <path d="M550 312 L630 175" stroke="#838e96" stroke-width="18"/><path d="M550 312 L596 233" stroke="#c99d05" stroke-width="30"/>
+  <g transform="translate(90 -24) scale(1.36)">
+    <ellipse cx="328" cy="380" rx="309" ry="10" fill="#151a1c" opacity=".23"/>
+    <!-- The far dual remains addressable but is mostly occluded in pure profile. -->
+    ${wheel(473, 'w2')}
+    <path d="M68 246 L260 221 516 214 541 244 512 325 352 336 218 316 56 317Z" fill="#37382d"/>
+    <path d="M252 223 L276 218 285 252 419 242 468 214 504 224 419 277 266 284Z" fill="#9b7817"/>
+    <path d="M261 238 L286 244 288 326 266 326Z" fill="#ffcd11"/>
+    <path d="M281 227 L340 239 347 316 336 329 H283Z" fill="url(#${id}-body)" stroke="#aa8211" stroke-width="2"/>
+    <circle cx="316" cy="313" r="10" fill="#9e7d1a" stroke="#ffe056" stroke-width="2"/>
+    <path d="M354 322 L377 193" stroke="#6b5b2a" stroke-width="20"/>
+    <path d="M355 317 L370 233" stroke="#e5b30d" stroke-width="15"/>
+    <path d="M370 235 L379 188" stroke="url(#${id}-metal)" stroke-width="9"/>
+    <circle cx="355" cy="318" r="9" fill="#e9b812" stroke="#8d6d17" stroke-width="2"/>
     <g id="${id}-bed">
-      <path d="M-35 40 L365 22 L1100 117 L1200 90 L1230 150 L1150 281 L425 281 L330 102 L-35 83Z" fill="url(#${id}-bed-paint)" stroke="#9f7c08" stroke-width="4"/>
-      <path d="M-35 40 L365 22 L1100 117 L1108 136 L355 46 L-35 61Z" fill="#ffe58a"/>
-      <path d="M-35 83 L330 102 L370 164 L307 127 L-35 101Z" fill="url(#${id}-shade)"/>
-      ${[30, 125, 220].map(x => `<path d="M${x} 63 l70 5 28 38 -19 -2Z" fill="#b38c0a"/>`).join('')}
-      <path d="M353 67 L1110 148 L1196 125 L1130 239 L445 239Z" fill="#e9b809"/>
-      ${[425, 540, 655, 770, 885, 1000, 1115].map(x => { const top = 77 + (x - 425) * .105; return `<path d="M${x} ${top} l22 2 23 ${248 - top} h-22Z" fill="#ffda45"/><path d="M${x + 22} ${top + 2} l23 ${246 - top} 8 -1 -23 ${top - 245}Z" fill="#a88305"/>` }).join('')}
-      <path d="M420 254 L1145 254 L1150 281 L425 281Z" fill="#ffcf27"/>
-      <path d="M462 277 L482 297 H1122 L1143 277" fill="#927208"/>
-      <rect x="1030" y="139" width="86" height="43" rx="3" fill="#20272c"/>
-      <path d="M1093 182 l23 -22 v22Z" fill="#bd252b"/><text x="1073" y="170" text-anchor="middle" font-family="Arial, sans-serif" font-size="29" font-weight="700" fill="#fff">797F</text>
+      <!-- Short canopy, tall front wall and raised discharge lip, traced in profile. -->
+      <path d="M27 29 L233 22 284 38 540 39 650 110 646 123 568 150 314 222 275 218 227 78 24 68Z" fill="url(#${id}-bed-paint)" stroke="#b38a18" stroke-width="2"/>
+      <path d="M24 68 L38 42 214 42 243 95 225 100 199 68 49 74Z" fill="url(#${id}-shade)"/>
+      <path d="M49 74 L92 95 110 82 181 83 209 111 225 115 217 89 194 68Z" fill="#967421"/>
+      ${[49, 99, 151].map(x => `<path d="M${x} 45 h13 l22 27 -15 -2Z" fill="#e4b627"/>`).join('')}
+      <path d="M238 39 L281 49 537 49 633 109 279 113Z" fill="#f7c72c"/>
+      <path d="M239 41 L266 43 301 116 277 116Z" fill="#ffdf54"/>
+      ${[310, 402, 496].map((x, i) => `<path d="M${x} 49 h13 l${i === 2 ? 29 : 24} 62 h-15Z" fill="#b99324"/><path d="M${x - 4} 48 h12 l24 61 h-13Z" fill="#ffdf55"/>`).join('')}
+      <path d="M280 119 L648 113 638 126 288 139Z" fill="#ffe055"/>
+      <path d="M285 140 L634 127 570 157 319 224 292 204Z" fill="url(#${id}-shade)"/>
+      <path d="M300 143 L616 132 565 152 325 214Z" fill="#d2a51d"/>
+      ${[320, 365, 412, 459, 506, 553].map((x, i) => `<path d="M${x} ${147 - i * 2} l16 -3 -5 ${43 - i * 6} q-2 13 -14 17 l-12 -8Z" fill="#b68c20"/><path d="M${x} ${147 - i * 2} l6 -1 -8 ${57 - i * 7} -7 3Z" fill="#f3c537"/>`).join('')}
+      <path d="M302 211 L569 145 634 122" fill="none" stroke="#f8cc3b" stroke-width="5"/>
+      <path d="M28 29 L233 22 284 38 540 39 650 110" fill="none" stroke="#ffe67d" stroke-width="6"/>
+      <path d="M34 35 L230 29 281 45 537 46" fill="none" stroke="#b99529" stroke-width="2"/>
+      <path d="M337 62 H398 L410 82 394 94 H349Z" fill="#282d2c"/>
+      <path d="M371 94 H394 L411 81 408 75 391 87 H367Z" fill="#d9292f"/>
+      <text x="355" y="83" fill="#fff" font-family="Arial, sans-serif" font-size="21" font-weight="800">797F</text>
+      <path d="M431 63 H473 L484 87 H439Z" fill="#30322c"/>
+      <text x="438" y="81" fill="#fff" font-family="Arial, sans-serif" font-size="18" font-weight="700">2104</text>
+      <path d="M407 37 l2 12 m5 -12 2 12" stroke="#c44425" stroke-width="3"/>
+      ${[559, 582, 605].map(x => `<ellipse cx="${x}" cy="110" rx="6" ry="3.5" fill="#514320"/>`).join('')}
     </g>
-    <path d="M-35 40 L365 22 L350 53 L-52 109 L-65 88Z" fill="#f5ca42" stroke="#af8812" stroke-width="3"/>
-    <path d="M-28 47 L354 29 L343 51 L-39 99Z" fill="#22292c"/>
-    <text x="160" y="66" text-anchor="middle" transform="rotate(-7 160 66)" fill="#fff" font-family="Arial" font-weight="700" font-size="26">CATERPILLAR</text>
+    <path d="M536 164 q-5 16 10 18 l9 -5 M547 162 q14 20 6 30 M283 214 q-9 16 4 33" fill="none" stroke="#44473c" stroke-width="2"/>
     <g id="${id}-cab">
-      <path d="M120 192 V112 L147 102 H290 L311 125 V192Z" fill="url(#${id}-body)" stroke="#806811" stroke-width="4"/>
-      <path d="M139 113 H281 L294 135 V165 H139Z" fill="url(#${id}-glass)" stroke="#20292f" stroke-width="7"/>
-      <path d="M216 112 V190 M139 170 V191 H294 V167 M216 112 V168 M142 151 L192 119" stroke="#95b8be" stroke-opacity=".55" stroke-width="4"/>
-      <path d="M127 104 H298" stroke="#262d32" stroke-width="12"/>
-      <rect x="264" y="176" width="22" height="5" fill="#343b40"/>
-      <path d="M302 139 h28 v25" fill="none" stroke="#343b40" stroke-width="5"/><rect x="321" y="155" width="18" height="29" rx="3" fill="#242d33"/>
-      <path d="M338 185 V118 h22 V95" fill="none" stroke="#41494e" stroke-width="15"/>
-      <rect x="328" y="128" width="24" height="52" rx="4" fill="url(#${id}-metal)"/>
-      <path d="M-55 193 H362 V210 H-55Z" fill="#ffcd11"/>
-      <rect x="-51" y="210" width="174" height="149" fill="#b38d0a"/>
-      <rect x="-40" y="219" width="151" height="129" rx="3" fill="#182127"/>
-      ${Array.from({ length: 12 }, (_, i) => `<path d="M-34 ${226 + i * 10} H106" stroke="#4c555b" stroke-width="4"/>`).join('')}
-      <path d="M37 221 V347" stroke="#747e83" stroke-width="3"/>
-      <path d="M125 208 H351 V243 L304 250 L267 275 H125Z" fill="url(#${id}-body)"/>
-      <rect x="162" y="218" width="98" height="33" rx="3" fill="#242b30"/><text x="211" y="243" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-weight="700" font-size="26">CAT</text>
-      <path d="M-57 360 H126 V378 H-57Z" fill="#ffcd11"/>
-      ${[-36, 79, 292].map(x => `<rect x="${x}" y="${x === 292 ? 216 : 357}" width="25" height="14" rx="3" fill="#faf0d4" stroke="#363b3e" stroke-width="3"/>`).join('')}
-      <path d="M-54 191 V148 H112 M-54 168 H112 M-8 148 V191 M45 148 V191 M100 148 V191 M313 148 H359 V191 M313 170 H359 M313 148 V191" fill="none" stroke="#e5e7de" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M66 156 L92 110 108 79 H172 L193 99 207 151Z" fill="#41443b" stroke="#272f2f" stroke-width="2"/>
+      <path d="M99 139 L105 91 132 86 H163 L174 96 177 140Z" fill="url(#${id}-glass)" stroke="#303a3b" stroke-width="4"/>
+      <path d="M109 95 L126 91 124 116 106 127Z M137 91 H157 L166 100 166 119 136 120Z" fill="#8ba5a5" opacity=".38"/>
+      <path d="M133 88 V144 M170 96 L172 143 M103 121 H171" fill="none" stroke="#242f30" stroke-width="3"/>
+      <path d="M138 123 H166 V153 H137Z" fill="#3c4744" stroke="#232e2d" stroke-width="2"/>
+      <path d="M155 130 h8" stroke="#b2b9ae" stroke-width="2"/>
+      <path d="M109 117 l14 -18 M142 118 l18 -16" stroke="#202d30" stroke-width="1.5"/>
+      <path d="M101 79 H171 L182 88" fill="none" stroke="#555952" stroke-width="5"/>
+      <path d="M185 137 V111 h10 v33 M91 111 H83 v20" fill="none" stroke="#303b3b" stroke-width="2"/>
+      <rect x="79" y="117" width="7" height="15" rx="2" fill="#515d59"/>
+      <path d="M24 150 H215 L231 169 224 182 205 170 H59 L35 189 21 182Z" fill="#ffcd11" stroke="#a27b0e" stroke-width="2"/>
+      <path d="M60 172 H199 L232 197 244 233 229 221 Q214 181 166 181 H114 Q67 185 50 230 L36 232 38 199Z" fill="#d6a817"/>
+      <path d="M49 231 Q69 180 119 180 H166 Q212 181 231 217 L236 239 216 221 Q176 191 123 198 L66 242Z" fill="#33332a"/>
+      <path d="M22 182 H58 L48 231 H21Z" fill="url(#${id}-body)"/>
+      <path d="M22 190 H33 V275 H19Z" fill="#343b36"/>
+      ${Array.from({ length: 12 }, (_, i) => `<path d="M21 ${195 + i * 6} h10" stroke="#717367" stroke-width="1.5"/>`).join('')}
+      <path d="M32 179 H61 L57 198 H32Z" fill="#303630"/>
+      <text x="34" y="190" fill="#fff" font-family="Arial, sans-serif" font-size="10" font-weight="700">797F</text>
+      <path d="M33 198 H47 L58 189 56 199 H33Z" fill="#d32f32"/>
+      <rect x="18" y="247" width="18" height="21" fill="#303a35"/>
+      <text x="19" y="256" fill="#fff" font-family="Arial, sans-serif" font-size="8" font-weight="800">CAT</text>
+      <path d="M25 261 l4 -5 4 5Z" fill="#ffcd11"/>
+      <path d="M17 274 H39 V299 H12 V288 H17Z" fill="#e7b70e"/>
+      <path d="M10 300 H48 V314 H10Z" fill="#ffcd11" stroke="#a5831b" stroke-width="2"/>
+      <rect x="19" y="280" width="11" height="6" rx="1" fill="#fff4c2"/>
+      <path d="M23 147 V128 H56 V149 M29 127 V164 M43 129 V165 M57 120 V164 M57 124 H90 M64 144 H211 M93 131 V162 M119 135 V161 M152 135 V160 M183 133 V162 M210 143 V163 M22 164 H224" fill="none" stroke="#374748" stroke-width="2" stroke-linejoin="round"/>
+      ${[74, 119, 164, 208].map(x => `<path d="M${x} 148 h8" stroke="#f0f0d3" stroke-width="4"/>`).join('')}
+      <path d="M217 162 L244 192 249 247 M219 152 L248 188 259 245" fill="none" stroke="#4a5045" stroke-width="2"/>
+      ${[0, 1, 2, 3, 4].map(i => `<path d="M${235 + i * 3} ${190 + i * 11} l11 -1" stroke="#b7a154" stroke-width="2"/>`).join('')}
     </g>
-    ${equipmentWheel(230, 370, 128, `${id}-w1`)}
-    ${equipmentWheel(990, 370, 128, `${id}-w3`)}
-    <!-- Escalera inclinada al frente del radiador, libre del neumático. -->
-    <path d="M-96 440 L61 211 M-65 440 L92 211" stroke="#d3ac17" stroke-width="8"/>
-    ${Array.from({ length: 12 }, (_, i) => { const y = 433 - i * 19, x = -91 + i * 13; return `<path d="M${x} ${y} h31" stroke="#ffe381" stroke-width="6"/>` }).join('')}
-    <path d="M-99 420 V393 L46 180 H75 M-67 419 L91 189" fill="none" stroke="#e5e7de" stroke-width="4"/>
-    <path d="M366 301 v61 h-29" fill="none" stroke="#c99d05" stroke-width="8"/>
+    ${wheel(155, 'w1')}
+    ${wheel(490, 'w3')}
+    <!-- Narrow access ladder seen edge-on at the nose. -->
+    <path d="M8 350 L20 166 M21 350 L32 167" fill="none" stroke="#c4a441" stroke-width="3"/>
+    ${Array.from({ length: 14 }, (_, i) => `<path d="M${9 + i * .8} ${345 - i * 12.5} h13" stroke="#d9bd65" stroke-width="2.5"/>`).join('')}
+    <path d="M5 331 L16 156 V129 Q16 125 20 125 H25 V160 M24 329 L35 159 V132" fill="none" stroke="#485653" stroke-width="2"/>
+  </g>
   </g>`
 }
 

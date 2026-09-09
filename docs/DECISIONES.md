@@ -2,6 +2,15 @@
 
 Bitácora de decisiones de diseño y contenido. Lo más reciente arriba.
 
+## 2026-09-09 — v2.4: CAT 797F rehecho desde foto lateral (Codex GPT-6 Astra, razonamiento medio)
+
+Gala aportó una foto del 797F en **vista lateral pura** (`docs/referencias/r4-01-cat-797f-lateral.png`, rescatada del portapapeles). Se le pasó a Codex como imagen adjunta (`codex exec -i`, acceso confirmado antes de lanzar) y rehízo `truck797()` iterando 3 rondas render-vs-foto (Swift/AppKit). Comparación final guardada en `docs/revisiones/truck797-comparacion.png`.
+
+- Rasgos incorporados: perfil lateral, cabina izquierda acristalada, visera y tolva con nervaduras, rótulos 797F (franja roja) y 2104, barandas, escalera con pasamanos, CAT frontal, cilindro de levante, neumáticos con banda, sombra.
+- Diferencias restantes: mecánica simplificada; el camión ocupa menos ancho que antes para respetar la proporción real.
+- Ids preservados (`-w1/-w2/-w3`, `-bed`, `-cab`); las escenas no cambiaron, pero los rótulos del despiece (motor, transmisión, diferencial, maza, mandos finales) se re-anclaron a la nueva geometría en `s03-faena.ts`.
+- Flujo de delegación: `codex exec -i … --skip-git-repo-check` en background de Claude Code (sin límite de 10 min), en vez del subagente `codex:rescue`.
+
 ## 2026-09-09 — v2.3: segunda pasada de equipos (Codex GPT-6 Astra, razonamiento medio)
 
 Gala pidió acercar los equipos a un 1:1 con las fotos. Codex comparó cada render (Swift/AppKit) con su foto e iteró. Solo `src/art/index.ts`; firmas e ids preservados; sin cambios de escenas ni duración.
