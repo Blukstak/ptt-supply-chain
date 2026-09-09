@@ -19,7 +19,8 @@ export function clientesScene(): Scene {
     { id: 'cm-5', label: 'Camión CAT 797F', x: 1400, s: 0.36, art: `<g transform="translate(60 -498)">${truck797('c97')}</g>` },
   ]
   const art = fullSvg(machines.map((m) => `<g id="${m.id}" transform="translate(${m.x} 905) scale(${m.s})" opacity="0">${m.art}</g>`).join(''))
-  const title = el('div', { class: 'abs', html: '<div class="kicker">Nuestros clientes</div><div class="headline" style="font-size:132px;margin-top:8px">La gran <em>minería</em></div>' })
+  const title = el('div', { class: 'abs', html: '<div class="kicker" style="font-family:var(--font-display);font-size:54px;font-weight:600;letter-spacing:.14em;line-height:1">Nuestros clientes</div><div class="headline" style="font-size:132px;margin-top:14px">La gran <em>minería</em></div>' })
+  // R5 · obs. 1: el título "Nuestros clientes" pasa de kicker de 18 px a 54 px (display), sobre "La gran minería".
   Object.assign(title.style, { left: '120px', top: '90px', opacity: '0' })
   // R4 · obs. 00:17: se elimina el párrafo; queda solo el título grande.
   const labels = machines.map((m) => tag(m.label, m.x + 30, 930, ''))

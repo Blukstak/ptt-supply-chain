@@ -2,6 +2,58 @@
 
 Bitácora de decisiones de diseño y contenido. Lo más reciente arriba.
 
+## 2026-09-09 — v2.8 / R5: Ronda 5 de Romina (7 observaciones) + fluidez
+
+Fuente: `docs/Observaciones_Video_PTT_R5_2026-09-09.docx` (Romina De Filippi, Subgerencia de Supply Chain, 09/09/2026; observaciones sobre la v2.7 · 02:05). Imagen en `docs/referencias/r5-01-engranajes-extremo-mando-final.png`.
+
+| # | Minuto | Observación R5 | Decisión / implementación | Estado |
+|---|---|---|---|---|
+| 1 | 00:15 | Agrandar la tipografía del título "Nuestros Clientes" | El kicker pasa de 18 px mono a **54 px** en la tipografía display (Barlow Condensed 600, tracking .14em, rojo PTT), sobre "La gran minería" (132 px). | ✅ |
+| 2 | 00:34 | No se entiende que los engranajes son parte del mando final; están en el extremo (círculo rojo de la Img 1) | Nueva secuencia: el mando exterior se hace a un lado (visible, atenuado al 60 %) y una **lupa roja** se ancla sobre la tapa del extremo (`-fl1`, x = −203 local) con pulsos; desde la lupa se abre un **cono de líneas** y el corte con engranajes **se desprende** de ese punto y crece hacia la izquierda. Etiqueta "Los engranajes van en el extremo del mando final"; subtítulo "…en el extremo, los engranajes". Rótulos (corona / solar / porta planetarios) reubicados a la izquierda y horómetro arriba a la derecha para que el mando exterior siga en pantalla mientras giran los engranajes. | ✅ |
+| 3 | 00:46 | Demasiado texto en la Red de interacción | Titular acortado a **"Respuesta rápida · 24/7 · flexibilidad"** (60 px); las tres etiquetas aparecen **de a una, en el mismo lugar** (1,15 s cada una) en vez de tres simultáneas; textos de derivación acortados ("Mandos finales, transmisiones y diferenciales → PTT" / "Otros componentes → otros proveedores"). La escena pasa de 9,9 s a 11,4 s (+1,5 s) para dar tiempo de lectura. | ✅ |
+| 4 | — | Fluidez: la imagen se pega en algunos tramos | Ver diagnóstico abajo. | ✅ |
+| 5 | 01:14 | La carga del exterior debe subir al camión para que se entienda el traslado | En Abastecimiento el camión propio llega **vacío** al punto de recepción y se detiene; las tres cajas **EE.UU. / EUROPA / ASIA** salen desde sus orígenes en el mapa, **se elevan y se depositan** sobre la cama baja (rebote, la cama cede, aparecen las cinchas), y recién entonces el camión parte a bodega. Las cajas son hijas del grupo del camión, así viajan con él. Etiqueta: "La carga de EE.UU., Europa y Asia sube al camión · rumbo a bodega PTT". | ✅ |
+| 6 | 01:49 | El mando instalado debe quedar sobre el aro amarillo, no sobre el neumático | La tapa PTT (`finalDrive` r 250, carcasa r 320) pasa de escala .36 (r 115 > neumático r 94) a **.15 (r 48)**, que coincide con el aro amarillo del `truck797` (r 47–52 en la rueda). Sigue anidada en `#c7-w3` (gira y avanza). El componente "entra" a la rueda a escala .07. Etiqueta "Componente PTT instalado en el aro de la rueda". | ✅ |
+| 7 | 01:55→ | Corrección de R4: eliminar "Distintas mineras…" (01:59) y el bloque de 02:02; cerrar con los tres lugares de PTT y sus conexiones | Bloques eliminados (`transmission()`/`engine()` siguen en `src/art/index.ts`, ya no se usan en escena). Nueva pantalla **"Tres lugares, una sola cadena"**: tarjetas **Taller en la mina** (`fieldWorkshop` + personal), **Taller de componentes** (`pttWorkshop` en miniatura con un mando final) y **Laboratorio de Ingeniería y Desarrollo** (`labBench` + ingeniero) en triángulo; líneas rojas punteadas que se dibujan y luego **fluyen** entre las tres, y un **mando final que recorre** mina → taller → laboratorio → mina, encendiendo el borde de cada tarjeta al llegar. Después, cierre de marca (logo). | ✅ |
+| 8 | — | Duración 120 ± 5 s | **124,65 s (02:04)**. Compensación de los +4 s (Red, engranajes, carga al camión, tres lugares): recortes de 0,1–0,3 s en Faena, Bodega, Taller, I+D y marca (ver estructura). | ✅ |
+
+### Diagnóstico de fluidez (obs. 4) y cambios
+
+No es posible medir FPS desde el navegador integrado (no dispara `requestAnimationFrame`), así que el diagnóstico es por revisión de código; los tirones coinciden con los tramos donde se mueve el `finalDriveSide` v2.5 (4 coronas × 100 dientes = ~800 paths con relleno de gradiente + brillos), que desde v2.5 es ~10× más pesado que el anterior:
+
+| Causa encontrada | Dónde | Cambio |
+|---|---|---|
+| **`attr:{transform}` sobre grupos SVG enormes dentro del mismo `<svg>` que el fondo**: cada frame Chrome re-rasterizaba el mando final completo *y* el rectángulo dañado del fondo (rajo/nave con gradientes) en la misma capa. | Faena (mando sale de la rueda, viaja y escala 3 s; cama baja), Red (4 mandos viajando a la vez), Abastecimiento (camión), Cierre (mando a la rueda, mando del I+D, viajero) | Nuevo helper `artLayer(inner, cx, cy)` + `artAt(...)` en `core/scene.ts`: el objeto viajero va en un `<svg class="full gpu">` propio (`will-change: transform`) y se anima con **transform CSS del `<svg>`** (x/y/scale); el compositor lo desplaza como textura sin volver a rasterizar, y el fondo queda en su capa. |
+| **`filter: brightness()` tweenado sobre `<g>` SVG** (fuerza re-rasterizar el grupo en cada frame y crea una superficie aislada). | Bodega (`#bds-cargo`), Recepción (`#rc-part`), Cierre (`#id-fd` = mando de 800 dientes; `#mn-ptt`) | Reemplazado por **destellos de opacidad** (rect/elipse/círculo blanco encima) — mismo efecto visual, sin filtro. |
+| **`backdrop-filter: blur()`** en todas las `.tag` (6 px) y `.panel` (10 px): cada etiqueta obliga a leer y desenfocar lo que tiene detrás en cada frame mientras algo se mueve debajo. | Global (`styles/main.css`) | Eliminado; fondo de las etiquetas más opaco (.84). |
+| **4 copias completas del mando final** en la Red (una por componente derivado). | `s04-red.ts` | Una sola definición en `<defs>` + `<use>` en 4 capas GPU. |
+| Canvases (`Dust`, `DataFlow`): revisados; `onEnter/onLeave` + ticker de `main.ts` ya los pausan fuera de su escena (sin cambios). | — | — |
+| `.scene { will-change }` en las 10 escenas: correcto (las inactivas están `visibility:hidden` y no se rasterizan). | — | Sin cambios. |
+
+Queda un tramo intrínsecamente caro: el **zoom ×3,2** al camión en Faena (Chrome re-rasteriza el 797 al terminar el zoom). Se mantuvo porque es corto (1,6 s) y ya vive en capa propia. Si en el equipo del cliente persiste algún tirón, la siguiente palanca es bajar los dientes por corona en `finalDriveSide` (100 → 48), que no se tocó por instrucción de no rediseñar los equipos.
+
+### Estructura resultante (02:04 · 124,65 s)
+
+| # | Capítulo | Inicio | Dur. |
+|---|---|---|---|
+| 0 | Portada | 0:00 | 6 s |
+| 1 | Quiénes somos | 0:06 | 10 s |
+| 2 | Nuestros clientes (54 px) · La gran minería + equipos | 0:15 | 8,6 s |
+| 3 | Contrato en faena (portón → despiece → el mando sale de la rueda → **lupa en el extremo → engranajes se desprenden** → horas → cama baja; cita) | 0:23 | 20,2 s |
+| 4 | Red de interacción (titular corto; etiquetas de a una; derivación) | 0:43 | 11,4 s |
+| 5 | Recepción e ingeniería | 0:54 | 12,8 s |
+| 6 | Abastecimiento (**la carga sube al camión** antes de partir) | 1:06 | 12,1 s |
+| 7 | Bodega | 1:17 | 10,4 s |
+| 8 | Taller PTT | 1:27 | 15,6 s |
+| 9 | Entrega (**tapa sobre el aro**) → Mejoras de I+D → **Tres lugares, una sola cadena** → marca | 1:42 | 22,4 s |
+
+### Pendientes que requieren decisión del cliente
+
+- Texto del cierre: "Tres lugares, una sola cadena" (kicker "Nuestro sistema") y las bajadas "Contrato de mantención en faena" / "Santiago · Antofagasta" / "Mejoras que vuelven al componente" son propuesta editorial.
+- Recorrido del componente entre los tres lugares (mina → taller de componentes → laboratorio → mina): si el flujo real es otro (p. ej. laboratorio → taller), se cambia el orden de los saltos.
+- En Red, la frase larga de R4 ("Respuesta rápida, disponibilidad 24/7 y flexibilidad ante los requerimientos del cliente.") se resumió a tres ideas; si se prefiere la frase completa, cabe repartida en dos líneas.
+- Siguen pendientes de R4: nombres de mecánicos y las bajadas de las 2 opciones.
+
 ## 2026-09-09 — v2.7: transmisión y motor rehechos desde las imágenes de R4 (Codex GPT-6 Astra, razonamiento medio)
 
 Las ilustraciones `transmission()` y `engine()` creadas en R4 quedaban muy simples frente al mando final. Codex recibió adjuntas `r4-05-transmision.png` y `r4-06-motor.png` y las rehízo con el mismo acabado (3/4, gradientes dorados, pernos, sombra). Transmisión: carcasa, tapas atornilladas, nervaduras, bloque hidráulico, brida inferior. Motor: bloque largo, culatas en fila, dos turbos, colectores, tuberías, cárter, bastidor, rótulo CAT. Ids preservados; sin cambios en escenas. Comparaciones en `docs/revisiones/`.

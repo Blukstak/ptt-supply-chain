@@ -24,7 +24,7 @@ export function recepcionScene(): Scene {
     <g id="rc-beam" opacity="0"><path d="M1030 590 L640 500 L640 620Z" fill="#f0503c" opacity=".35"/><line x1="1030" y1="590" x2="640" y2="560" stroke="#f0503c" stroke-width="3"/></g>
     <g id="rc-lab" transform="translate(1520 700)" opacity="0">${labBench('lab')}<g transform="translate(-60 -250) scale(.9)">${pttWorker('lw', false, '#2a2f36')}</g>
       <text x="0" y="-320" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="26" fill="#e0262b" letter-spacing="4">LABORATORIO · INGENIERÍA Y DESARROLLO</text></g>
-    <g id="rc-part" transform="translate(700 600) scale(.6)" opacity="0"><g id="rc-part-in">${loosePart('rp', 44)}</g></g>
+    <g id="rc-part" transform="translate(700 600) scale(.6)" opacity="0"><g id="rc-part-in">${loosePart('rp', 44)}</g><circle id="rc-part-flash" r="70" fill="#fff" opacity="0"/></g>
   `)
   const lt = lowerThird('Recepción e inspección en taller PTT', 'Evaluación técnica')
   const tagScan = tag('SCAN OK · FD-797-0412 recepcionado en WMS', 560, 900, 'ok')
@@ -80,7 +80,8 @@ export function recepcionScene(): Scene {
       tl.fromTo(q('#lab-screen'), { opacity: 0.3 }, { opacity: 1, duration: 0.2, repeat: 7, yoyo: true }, labAt + 1.4)
       pop(tl, tagLab, labAt + 1.2)
       tl.to(q('#rc-part'), { attr: { transform: 'translate(700 600) scale(.6)' }, duration: 0.9, ease: 'power2.inOut' }, labAt + 2.6)
-      tl.fromTo(q('#rc-part'), { filter: 'brightness(2.4)' }, { filter: 'brightness(1)', duration: 0.6 }, labAt + 3.4)
+      // R5 · fluidez: destello por opacidad en vez de `filter: brightness()` (el filtro re-rasteriza el grupo cada frame)
+      tl.fromTo(q('#rc-part-flash'), { opacity: 0.85 }, { opacity: 0, duration: 0.6 }, labAt + 3.4)
       tl.to([q('#rc-lab'), q('#rc-stand'), q('#rc-part'), tagLab], { opacity: 0, duration: 0.5 }, labAt + 4)
       sceneLeave(tl, root, labAt + 4.2, 0.9)
       return labAt + 5.1 - at

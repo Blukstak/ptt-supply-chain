@@ -59,3 +59,9 @@ Video de referencia del mando final: https://www.youtube.com/watch?v=j4ulsFhfqaA
 | `r4-05-transmision.png` | 4 — Transmisión CAT | `transmission()` (vector nuevo) |
 | `r4-06-motor.png` | 5 — Motor CAT sobre bastidor | `engine()` (vector nuevo) |
 | `r4-07-mando-final-797b-797f.png` | 6 — Mando final 797B–797F | Referencia del mando final en la pantalla de mineras |
+
+## Ronda 5 — `../Observaciones_Video_PTT_R5_2026-09-09.docx` (numeración del documento)
+
+| Archivo | Imagen | Uso en la animación |
+|---|---|---|
+| `r5-01-engranajes-extremo-mando-final.png` | 1 — Render del mando final con el círculo rojo sobre el extremo donde van los engranajes (reduction gear) | Faena 00:34: lupa roja anclada al extremo del `finalDriveSide` desde la que se desprende el corte con engranajes |

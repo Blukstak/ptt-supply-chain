@@ -25,6 +25,21 @@ export function fullSvg(inner: string, cls = 'full'): SVGSVGElement {
   return s
 }
 
+/**
+ * R5 · fluidez: capa SVG independiente para un objeto que se mueve/escala mucho.
+ * El arte se dibuja centrado en (cx, cy); luego se anima el <svg> completo con transform CSS
+ * (`artAt`), que el compositor resuelve sin volver a rasterizar el SVG en cada frame.
+ */
+export function artLayer(inner: string, cx: number, cy: number): SVGSVGElement {
+  const s = fullSvg(inner, 'full gpu')
+  s.style.transformOrigin = `${cx}px ${cy}px`
+  return s
+}
+/** Vars GSAP para llevar el centro (cx, cy) de una `artLayer` a (x, y) con escala `s`. */
+export function artAt(cx: number, cy: number, x: number, y: number, s = 1) {
+  return { x: x - cx, y: y - cy, scale: s, transformOrigin: `${cx}px ${cy}px` }
+}
+
 /** Crea un bloque de cita grande con palabras separadas, listo para animar. */
 export function quote(text: string, x = 120, y = 440, maxW = 1400): HTMLElement {
   const q = el('div', { class: 'quote abs' })

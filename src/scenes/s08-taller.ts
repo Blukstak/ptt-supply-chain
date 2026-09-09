@@ -116,7 +116,7 @@ export function tallerScene(): Scene {
       tl.fromTo(stamp, { opacity: 0, scale: 2.4, rotate: 10 }, { opacity: 1, scale: 1, rotate: 0, duration: 0.4, ease: 'power4.in' }, cAt + 0.4)
       pop(tl, tagOT, cAt + 0.8)
       // 2 opciones: Reparación (izquierda) · Venta Intercambio (derecha, del stock)
-      const altAt = cAt + 2.2
+      const altAt = cAt + 2.0
       tl.to([steps, stamp, tagOT, q('#tl-t1'), q('#tl-t2'), q('#tl-stand'), q('#tf-signs')], { opacity: 0, duration: 0.4 }, altAt - 0.3)
       tl.to(q('#tl-dim'), { opacity: 0.62, duration: 0.6 }, altAt)
       tl.to(q('#tl-fd'), { attr: { transform: 'translate(500 600) scale(.8)' }, duration: 1, ease: 'power3.inOut' }, altAt)
@@ -127,11 +127,11 @@ export function tallerScene(): Scene {
       tl.fromTo(q('#tl-stock'), { opacity: 0, attr: { transform: 'translate(1440 800) scale(.2)' } }, { opacity: 1, attr: { transform: 'translate(1440 800) scale(.55)' }, duration: 0.8, ease: 'back.out(1.6)' }, altAt + 1.6)
       tl.fromTo(hR, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out' }, altAt + 1.8)
       pop(tl, tagR, altAt + 2.2)
-      const qAt = altAt + 3.5
+      const qAt = altAt + 3.3
       tl.to([hL, hR, tagL, tagR], { opacity: 0, duration: 0.4 }, qAt - 0.3)
       tl.to([q('#tl-fd'), q('#tl-right'), q('#tl-split')], { opacity: 0.2, duration: 0.5 }, qAt - 0.3)
       tl.to(q('#tl-dim'), { opacity: 0.85, duration: 0.6 }, qAt - 0.3)
-      const end = revealQuote(tl, q1, qAt, 2.0)
+      const end = revealQuote(tl, q1, qAt, 1.9)
       sceneLeave(tl, root, end, 0.9)
       return end + 1 - at
     },

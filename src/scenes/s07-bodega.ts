@@ -23,6 +23,7 @@ export function bodegaScene(): Scene {
       <g transform="translate(1090 540) scale(.95)">${pttWorker('bw2', false)}</g>
     </g>
     <g id="bd-picker" transform="translate(1690 560)" opacity="0">${pttWorker('bw3', true)}</g>
+    <g id="bd-scanfx" opacity="0"><rect x="350" y="645" width="268" height="118" rx="6" fill="#fff"/></g>
     <g id="bd-beam" opacity="0"><line x1="1010" y1="580" x2="560" y2="660" stroke="#f0503c" stroke-width="3"/><circle cx="560" cy="660" r="16" fill="none" stroke="#f0503c" stroke-width="3"/></g>
     <g id="bd-beam2" opacity="0"><line x1="1700" y1="600" x2="1510" y2="420" stroke="#f0503c" stroke-width="3"/><circle cx="1510" cy="420" r="16" fill="none" stroke="#f0503c" stroke-width="3"/></g>
     <g id="bd-pallet" opacity="0" transform="translate(${PAL.x} ${PAL.y})">
@@ -64,7 +65,8 @@ export function bodegaScene(): Scene {
       tl.fromTo(q('#bd-people'), { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: 0.6, ease: 'power3.out' }, at + 2.4)
       const scanAt = at + 3.0
       tl.to(q('#bd-beam'), { opacity: 1, duration: 0.12, repeat: 7, yoyo: true }, scanAt)
-      tl.fromTo(root.querySelector('#bds-cargo')!, { filter: 'brightness(1.8)' }, { filter: 'brightness(1)', duration: 0.6 }, scanAt + 0.6)
+      // R5 · fluidez: destello por opacidad en vez de `filter: brightness()` sobre el grupo de carga
+      tl.fromTo(q('#bd-scanfx'), { opacity: 0.55 }, { opacity: 0, duration: 0.6 }, scanAt + 0.6)
       pop(tl, tagChk, scanAt + 0.8)
       // Flujo (a): la carga internacional baja del camión a la zona de consolidación
       tl.to(q('#bd-pallet'), { opacity: 1, duration: 0.5 }, scanAt + 1)
@@ -93,9 +95,9 @@ export function bodegaScene(): Scene {
       pop(tl, tagCons, consAt + 0.5)
       pop(tl, tagTo, consAt + 1.1)
       tl.to(q('#bd-big'), { attr: { transform: `translate(2100 ${PAL.y - 180}) scale(1)` }, duration: 1, ease: 'power2.in' }, consAt + 1.9)
-      tl.to([tagIn, tagChk, tagCons], { opacity: 0, duration: 0.4 }, consAt + 2.4)
-      sceneLeave(tl, root, consAt + 2.9, 0.9)
-      return consAt + 3.8 - at
+      tl.to([tagIn, tagChk, tagCons], { opacity: 0, duration: 0.4 }, consAt + 2.2)
+      sceneLeave(tl, root, consAt + 2.6, 0.9)
+      return consAt + 3.5 - at
     },
   }
 }

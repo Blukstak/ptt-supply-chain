@@ -1,6 +1,6 @@
 import { el } from '../core/dom'
 import { mercatorMap, cargoShip, airplane, lowboyTruck, pttWorker } from '../art'
-import { Scene, sceneRoot, fullSvg, sceneEnter, sceneLeave, lowerThird, showLowerThird, tag, pop, stepsBar, SUPPLY_STEPS } from '../core/scene'
+import { Scene, sceneRoot, fullSvg, artLayer, artAt, sceneEnter, sceneLeave, lowerThird, showLowerThird, tag, pop, stepsBar, SUPPLY_STEPS } from '../core/scene'
 
 /**
  * RED INTERNACIONAL DE ABASTECIMIENTO (R2 · obs. 9 y 10).
@@ -45,8 +45,13 @@ export function importacionScene(): Scene {
         <text x="280" y="300" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="22" fill="#fff" letter-spacing="3">EMITIR ÓRDENES DE COMPRA</text>
       </g>
     </g>
-    <g id="im-semi" transform="translate(-1000 800) scale(.75)" opacity="0">${lowboyTruck('ims', true)}</g>
   `)
+  // R5 · obs. 01:14: el camión propio llega VACÍO al punto de recepción; las cajas EE.UU./EUROPA/ASIA vienen desde
+  // sus orígenes en el mapa, se elevan y se depositan sobre la cama baja (son hijas del grupo del camión: viajan con él).
+  // R5 · fluidez: el camión va en su propia capa GPU.
+  const TRK = { x: 300, y: 800, s: 0.75 }
+  const semiSvg = artLayer(`<g id="im-semi" transform="translate(${TRK.x} ${TRK.y}) scale(${TRK.s})">${lowboyTruck('ims', true)}</g>`, TRK.x, TRK.y)
+  semiSvg.style.opacity = '0'
   // R3 · obs. 3: título inferior con las tres ideas (red internacional, agilidad, stock de mayor rotación)
   const lt = lowerThird('Abastecimiento internacional', 'Red internacional de proveedores, operación ágil y stock de los repuestos de mayor rotación.')
   Object.assign((lt.querySelector('.headline') as HTMLElement).style, { fontSize: '50px', maxWidth: '1500px' })
@@ -61,8 +66,8 @@ export function importacionScene(): Scene {
   const copyMap = el('div', { class: 'abs headline', html: 'Proveedores del mundo para asegurar el abastecimiento y mantener activa la cadena de reparación.' })
   Object.assign(copyMap.style, { left: '110px', top: '540px', width: '760px', fontSize: '36px', lineHeight: '1.02', opacity: '0', padding: '16px 22px', background: 'rgba(7,9,12,.72)', borderLeft: '6px solid var(--amber)', borderRadius: '4px' })
   const tagKind = tag('Repuestos originales + repuestos desarrollados por Ingeniería y Desarrollo', 110, 700, 'ok')
-  const tagLoad = tag('Carga de EE.UU., Europa y Asia · rumbo a bodega PTT', 1100, 700, 'info')
-  root.append(bg, lt, ...labels, steps, copyMap, tagKind, tagLoad)
+  const tagLoad = tag('La carga de EE.UU., Europa y Asia sube al camión · rumbo a bodega PTT', 900, 640, 'info')
+  root.append(bg, semiSvg, lt, ...labels, steps, copyMap, tagKind, tagLoad)
 
   return {
     id: 'import', title: 'Abastecimiento', root,
@@ -114,15 +119,38 @@ export function importacionScene(): Scene {
       tl.fromTo(copyMap, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, sAt + 1.2)
       pop(tl, tagKind, sAt + 2.1)
       // 04 — camión propio, claramente cargado, sale hacia bodega
-      const tAt = sAt + 3.8
+      const tAt = sAt + 3.4
+      const wheels = ['#ims-w0', '#ims-w1', '#ims-w2', '#ims-w3', '#ims-w4'].map(q)
+      // 04a — el camión llega vacío y se detiene bajo el punto de recepción
+      const cargoWrap = [0, 1, 2].map((i) => q(`#ims-cr${i}`).parentElement as unknown as SVGGElement)
+      const straps = Array.from(root.querySelectorAll('#ims-cargo > path'))
+      const land = [[278, 120], [365, 115], [454, 110]] // posición final de cada caja sobre la cama (local del camión)
+      const toLocal = (sx: number, sy: number) => [(sx - TRK.x) / TRK.s, (sy - TRK.y) / TRK.s]
+      cargoWrap.forEach((c, i) => { const [lx, ly] = toLocal(110 + origins[i].x * 1.7, 90 + origins[i].y * 1.7); tl.set(c, { opacity: 0, attr: { transform: `translate(${lx} ${ly}) scale(.5)` } }, at) })
+      tl.set(straps, { opacity: 0 }, at)
+      tl.set(semiSvg, artAt(TRK.x, TRK.y, -900, TRK.y, 1), at)
+      tl.to(semiSvg, { opacity: 1, duration: 0.3 }, tAt - 1.3)
+      tl.to(semiSvg, { ...artAt(TRK.x, TRK.y, TRK.x, TRK.y, 1), duration: 1.4, ease: 'power2.out' }, tAt - 1.3)
+      tl.to(wheels, { rotation: 700, transformOrigin: '50% 50%', duration: 1.4, ease: 'power2.out' }, tAt - 1.3)
       tl.to([q('#im-map'), ...labels], { opacity: 0.25, duration: 0.6 }, tAt)
-      tl.to(q('#im-semi'), { opacity: 1, duration: 0.3 }, tAt)
-      tl.to(q('#im-semi'), { attr: { transform: 'translate(2100 800) scale(.75)' }, duration: 3.3, ease: 'power1.inOut' }, tAt)
-      tl.to(['#ims-w0', '#ims-w1', '#ims-w2', '#ims-w3', '#ims-w4'].map(q), { rotation: 1400, transformOrigin: '50% 50%', duration: 3.3, ease: 'power1.inOut' }, tAt)
-      pop(tl, tagLoad, tAt + 0.8, 1.5)
-      tl.to([steps, copyMap, tagKind, ...labels], { opacity: 0, duration: 0.5 }, tAt + 2)
-      sceneLeave(tl, root, tAt + 2.4, 0.9)
-      return tAt + 3.3 - at
+      // 04b — la carga que viene del exterior SUBE al camión: cada caja se eleva y se deposita sobre la cama baja
+      cargoWrap.forEach((c, i) => {
+        const t0 = tAt + 0.0 + i * 0.3
+        const [lx, ly] = land[i]
+        tl.to(c, { opacity: 1, duration: 0.25 }, t0)
+        tl.to(c, { attr: { transform: `translate(${lx} ${ly - 150}) scale(1)` }, duration: 0.8, ease: 'power2.inOut' }, t0)
+        tl.to(c, { attr: { transform: `translate(${lx} ${ly}) scale(1)` }, duration: 0.5, ease: 'bounce.out' }, t0 + 0.8)
+      })
+      tl.to(straps, { opacity: 1, duration: 0.3 }, tAt + 1.6)
+      tl.to(q('#ims-bed'), { y: 3, duration: 0.12, repeat: 5, yoyo: true, ease: 'sine.inOut' }, tAt + 1.0)
+      pop(tl, tagLoad, tAt + 0.7, 1.9)
+      // 04c — sale hacia bodega con la carga a bordo
+      const goAt = tAt + 1.9
+      tl.to(semiSvg, { ...artAt(TRK.x, TRK.y, 2200, TRK.y, 1), duration: 2.2, ease: 'power2.in' }, goAt)
+      tl.to(wheels, { rotation: 1600, transformOrigin: '50% 50%', duration: 2.2, ease: 'power2.in' }, goAt)
+      tl.to([steps, copyMap, tagKind, ...labels], { opacity: 0, duration: 0.5 }, goAt + 0.6)
+      sceneLeave(tl, root, goAt + 1.1, 0.9)
+      return goAt + 2.0 - at
     },
   }
 }

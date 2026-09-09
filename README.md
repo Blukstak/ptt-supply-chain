@@ -1,6 +1,6 @@
 # PTT · Supply Chain Film
 
-Video corporativo **renderizado en el navegador** (~2:05) sobre Power Train Technologies y su cadena de
+Video corporativo **renderizado en el navegador** (~2:04) sobre Power Train Technologies y su cadena de
 suministro: quiénes somos, nuestros clientes y el ciclo completo de un mando final, desde el contrato en faena
 hasta las mejoras de Ingeniería y Desarrollo.
 
@@ -31,20 +31,20 @@ src/
 public/media/        (opcional) fotografías reales para reemplazar fondos
 ```
 
-## Escenas (v2.6 · 02:05)
+## Escenas (v2.8 · 02:04)
 
 | # | Capítulo | Contenido |
 |---|----------|-----------|
 | 0 | Portada | Logo PTT · Marubeni Group, planetario girando |
 | 1 | Quiénes somos | Reparamos componentes de maquinaria minera · talleres Santiago y Antofagasta (mapa de Chile) · contrato de mantención en faena · Ingeniería y Desarrollo |
-| 2 | La gran minería | Título grande; equipos que reparamos: motoniveladora, bulldozer, perforadora, camiones de extracción, CAT 797F |
-| 3 | Contrato en faena | El 797 entra al taller PTT dentro de la mina · despiece de componentes · el mando final se desacopla de la rueda trasera y sale del camión → engranajes · horas 17.650/18.000 · el componente sale en cama baja. *"Todo comienza antes de que ocurra una falla (generalmente)."* |
-| 4 | Red de interacción | La minera interactúa internamente y sale una sola línea a PTT; dentro de PTT: taller, calidad, bodega, proveedores, prov. logísticos · respuesta rápida · flexibilidad · 24/7 · componentes derivados a PTT vs. otros proveedores |
+| 2 | La gran minería | "Nuestros clientes" (54 px) + título grande; equipos que reparamos: motoniveladora, bulldozer, perforadora, camiones de extracción, CAT 797F |
+| 3 | Contrato en faena | El 797 entra al taller PTT dentro de la mina · despiece de componentes · el mando final se desacopla de la rueda trasera y sale del camión → lupa roja en el extremo del mando, desde donde se desprende el corte con los engranajes · horas 17.650/18.000 · el componente sale en cama baja. *"Todo comienza antes de que ocurra una falla (generalmente)."* |
+| 4 | Red de interacción | La minera interactúa internamente y sale una sola línea a PTT; dentro de PTT: taller, calidad, bodega, proveedores, prov. logísticos · respuesta rápida · flexibilidad · 24/7 (etiquetas de a una) · componentes derivados a PTT vs. otros proveedores |
 | 5 | Recepción e ingeniería | Recepción, escaneo, desarme · evaluación en taller: se evalúa el componente, se genera el listado de repuestos, se valoriza, se cotiza y se entrega al cliente el detalle · el laboratorio de Ingeniería retira una pieza, la estudia y la devuelve |
-| 6 | Abastecimiento | Barra de 6 pasos (análisis de repuestos → compras → importación → recepción y revisión → picking → entrega a taller); aquí se recorren 01–03: listado y OC en el ERP · aéreo desde EE.UU. y Europa · marítimo desde Asia · punto de recepción sobre Chile · camión propio cargado. *"Red internacional de proveedores, operación ágil y stock de los repuestos de mayor rotación."* |
+| 6 | Abastecimiento | Barra de 6 pasos (análisis de repuestos → compras → importación → recepción y revisión → picking → entrega a taller); aquí se recorren 01–03: listado y OC en el ERP · aéreo desde EE.UU. y Europa · marítimo desde Asia · punto de recepción sobre Chile · el camión propio llega vacío, la carga de EE.UU./Europa/Asia sube a la cama baja y parte a bodega. *"Red internacional de proveedores, operación ágil y stock de los repuestos de mayor rotación."* |
 | 7 | Bodega | Pasos 04–06: el camión cargado llega y el personal revisa la carga (recepción) · picking de los repuestos que ya estaban en bodega · ambos flujos se consolidan en una sola caja que se entrega a taller. *"Bodega completa los repuestos para la reparación y entrega en la fecha planificada."* |
 | 8 | Taller PTT | Llega la caja consolidada; salen los repuestos (verde: ya estaban en bodega · teal: comprados fuera) · torque y barra de armado, pruebas y certificación PTT · *"2 opciones para nuestros clientes: Reparación y Venta Intercambio"* |
-| 9 | Entrega y cierre | El componente PTT queda fijado a la rueda y sale con el camión · mejoras de Ingeniería y Desarrollo · distintas mineras nos envían mando final, transmisión y motor · cierre de marca |
+| 9 | Entrega y cierre | El componente PTT queda fijado al aro de la rueda y sale con el camión · mejoras de Ingeniería y Desarrollo · "Tres lugares, una sola cadena": taller en la mina · taller de componentes · laboratorio de I+D conectados, con el componente viajando entre ellos · cierre de marca |
 
 Observaciones del cliente y decisiones: `docs/DECISIONES.md`. Referencias visuales: `docs/referencias/`.
 
