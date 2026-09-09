@@ -48,3 +48,14 @@ Video de referencia del mando final: https://www.youtube.com/watch?v=j4ulsFhfqaA
 | Archivo | Descripción | Uso |
 |---|---|---|
 | `r4-01-cat-797f-lateral.png` | CAT 797F en **vista lateral pura** (rótulos 797F · 2104), enviada por chat y rescatada del portapapeles | Referencia principal de `truck797()` desde v2.4 |
+
+### R4 — `../Observaciones_Video_PTT_R4_2026-09-09.docx` (numeración del documento)
+
+| Archivo | Imagen | Uso en la animación |
+|---|---|---|
+| `r4-02-captura-gran-mineria-texto.png` | 1 — Párrafo de "Nuestros clientes" a eliminar | Eliminado; queda "La gran minería" |
+| `r4-03-captura-letrero-tapado.png` | 2 — Letrero D3 tapado por la puerta de recepción | Letreros reubicados; nuevo formato con mecánico y componente |
+| `r4-04-mando-final-reductor.png` | 3 — Mando final / reductor sobre bastidor rojo | Pantalla "Distintas mineras" (se reutiliza `finalDriveSide`) |
+| `r4-05-transmision.png` | 4 — Transmisión CAT | `transmission()` (vector nuevo) |
+| `r4-06-motor.png` | 5 — Motor CAT sobre bastidor | `engine()` (vector nuevo) |
+| `r4-07-mando-final-797b-797f.png` | 6 — Mando final 797B–797F | Referencia del mando final en la pantalla de mineras |

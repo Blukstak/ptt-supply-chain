@@ -2,6 +2,49 @@
 
 Bitácora de decisiones de diseño y contenido. Lo más reciente arriba.
 
+## 2026-09-09 — v2.6 / R4: Ronda 4 de Romina (14 observaciones)
+
+Fuente: `docs/Observaciones_Video_PTT_R4_2026-09-09.docx` (Romina De Filippi, Subgerencia de Supply Chain, 09/09/2026; observaciones sobre la v2.5 · 02:05). Capturas y fotos en `docs/referencias/r4-02…r4-07`.
+
+| # | Minuto | Observación R4 | Decisión / implementación | Estado |
+|---|---|---|---|---|
+| 1 | 00:17 | Eliminar el párrafo (Img 1); dejar solo el título grande "La gran minería" | Kicker "Nuestros clientes" + **"La gran minería"** (132 px). Párrafo eliminado; se conserva la etiqueta pequeña "Equipos que reparamos". | ✅ |
+| 2 | — | Etiqueta "Camión Komatsu" → "Camiones de extracción" | Etiqueta cambiada (`s02-clientes.ts`). | ✅ |
+| 3 | 00:26 | Sacar el texto superior; dejar solo "Contrato de Mantención dentro de la minera" | Lower-third con ese título exacto (64 px, kicker "Personal PTT en faena"); párrafo superior eliminado. | ✅ |
+| 4 | 00:31 | El componente debe salir del camión, no aparecer por corte | Nueva transición: zoom a la rueda trasera del 797 (queda a la derecha), aparece un anillo rojo de pernos que gira (desacople), el mando final nace en la rueda, vibra y **viaja desde la rueda al primer plano** creciendo mientras el camión se atenúa; etiqueta "El mando final se desacopla de la rueda trasera y sale del camión". Recién después se abre al corte con engranajes. | ✅ |
+| 5 | 00:42 | Título "Todo comienza antes de que ocurra una falla"; "(generalmente)" como bajada pequeña | Cita en dos niveles: título 84 px y "(generalmente)" en línea inferior, 40 px, peso ligero, gris. | ✅ |
+| 6 | 00:45 | Quitar "Un solo canal"; énfasis en respuesta rápida, 24/7 y flexibilidad (copy sugerido) | Lower-third: **"Respuesta rápida, disponibilidad 24/7 y flexibilidad ante los requerimientos del cliente."** (texto literal). Etiquetas: "Respuesta rápida a la minera", "Flexibilidad ante los requerimientos del cliente", "Disponibilidad 24/7". | ✅ |
+| 7 | Taller | Letrero tapado por la puerta (Img 2): reubicar; letrero por estación con mecánico y componente; en 01:28 y 01:50 "Estación de armado" | `pttWorkshop()` ahora recibe `StationSign[]` (código, mecánico, componente, x opcional) y el tipo DESARME/ARMADO. Recepción: D1/D2/D3 "Estación de desarme" reubicados en x 330/810/1290 (fuera de la puerta, que ocupa 1500–1900). Taller (01:28) y cierre (01:50): A1/A2/A3 **"Estación de armado"**. Mecánicos y componentes (propuesta): Cristián Araya · Mando final; Rodrigo Muñoz · Transmisión; Felipe Contreras · Motor. La OT del taller pasa a "Estación A1". Los letreros se ocultan cuando un título grande pasa por encima (2 opciones, "Mejoras de I+D"). | ✅ |
+| 8 | 01:09 | Aviones reconocibles | `airplane()` rehecho: fuselaje con morro redondeado y cabina oscura, 11 ventanillas, alas en flecha, dos motores bajo el ala, estabilizador y cola vertical, franja roja PTT; tamaño en el mapa ×1,7. | ✅ |
+| 9 | 01:28 | Diferenciar repuestos de stock vs. comprados; que salgan de la caja piezas reconocibles; reemplazar la "estrella" | Nuevo `sparePart()` (sello, perno, tuerca, rodamiento, engranaje). De la caja consolidada salen 6 piezas en dos filas: **verde = "Repuestos que ya estaban en bodega"** (engranaje, rodamiento, sello) y **teal = "Repuestos comprados fuera · red internacional"** (perno, tuerca, rodamiento); luego entran al componente. La estrella se reemplazó por **llave de torque** (`torqueWrench()`) apretando sobre el componente + **barra "Armado del componente 0→100 %"**; se mantienen las chispas de fondo. | ✅ |
+| 10 | 01:37 | Título exacto "2 opciones para nuestros clientes: Reparación y Venta Intercambio" | Cita final de Taller con ese texto literal (72 px). Las dos mitades pasan a "Opción 1 · Reparación" y "Opción 2 · Venta Intercambio" con bajadas breves. | ✅ |
+| 11 | 01:48 | El mando final gira con la rueda pero queda atrás; fijarlo a la rueda | La tapa PTT instalada ahora es **hija del grupo de la rueda trasera** (`#c7-w3`): gira y avanza con el camión. El camión sale con `attr.transform` (antes `x`, que pisaba la traslación del `<g>`). Punto de instalación recalculado para la geometría v2.4 (1304, 767). | ✅ |
+| 12 | 01:56 | Quitar el bloque fortalezas/limitaciones | Eliminado (−5 s). | ✅ |
+| 13 | 02:03 | Reemplazar la escena final por distintas mineras enviándonos sus componentes (mando final, transmisión, motor; Img 3–6) | Nueva pantalla "Distintas mineras nos envían sus componentes": tres tarjetas **Minera A · Antofagasta / Minera B · Atacama / Minera C · O'Higgins**, cada una con su componente (`finalDriveSide`, nuevas `transmission()` y `engine()` vectoriales a partir de las Img 4 y 5) que baja por una flecha a la barra "TALLER PTT · POWER TRAIN TECHNOLOGIES · Recibimos y reparamos mandos finales · transmisiones · motores". El anillo de procesos se eliminó; el **cierre de marca (logo)** se mantiene al final. | ✅ |
+| 14 | — | Duración 120 ± 5 s | **125,2 s (02:05)**. Compensación: Clientes −0,5 s, Red −0,3 s, transición del componente comprimida, cierre de marca 4 s. | ✅ |
+
+### Estructura resultante (02:05 · 125,2 s)
+
+| # | Capítulo | Inicio | Dur. |
+|---|---|---|---|
+| 0 | Portada | 0:00 | 6 s |
+| 1 | Quiénes somos | 0:06 | 10 s |
+| 2 | La gran minería (título) + equipos | 0:15 | 8,6 s |
+| 3 | Contrato en faena (portón → despiece → el mando final sale de la rueda → engranajes → horas → cama baja; cita con bajada) | 0:23 | 20 s |
+| 4 | Red de interacción (respuesta rápida · flexibilidad · 24/7; derivación) | 0:43 | 9,9 s |
+| 5 | Recepción e ingeniería (letreros D1–D3 reubicados) | 0:52 | 13 s |
+| 6 | Abastecimiento (aviones nuevos) | 1:05 | 12 s |
+| 7 | Bodega | 1:16 | 11 s |
+| 8 | Taller PTT (repuestos stock/compras → torque + barra → QA → 2 opciones) | 1:26 | 16 s |
+| 9 | Entrega (mando fijado a la rueda) → Mejoras de I+D → Mineras y componentes → marca | 1:42 | 23,6 s |
+
+### Pendientes que requieren decisión del cliente
+
+- Nombres de mecánicos (Cristián Araya, Rodrigo Muñoz, Felipe Contreras) y asignación de componentes por estación son inventados; reemplazar por los reales.
+- "Minera A/B/C" y regiones (Antofagasta, Atacama, O'Higgins) son genéricos; si se pueden nombrar clientes reales (o usar sus logos con autorización) se cambian.
+- Bajadas de las 2 opciones ("Reparamos el componente del cliente…" / "Entregamos de inmediato un componente de nuestro stock y recibimos el del cliente a cambio.") son propuesta editorial sobre el título exacto de Romina.
+- Obs. 1: se mantuvo la etiqueta pequeña "Equipos que reparamos · camiones de extracción y equipos de apoyo" sobre los equipos; se puede quitar si "solo el título" incluye también esa etiqueta.
+
 ## 2026-09-09 — v2.5: mando final rehecho desde el render de referencia (Codex GPT-6 Astra, razonamiento medio)
 
 Gala pidió que el componente se vea como `docs/referencias/02-mando-final.png` (render CAT), sin el eje delgado trasero. Codex recibió las dos imágenes adjuntas (`-i`) y rehízo solo `finalDriveSide()`: tambor con tapa plana, cuerpo dorado escalonado, doble corona derecha con 100 dientes por corona, pernos, brillos, sombra; sin eje saliente; placa PTT roja discreta. Ids `-fl1/-fl2/-g` preservados; sin cambios en escenas. Comparación en `docs/revisiones/finalDrive-comparacion.png`.
