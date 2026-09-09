@@ -1,5 +1,5 @@
 import { el } from '../core/dom'
-import { pttWorkshop, finalDrive, finalDriveSide, pttWorker, labBench, loosePart } from '../art'
+import { pttWorkshop, finalDrive, finalDriveSide, pttWorker, labBench, loosePart, STATIONS_DESARME } from '../art'
 import { Scene, sceneRoot, fullSvg, sceneEnter, sceneLeave, lowerThird, showLowerThird, tag, pop } from '../core/scene'
 
 /**
@@ -8,7 +8,8 @@ import { Scene, sceneRoot, fullSvg, sceneEnter, sceneLeave, lowerThird, showLowe
  */
 export function recepcionScene(): Scene {
   const root = sceneRoot('recepcion')
-  const bg = fullSvg(`${pttWorkshop('rf', ['D1', 'D2', 'D3'])}
+  // R4 · Taller: el letrero D3 quedaba tapado por la puerta de recepción (x 1500–1900); se reubican los tres a la izquierda de la puerta.
+  const bg = fullSvg(`${pttWorkshop('rf', STATIONS_DESARME.map((st, i) => ({ ...st, x: 330 + i * 480 })), 'DESARME')}
     <rect x="1500" y="220" width="400" height="400" fill="#3a3f47" stroke="#2a2f36" stroke-width="6"/>
     <g id="rc-door">${Array.from({ length: 8 }, (_, i) => `<rect x="1506" y="${226 + i * 49}" width="388" height="45" fill="#4b525c"/>`).join('')}</g>
     <text x="1700" y="205" text-anchor="middle" font-family="Barlow Condensed" font-weight="700" font-size="30" fill="#e0262b" letter-spacing="4">RECEPCIÓN</text>

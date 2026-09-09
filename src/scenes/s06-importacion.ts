@@ -25,7 +25,7 @@ export function importacionScene(): Scene {
       ${origins.map((o, i) => `<g id="im-o-${i}" opacity="0"><circle cx="${o.x}" cy="${o.y}" r="7" fill="#fff"/><circle cx="${o.x}" cy="${o.y}" r="14" fill="none" stroke="#fff" stroke-width="1.5" opacity=".6"/></g>`).join('')}
       <g id="im-cl" opacity="0"><circle cx="${CL.x}" cy="${CL.y}" r="9" fill="#e0262b"/><circle id="im-cl-ping" cx="${CL.x}" cy="${CL.y}" r="16" fill="none" stroke="#e0262b" stroke-width="2"/></g>
       ${origins.map((_o, i) => `<g id="im-oc-${i}" opacity="0" transform="translate(${CL.x} ${CL.y})"><rect x="-9" y="-11" width="18" height="22" rx="2" fill="#fff"/><rect x="-5" y="-6" width="10" height="2" fill="#e0262b"/><rect x="-5" y="-1" width="10" height="2" fill="#8a8f98"/><rect x="-5" y="4" width="10" height="2" fill="#8a8f98"/></g>`).join('')}
-      ${origins.map((o, i) => `<g id="im-v-${i}" opacity="0" transform="translate(${o.x} ${o.y})"><g id="im-vr-${i}">${o.air ? `<g transform="scale(.14) translate(-165 -40)">${airplane(`pl${i}`)}</g>` : `<g transform="scale(.13) translate(-360 -100)">${cargoShip(`sh${i}`)}</g>`}</g></g>`).join('')}
+      ${origins.map((o, i) => `<g id="im-v-${i}" opacity="0" transform="translate(${o.x} ${o.y})"><g id="im-vr-${i}">${o.air ? `<g transform="scale(.24) translate(-170 -50)">${airplane(`pl${i}`)}</g>` : `<g transform="scale(.13) translate(-360 -100)">${cargoShip(`sh${i}`)}</g>`}</g></g>`).join('')}
     </g>
     <g id="im-desk" opacity="0">
       <rect x="0" y="0" width="1920" height="1080" fill="#0d1117"/>

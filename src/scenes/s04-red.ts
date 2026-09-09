@@ -57,12 +57,15 @@ export function redScene(): Scene {
     ;(d.querySelector('.lbl') as HTMLElement).style.cssText = `font-family:var(--font-display);font-weight:${hub ? 700 : 600};font-size:${hub ? 40 : 28}px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink);white-space:nowrap`
     return d
   })
-  const lt = lowerThird('Cómo trabajamos con la minería', 'Un solo canal, respuesta 24/7')
-  const tagFast = tag('Comunicación rápida con las mineras', 700, 200, 'ok')
+  // R4 · obs. 00:45: sin "Un solo canal"; énfasis en respuesta rápida, 24/7 y flexibilidad (copy sugerido).
+  const lt = lowerThird('Cómo trabajamos con la minería', 'Respuesta rápida, disponibilidad 24/7 y flexibilidad ante los requerimientos del cliente.')
+  Object.assign((lt.querySelector('.headline') as HTMLElement).style, { fontSize: '50px', maxWidth: '1500px' })
+  const tagFast = tag('Respuesta rápida a la minera', 700, 200, 'ok')
   const tag247 = tag('Disponibilidad 24/7', 780, 590, 'ok')
+  const tagFlex = tag('Flexibilidad ante los requerimientos del cliente', 700, 400, 'ok')
   const tagPTT = tag('Componentes derivados a PTT · mandos finales, transmisiones, diferenciales', 1060, 100, 'ok')
   const tagOtros = tag('Otros componentes se derivan a distintos proveedores', 120, 950, '')
-  root.append(bg, flow.canvas, ...nodeEls, lt, tagFast, tag247, tagPTT, tagOtros)
+  root.append(bg, flow.canvas, ...nodeEls, lt, tagFast, tag247, tagFlex, tagPTT, tagOtros)
 
   return {
     id: 'red', title: 'Red de interacción', root,
@@ -80,10 +83,11 @@ export function redScene(): Scene {
       tl.to(q('#rd-link'), { opacity: 1, duration: 0.2 }, at + 2.2)
       tl.fromTo(q('#rd-link'), { strokeDasharray: 900, strokeDashoffset: 900 }, { strokeDashoffset: 0, duration: 0.9, ease: 'power3.inOut' }, at + 2.2)
       pop(tl, tagFast, at + 3.1)
-      pop(tl, tag247, at + 3.6)
+      pop(tl, tagFlex, at + 3.5)
+      pop(tl, tag247, at + 3.9)
       // Derivación de componentes: algunos a PTT, otros a distintos proveedores
       const dAt = at + 6
-      tl.to([tagFast, tag247], { opacity: 0, duration: 0.4 }, dAt - 0.3)
+      tl.to([tagFast, tagFlex, tag247], { opacity: 0, duration: 0.4 }, dAt - 0.3)
       tl.to(q('#rd-otros'), { opacity: 1, duration: 0.5 }, dAt)
       tl.to(flow, { intensity: 0.35, duration: 0.5 }, dAt)
       const comps = Array.from(root.querySelectorAll('.rd-comp')) as SVGGElement[]
@@ -97,9 +101,9 @@ export function redScene(): Scene {
       pop(tl, tagPTT, dAt + 1.5)
       pop(tl, tagOtros, dAt + 2.3)
       tl.fromTo(nodeEls[3].querySelector('.dot')!, { scale: 1 }, { scale: 1.5, duration: 0.3, repeat: 5, yoyo: true }, dAt + 1.4)
-      tl.to([...nodeEls, q('#rd-boxes'), q('#rd-link'), q('#rd-otros'), tagPTT, tagOtros, flow.canvas], { opacity: 0, duration: 0.5 }, at + 9)
-      sceneLeave(tl, root, at + 9.3, 0.9)
-      return 10.2
+      tl.to([...nodeEls, q('#rd-boxes'), q('#rd-link'), q('#rd-otros'), tagPTT, tagOtros, flow.canvas], { opacity: 0, duration: 0.5 }, at + 8.7)
+      sceneLeave(tl, root, at + 9, 0.9)
+      return 9.9
     },
   }
 }

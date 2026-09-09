@@ -40,6 +40,7 @@ export function faenaScene(): Scene {
   const fdSvg = fullSvg(`
     <defs><radialGradient id="fd-bg" cx=".5" cy=".5" r=".6"><stop offset="0" stop-color="#1b2330"/><stop offset="1" stop-color="#07090c"/></radialGradient></defs>
     <rect id="fd-bgrect" width="1920" height="1080" fill="url(#fd-bg)" opacity="0"/>
+    <g id="fd-ring" opacity="0" transform="translate(1320 560)"><circle r="150" fill="none" stroke="#e0262b" stroke-width="5" stroke-dasharray="14 10"/>${Array.from({ length: 12 }, (_, i) => `<circle cx="${Math.cos((i / 12) * Math.PI * 2) * 150}" cy="${Math.sin((i / 12) * Math.PI * 2) * 150}" r="9" fill="#e0262b"/>`).join('')}</g>
     <g id="fd-ext" transform="translate(700 560) scale(.4)" opacity="0">${finalDriveSide('fde', 'PTT')}</g>
     <g id="fd-wrap" transform="translate(620 540)" opacity="0">${finalDrive('fd', 250)}</g>
     <g id="fd-callouts" opacity="0" font-family="JetBrains Mono, monospace" font-size="15" fill="#9aa7b6" letter-spacing="2">
@@ -52,17 +53,20 @@ export function faenaScene(): Scene {
   `)
   const semiSvg = fullSvg(`<g id="rt-semi" transform="translate(-1000 720) scale(.95)">${lowboyTruck('semi')}<g transform="translate(330 140) scale(.42)">${finalDriveSide('cr', 'PTT')}</g></g>`)
 
-  const lt1 = lowerThird('Contrato de mantención en faena', 'Personal PTT dentro de la minera')
-  const intro = el('div', { class: 'sub abs', html: 'Operamos un <b style="color:var(--ink);font-weight:600">contrato de mantención dentro de la minera</b>: nuestro personal recibe el camión en el taller de la faena y desde ahí sale el componente hacia nuestros talleres.' })
-  Object.assign(intro.style, { left: '120px', top: '130px', maxWidth: '900px', opacity: '0', fontSize: '30px', textShadow: '0 4px 24px rgba(0,0,0,.8)' })
+  // R4 · obs. 00:26: solo el título, sin el texto superior.
+  const lt1 = lowerThird('Personal PTT en faena', 'Contrato de Mantención dentro de la minera')
+  Object.assign((lt1.querySelector('.headline') as HTMLElement).style, { fontSize: '64px', maxWidth: '1500px' })
   const tagParts = tag('Componentes que reparamos en PTT', 120, 130, 'info')
   const tagLife = tag('Próximo a cumplir vida útil programada · cambio a las 18.000 h', 1180, 820)
   const tagGD = tag('Guía de despacho · Trazabilidad activa · Destino: Taller PTT', 120, 150, 'ok')
-  const q1 = quote('Todo comienza antes de que ocurra una falla (generalmente).', 120, 300, 1500)
+  // R4 · obs. 00:42: título principal + "(generalmente)" como bajada pequeña en línea inferior.
+  const q1 = quote('Todo comienza antes de que ocurra una falla', 120, 300, 1500)
+  q1.append(el('div', { class: 'w', style: 'display:block;font-size:40px;font-weight:300;text-transform:none;letter-spacing:.04em;color:var(--ink-2);margin-top:22px' }, '(generalmente)'))
+  const tagOut = tag('El mando final se desacopla de la rueda trasera y sale del camión', 120, 150, 'info')
 
   root.append(bg)
   photoBg(root, 'mine-day.jpg', bg)
-  root.append(dust.canvas, shedSvg, truckSvg, fdSvg, semiSvg, lt1, intro, tagParts, tagLife, tagGD, q1)
+  root.append(dust.canvas, shedSvg, truckSvg, fdSvg, semiSvg, lt1, tagParts, tagLife, tagGD, tagOut, q1)
 
   return {
     id: 'faena', title: 'Contrato en faena', root,
@@ -74,7 +78,6 @@ export function faenaScene(): Scene {
       sceneEnter(tl, root, at, 1.2)
       tl.fromTo(q('#mine1-benches'), { y: 40, scale: 1.03, transformOrigin: '50% 100%' }, { y: 0, scale: 1, duration: 5, ease: 'power2.out' }, at)
       showLowerThird(tl, lt1, at + 0.6, 3)
-      tl.fromTo(intro, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, at + 1)
       // 1) Portón del taller en faena se abre, personal PTT y camión entra
       tl.to(q('#fw-door'), { y: -240, duration: 1.2, ease: 'power2.inOut' }, at + 0.3)
       tl.to(q('#fw-people'), { opacity: 1, duration: 0.5 }, at + 0.8)
@@ -85,23 +88,32 @@ export function faenaScene(): Scene {
 
       // 2) Despiece: camión al frente con componentes destacados
       const dAt = at + 4
-      tl.to(intro, { opacity: 0, y: -10, duration: 0.4 }, dAt - 0.3)
       tl.to([shedSvg, bg, dust.canvas], { opacity: 0.25, duration: 0.8 }, dAt)
       tl.to(truck, { attr: { transform: 'translate(480 470) scale(.72)' }, duration: 1, ease: 'power3.inOut' }, dAt)
       pop(tl, tagParts, dAt + 0.6)
       tl.fromTo(root.querySelectorAll('.dp-item'), { opacity: 0, scale: 0.6, transformOrigin: '50% 50%' }, { opacity: 1, scale: 1, duration: 0.5, stagger: 0.25, ease: 'back.out(1.8)' }, dAt + 0.7)
 
-      // 3) Close-up al mando final: zoom a la rueda trasera → componente exterior → engranajes → horas
+      // 3) Close-up al mando final (R4 · obs. 00:31): zoom a la rueda trasera; el componente se DESACOPLA de la rueda
+      //    y sale del camión hacia el primer plano (no aparece por corte). Rueda trasera w3 en stage: (1024.6, 736.7) con el camión en translate(480 470) scale(.72).
       const zoomAt = dAt + 3.2
+      const WX = 1320, WY = 560 // dónde queda la rueda trasera tras el zoom
       tl.to(tagParts, { opacity: 0, duration: 0.3 }, zoomAt)
       tl.to(root.querySelectorAll('.dp-item'), { opacity: 0, duration: 0.4 }, zoomAt)
-      tl.to(truckSvg, { scale: 3.2, x: -3175, y: -1911, transformOrigin: '50% 50%', duration: 1.6, ease: 'power3.inOut' }, zoomAt)
-      tl.to(truckSvg, { opacity: 0.12, duration: 0.6 }, zoomAt + 1)
-      tl.to(q('#fd-bgrect'), { opacity: 0.94, duration: 0.8 }, zoomAt + 1)
-      tl.fromTo(q('#fd-link'), { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.6 }, zoomAt + 1.2)
-      tl.fromTo(q('#fd-ext'), { opacity: 0, attr: { transform: 'translate(700 560) scale(.4)' } }, { opacity: 1, attr: { transform: 'translate(700 560) scale(1.45)' }, duration: 1.1, ease: 'power4.out' }, zoomAt + 1.2)
+      tl.to(truckSvg, { scale: 3.2, x: WX - 960 - (1024.6 - 960) * 3.2, y: WY - 540 - (736.7 - 540) * 3.2, transformOrigin: '50% 50%', duration: 1.6, ease: 'power3.inOut' }, zoomAt)
+      tl.to(q('#fd-bgrect'), { opacity: 0.7, duration: 0.8 }, zoomAt + 1)
+      tl.fromTo(q('#fd-ring'), { opacity: 0, attr: { transform: `translate(${WX} ${WY}) scale(.6)` } }, { opacity: 1, attr: { transform: `translate(${WX} ${WY}) scale(1)` }, duration: 0.5, ease: 'power2.out' }, zoomAt + 1.1)
+      tl.to(q('#fd-ring'), { rotation: -90, transformOrigin: '50% 50%', duration: 1.1, ease: 'power1.inOut' }, zoomAt + 1.2)
+      tl.fromTo(q('#fd-link'), { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.6 }, zoomAt + 1.3)
+      // el componente nace en la rueda (pequeño, semitransparente) y se desacopla: viaja al centro creciendo mientras el camión queda atrás
+      tl.fromTo(q('#fd-ext'), { opacity: 0, attr: { transform: `translate(${WX} ${WY}) scale(.55)` } }, { opacity: 1, duration: 0.4 }, zoomAt + 1.4)
+      tl.to(q('#fd-ext'), { attr: { transform: `translate(${WX - 40} ${WY}) scale(.62)` }, duration: 0.4, ease: 'sine.inOut', repeat: 1, yoyo: true }, zoomAt + 1.4)
+      pop(tl, tagOut, zoomAt + 1.7, 2.0)
+      tl.to(q('#fd-ext'), { attr: { transform: 'translate(700 560) scale(1.45)' }, duration: 1.2, ease: 'power3.inOut' }, zoomAt + 2.2)
+      tl.to(q('#fd-ring'), { opacity: 0, duration: 0.5 }, zoomAt + 2.4)
+      tl.to(truckSvg, { opacity: 0.12, duration: 0.9 }, zoomAt + 2.4)
+      tl.to(q('#fd-bgrect'), { opacity: 0.94, duration: 0.8 }, zoomAt + 2.4)
       // el exterior se desplaza y "abre" al corte con engranajes (en la punta)
-      const gearsAt = zoomAt + 2.6
+      const gearsAt = zoomAt + 3.5
       tl.to(q('#fd-ext'), { attr: { transform: 'translate(1180 560) scale(.9)' }, opacity: 0.35, duration: 0.9, ease: 'power3.inOut' }, gearsAt)
       tl.fromTo(q('#fd-wrap'), { attr: { transform: 'translate(620 540) scale(.3)' }, opacity: 0 }, { attr: { transform: 'translate(620 540) scale(1)' }, opacity: 1, duration: 1, ease: 'power4.out' }, gearsAt)
       tl.to(q('#fd-ringgear'), { rotation: 60, transformOrigin: '50% 50%', duration: 12, ease: 'none' }, gearsAt)

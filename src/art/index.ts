@@ -474,14 +474,92 @@ export function cargoShip(id = 'ship') {
 }
 
 export function airplane(id = 'plane') {
+  // R4 · obs. 01:09: avión reconocible — fuselaje con morro redondeado, ventanillas, alas en flecha, cola y dos motores. Morro hacia +x.
+  const windows = Array.from({ length: 11 }, (_, i) => `<rect x="${118 + i * 14}" y="30" width="7" height="7" rx="2" fill="#243447"/>`).join('')
   return `
   <g id="${id}">
-    <path d="M0 40 L260 30 L330 44 L260 58 L0 48Z" fill="#e9eef4"/>
-    <path d="M60 30 L110 -10 L130 -10 L100 30Z" fill="#cfd8e3"/>
-    <path d="M120 44 L180 90 L210 90 L160 44Z" fill="#cfd8e3"/>
-    <path d="M110 40 L190 10 L200 22 L150 44Z" fill="#dfe6ee"/>
-    <rect x="150" y="34" width="8" height="6" fill="#111"/>
-    <path d="M290 34 L330 44 L290 52Z" fill="${C.amber}"/>
+    <path d="M22 22 L60 8 L96 4 L116 40 L60 70 L22 60Z" fill="#cfd8e3"/>
+    <path d="M22 60 L6 10 L20 8 L52 40Z" fill="#c2ccd8" stroke="#8fa0b4" stroke-width="1.5"/>
+    <path d="M40 46 L60 44 L60 52 L44 56Z" fill="#8fa0b4"/>
+    <path d="M110 44 L150 18 L170 18 L142 44 L200 44 L230 100 L210 100 L162 60 L120 56Z" fill="#dde4ec" stroke="#9aa9bb" stroke-width="1.2"/>
+    <path d="M28 44 L120 20 L250 16 L300 22 L338 42 L300 62 L250 68 L120 66 L28 60 Q14 52 28 44Z" fill="#f2f5f8" stroke="#a9b6c5" stroke-width="1.5"/>
+    <path d="M28 44 L120 20 L250 16 L300 22 L338 42 L120 42 Q40 44 28 44Z" fill="#ffffff" opacity=".7"/>
+    <path d="M292 24 L316 30 L336 40 L300 46Z" fill="#2c3a4a"/>
+    ${windows}
+    <path d="M226 60 L256 96 L270 96 L246 60Z" fill="#c2ccd8" stroke="#8fa0b4" stroke-width="1.2"/>
+    <rect x="186" y="58" width="44" height="18" rx="9" fill="#7f8fa3" stroke="#4d5b6c" stroke-width="1.5"/>
+    <rect x="132" y="66" width="44" height="18" rx="9" fill="#7f8fa3" stroke="#4d5b6c" stroke-width="1.5"/>
+    <path d="M120 40 L250 40 L250 46 L120 46Z" fill="${C.amber}" opacity=".9"/>
+    <path d="M100 54 L124 40 L130 44 L108 58Z" fill="${C.amber}" opacity=".9"/>
+  </g>`
+}
+
+/** R4 · obs. 01:28: repuestos reconocibles que salen de la caja (centrados en 0,0; radio ≈ 34). */
+export function sparePart(id = 'sp', kind: 'seal' | 'bolt' | 'nut' | 'bearing' | 'gear' = 'gear') {
+  const g = (inner: string) => `<g id="${id}">${inner}</g>`
+  if (kind === 'seal') return g(`<circle r="34" fill="#c7cbd2" stroke="#8a8f98" stroke-width="3"/><circle r="27" fill="#2b2f36"/><circle r="20" fill="#1a1d22" stroke="#8a8f98" stroke-width="2"/><circle r="14" fill="none" stroke="#c0392b" stroke-width="4"/>`)
+  if (kind === 'bolt') return g(`<g transform="rotate(-30)"><rect x="-12" y="-38" width="24" height="18" rx="2" fill="#9aa5b3" stroke="#5f6d7d" stroke-width="2"/><rect x="-7" y="-20" width="14" height="58" fill="#8a99ad" stroke="#5f6d7d" stroke-width="1.5"/>${Array.from({ length: 8 }, (_, i) => `<rect x="-7" y="${-14 + i * 7}" width="14" height="2.5" fill="#5f6d7d"/>`).join('')}</g>`)
+  if (kind === 'nut') return g(`<path d="M0 -34 L29 -17 L29 17 L0 34 L-29 17 L-29 -17Z" fill="#b5bec9" stroke="#5f6d7d" stroke-width="3"/><circle r="15" fill="#2b2f36" stroke="#5f6d7d" stroke-width="2"/><circle r="10" fill="none" stroke="#8a8f98" stroke-width="2"/>`)
+  if (kind === 'bearing') return g(`<circle r="34" fill="#d7dbe0" stroke="#5f6d7d" stroke-width="3"/><circle r="27" fill="#3a4049"/>${Array.from({ length: 9 }, (_, i) => { const a = (i / 9) * Math.PI * 2; return `<circle cx="${Math.cos(a) * 21}" cy="${Math.sin(a) * 21}" r="5" fill="#eef1f4" stroke="#7d8896" stroke-width="1"/>` }).join('')}<circle r="14" fill="#d7dbe0" stroke="#5f6d7d" stroke-width="3"/><circle r="9" fill="#1a1d22"/>`)
+  return g(`${Array.from({ length: 12 }, (_, i) => `<rect x="-5" y="-38" width="10" height="12" rx="1.5" fill="#8a99ad" stroke="#5f6d7d" stroke-width="1" transform="rotate(${i * 30})"/>`).join('')}<circle r="29" fill="#8a99ad" stroke="#5f6d7d" stroke-width="2"/><circle r="19" fill="#56657a"/><circle r="8" fill="#1d2229"/>`)
+}
+
+/** R4 · obs. 01:28: llave de torque (reemplaza la "estrella"). Origen en el cabezal; el mango se extiende hacia +x. */
+export function torqueWrench(id = 'tw') {
+  return `<g id="${id}">
+    <circle r="30" fill="#b5bec9" stroke="#4d5b6c" stroke-width="4"/><circle r="14" fill="#2b2f36" stroke="#8a8f98" stroke-width="3"/>
+    <rect x="22" y="-11" width="200" height="22" rx="6" fill="#9aa5b3" stroke="#4d5b6c" stroke-width="3"/>
+    <rect x="150" y="-14" width="80" height="28" rx="8" fill="#e0262b" stroke="#8e1a1e" stroke-width="3"/>
+    <rect x="96" y="-6" width="40" height="12" fill="#2b2f36"/>
+  </g>`
+}
+
+/** R4 · obs. 02:03 (Imagen 4): transmisión CAT — cuerpo cilíndrico amarillo con tapas, brida frontal, bloque de válvulas y patas. Centrada en (0,0), ≈ 320 × 220. */
+export function transmission(id = 'tx') {
+  const bolts = (cx: number, cy: number, r: number, n: number) => Array.from({ length: n }, (_, i) => { const a = (i / n) * Math.PI * 2; return `<circle cx="${cx + Math.cos(a) * r}" cy="${cy + Math.sin(a) * r}" r="3.2" fill="#8a6a12" stroke="#4a3808" stroke-width="1"/>` }).join('')
+  return `<defs>
+    <linearGradient id="${id}-y" x2="0" y2="1"><stop stop-color="#ffd84a"/><stop offset=".55" stop-color="#e6b512"/><stop offset="1" stop-color="#a87f08"/></linearGradient>
+    <linearGradient id="${id}-c" x1="0" x2="1"><stop stop-color="#c99a10"/><stop offset=".4" stop-color="#ffd84a"/><stop offset="1" stop-color="#b58a0c"/></linearGradient>
+  </defs><g id="${id}">
+    <ellipse cx="0" cy="112" rx="170" ry="12" fill="#000" opacity=".3"/>
+    <rect x="-40" y="-40" width="180" height="150" rx="10" fill="url(#${id}-y)" stroke="#8a6a12" stroke-width="2"/>
+    <rect x="-150" y="-70" width="150" height="150" rx="14" fill="url(#${id}-c)" stroke="#8a6a12" stroke-width="2"/>
+    <ellipse cx="-150" cy="5" rx="34" ry="78" fill="#d9ab14" stroke="#8a6a12" stroke-width="2"/>
+    <ellipse cx="-152" cy="5" rx="24" ry="60" fill="#f2c62c" stroke="#a37a23" stroke-width="1.5"/>
+    <ellipse cx="-154" cy="5" rx="10" ry="24" fill="#3a3220" stroke="#8a6a12" stroke-width="1.5"/>
+    ${bolts(-152, 5, 68, 14).replace(/cx="([^"]+)"/g, (_m, v) => `cx="${(-152 + (parseFloat(v) + 152) * 0.45).toFixed(1)}"`)}
+    <rect x="-110" y="-96" width="70" height="30" rx="4" fill="#e0b41b" stroke="#8a6a12" stroke-width="2"/>
+    <rect x="-100" y="-104" width="50" height="10" rx="2" fill="#c49a10"/>
+    <circle cx="20" cy="30" r="40" fill="#e9bd21" stroke="#8a6a12" stroke-width="2"/><circle cx="20" cy="30" r="27" fill="#d6a712"/>${bolts(20, 30, 33, 10)}
+    <circle cx="100" cy="-10" r="22" fill="#e9bd21" stroke="#8a6a12" stroke-width="2"/><circle cx="100" cy="-10" r="10" fill="#3a3220"/>
+    <rect x="40" y="70" width="110" height="46" rx="4" fill="#d6a712" stroke="#8a6a12" stroke-width="2"/>
+    ${[52, 76, 100, 124].map((x) => `<rect x="${x}" y="78" width="14" height="30" rx="3" fill="#3a3220"/>`).join('')}
+    <rect x="140" y="-30" width="34" height="90" rx="4" fill="#c99a10" stroke="#8a6a12" stroke-width="2"/>
+    <path d="M-125 80 L-125 110 L-95 110 M110 110 L140 110 L140 80" stroke="#3a3220" stroke-width="10" fill="none"/>
+    <text x="10" y="-10" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="22" fill="#4a3808" letter-spacing="3">TRANSMISIÓN</text>
+  </g>`
+}
+
+/** R4 · obs. 02:03 (Imagen 5): motor diésel CAT sobre bastidor negro — bloque, culatas, múltiples, turbo y cañerías. Centrado en (0,0), ≈ 420 × 220. */
+export function engine(id = 'eng') {
+  return `<defs>
+    <linearGradient id="${id}-y" x2="0" y2="1"><stop stop-color="#ffd84a"/><stop offset=".6" stop-color="#e2b011"/><stop offset="1" stop-color="#a87f08"/></linearGradient>
+  </defs><g id="${id}">
+    <ellipse cx="0" cy="118" rx="230" ry="12" fill="#000" opacity=".3"/>
+    <rect x="-210" y="84" width="420" height="22" rx="3" fill="#1f2226" stroke="#0d0f11" stroke-width="2"/>
+    <rect x="-190" y="106" width="30" height="12" fill="#1f2226"/><rect x="160" y="106" width="30" height="12" fill="#1f2226"/>
+    <rect x="-170" y="-10" width="340" height="96" rx="6" fill="url(#${id}-y)" stroke="#8a6a12" stroke-width="2"/>
+    ${[-150, -95, -40, 15, 70, 125].map((x) => `<rect x="${x}" y="-62" width="46" height="56" rx="4" fill="#e9bd21" stroke="#8a6a12" stroke-width="2"/><rect x="${x + 6}" y="-56" width="34" height="10" rx="2" fill="#c49a10"/>`).join('')}
+    <rect x="-160" y="-76" width="316" height="14" rx="3" fill="#d6a712" stroke="#8a6a12" stroke-width="2"/>
+    <path d="M-140 -6 H150" stroke="#2b2f36" stroke-width="10" stroke-linecap="round"/>
+    <path d="M-150 20 H160 M-150 44 H160" stroke="#3a3220" stroke-width="5" opacity=".6"/>
+    ${[-130, -75, -20, 35, 90].map((x) => `<circle cx="${x}" cy="32" r="12" fill="#3a3220" stroke="#8a6a12" stroke-width="1.5"/>`).join('')}
+    <circle cx="150" cy="-30" r="30" fill="#8a8f98" stroke="#3a3f47" stroke-width="3"/><circle cx="150" cy="-30" r="16" fill="#3a3f47"/><circle cx="150" cy="-30" r="7" fill="#8a8f98"/>
+    <path d="M120 -30 L60 -30 L60 -20" stroke="#8a8f98" stroke-width="10" fill="none" stroke-linecap="round"/>
+    <path d="M-200 60 L-170 60 M-200 40 L-200 70" stroke="#8a8f98" stroke-width="8" stroke-linecap="round"/>
+    <rect x="-215" y="0" width="45" height="60" rx="6" fill="#c99a10" stroke="#8a6a12" stroke-width="2"/>
+    <path d="M-120 86 L-120 100 M120 86 L120 100" stroke="#0d0f11" stroke-width="6"/>
+    <text x="0" y="66" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="24" fill="#4a3808" letter-spacing="4">MOTOR DIÉSEL</text>
   </g>`
 }
 
@@ -665,10 +743,22 @@ export function pttWorker(id = 'w', withTablet = true, shirt = '#1e2126') {
  * Nave del taller PTT (Imágenes 5-7): muros blancos ondulados, cerchas, puente grúa amarillo,
  * letreros de estación (D1, D2…), mesas de trabajo y carros de herramientas rojos.
  */
-export function pttWorkshop(id = 'ws', stations = ['D1', 'D2', 'D3']) {
+/** Letrero de estación (R4 · Taller): código, tipo de estación, mecánico y componente. `x` opcional para reubicarlo. */
+export interface StationSign { code: string; mech: string; part: string; x?: number }
+export const STATIONS_DESARME: StationSign[] = [
+  { code: 'D1', mech: 'Cristián Araya', part: 'Mando final' },
+  { code: 'D2', mech: 'Rodrigo Muñoz', part: 'Transmisión' },
+  { code: 'D3', mech: 'Felipe Contreras', part: 'Motor' },
+]
+export const STATIONS_ARMADO: StationSign[] = [
+  { code: 'A1', mech: 'Cristián Araya', part: 'Mando final' },
+  { code: 'A2', mech: 'Rodrigo Muñoz', part: 'Transmisión' },
+  { code: 'A3', mech: 'Felipe Contreras', part: 'Motor' },
+]
+export function pttWorkshop(id = 'ws', stations: StationSign[] = STATIONS_DESARME, kind: 'DESARME' | 'ARMADO' = 'DESARME') {
   const ribs = Array.from({ length: 48 }, (_, i) => `<rect x="${i * 40}" y="0" width="20" height="600" fill="#ffffff" opacity=".035"/>`).join('')
   const trusses = [200, 700, 1200, 1700].map((x) => `<path d="M${x - 250} 130 L${x} 40 L${x + 250} 130 M${x - 250} 130 L${x + 250} 130 M${x - 125} 85 L${x - 125} 130 M${x + 125} 85 L${x + 125} 130 M${x} 40 L${x} 130" stroke="#b9bec6" stroke-width="5" fill="none" opacity=".7"/>`).join('')
-  const signs = stations.map((s, i) => { const x = 380 + i * 560; return `<g><rect x="${x - 130}" y="250" width="260" height="74" rx="4" fill="#f4f4f2" stroke="#c9ccd1" stroke-width="2"/><rect x="${x - 130}" y="250" width="8" height="74" fill="#e0262b"/><text x="${x}" y="281" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="30" fill="#111">${s}</text><text x="${x}" y="308" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="600" font-size="16" fill="#555" letter-spacing="1.5">ESTACIÓN DE DESARME</text></g>` }).join('')
+  const signs = stations.map((st, i) => { const x = st.x ?? 380 + i * 560; return `<g><rect x="${x - 140}" y="236" width="280" height="104" rx="4" fill="#f4f4f2" stroke="#c9ccd1" stroke-width="2"/><rect x="${x - 140}" y="236" width="8" height="104" fill="#e0262b"/><text x="${x - 118}" y="272" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="34" fill="#111">${st.code}</text><text x="${x - 70}" y="269" font-family="Barlow Condensed, sans-serif" font-weight="600" font-size="16" fill="#555" letter-spacing="1.5">ESTACIÓN DE ${kind}</text><text x="${x - 118}" y="298" font-family="Barlow Condensed, sans-serif" font-weight="600" font-size="19" fill="#222">Mecánico: ${st.mech}</text><text x="${x - 118}" y="324" font-family="Barlow Condensed, sans-serif" font-weight="600" font-size="17" fill="#e0262b" letter-spacing="1">Repara: ${st.part}</text></g>` }).join('')
   const table = (x: number) => `<g><rect x="${x}" y="720" width="340" height="16" fill="#2a2f36"/><rect x="${x + 10}" y="736" width="14" height="120" fill="#1d2229"/><rect x="${x + 316}" y="736" width="14" height="120" fill="#1d2229"/><rect x="${x + 10}" y="800" width="320" height="8" fill="#1d2229"/></g>`
   const cart = (x: number) => `<g><rect x="${x}" y="760" width="110" height="110" rx="4" fill="#e0262b"/>${[0, 1, 2, 3].map((i) => `<rect x="${x + 8}" y="${768 + i * 26}" width="94" height="20" fill="#b3181d"/><rect x="${x + 44}" y="${775 + i * 26}" width="22" height="5" fill="#f1f1f1"/>`).join('')}<circle cx="${x + 20}" cy="878" r="8" fill="#111"/><circle cx="${x + 90}" cy="878" r="8" fill="#111"/></g>`
   return `
