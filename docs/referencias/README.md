@@ -31,4 +31,14 @@
 | `r2-12-captura-red.png` | 12 — Captura de la red (v1.2) a corregir | Red reescrita: minera → una línea → PTT |
 | `r2-13-captura-forecast.png` | 13 — Bloque de forecast a eliminar | Eliminado; reemplazado por derivación de componentes |
 
+## Ronda 3 — `../Observaciones_Video_PTT_R3_2026-09-09.docx` (numeración del documento)
+
+Las tres capturas son de la **v1.2 (03:47)**; se mapearon a las escenas equivalentes de v2.0.
+
+| Archivo | Imagen | Uso en la animación |
+|---|---|---|
+| `r3-01-captura-anticipa-eliminar.png` | 1 — Pantalla "Supply chain no reacciona. Anticipa." (v1.2) a eliminar | Ya no existía en v2.0 (bloque de forecast eliminado en R2) |
+| `r3-02-captura-evaluacion-taller.png` | 2 — Escena de evaluación en taller (v1.2) | Panel "Evaluación en taller" (evaluación → listado → valorización → cotización → detalle) + copy en Recepción |
+| `r3-03-captura-abastecimiento.png` | 3 — Escena de abastecimiento internacional (v1.2) con los 5 pasos y "Repuestos originales, a tiempo" | Barra de 6 pasos y nuevo título en Abastecimiento; pasos 04–06 continúan en Bodega |
+
 Video de referencia del mando final: https://www.youtube.com/watch?v=j4ulsFhfqaA

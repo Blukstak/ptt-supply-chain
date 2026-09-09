@@ -1,6 +1,6 @@
 import { el } from '../core/dom'
 import { mercatorMap, cargoShip, airplane, lowboyTruck, pttWorker } from '../art'
-import { Scene, sceneRoot, fullSvg, sceneEnter, sceneLeave, lowerThird, showLowerThird, tag, pop } from '../core/scene'
+import { Scene, sceneRoot, fullSvg, sceneEnter, sceneLeave, lowerThird, showLowerThird, tag, pop, stepsBar, SUPPLY_STEPS } from '../core/scene'
 
 /**
  * RED INTERNACIONAL DE ABASTECIMIENTO (R2 · obs. 9 y 10).
@@ -9,16 +9,18 @@ import { Scene, sceneRoot, fullSvg, sceneEnter, sceneLeave, lowerThird, showLowe
  */
 export function importacionScene(): Scene {
   const root = sceneRoot('import')
-  const CL = { x: 268, y: 418 }
+  // R3 · obs. 4: el punto de recepción va sobre Chile (costa oeste de Sudamérica), no sobre Argentina.
+  const CL = { x: 232, y: 432 }
   const origins = [
-    { x: 190, y: 228, name: 'EE.UU. · Houston · aéreo', air: true, route: 'M190 228 Q300 300 268 418' },
-    { x: 452, y: 132, name: 'Europa · Rotterdam · aéreo', air: true, route: 'M452 132 Q420 330 268 418' },
-    { x: 782, y: 322, name: 'Asia · Singapur · marítimo', air: false, route: 'M782 322 L760 380 L700 470 L560 520 L420 520 L300 490 L268 418' },
+    { x: 190, y: 228, name: 'EE.UU. · Houston · aéreo', air: true, route: 'M190 228 Q290 300 232 432' },
+    { x: 452, y: 132, name: 'Europa · Rotterdam · aéreo', air: true, route: 'M452 132 Q420 330 232 432' },
+    { x: 782, y: 322, name: 'Asia · Singapur · marítimo', air: false, route: 'M782 322 L760 380 L700 470 L560 500 L400 470 L232 432' },
   ]
   const bg = fullSvg(`
     <rect width="1920" height="1080" fill="#07090c"/>
     <g id="im-map" transform="translate(110 90) scale(1.7)" opacity="0">
       ${mercatorMap('merc')}
+      <path id="im-chile" d="M218 372 L232 370 L246 448 L256 516 L262 540 L250 520 L240 460 L225 400Z" fill="#e0262b" opacity="0"/>
       ${origins.map((o, i) => `<path id="im-route-${i}" d="${o.route}" fill="none" stroke="${o.air ? '#ffffff' : '#e0262b'}" stroke-width="2.5" stroke-dasharray="6 5" opacity="0"/>`).join('')}
       ${origins.map((o, i) => `<g id="im-o-${i}" opacity="0"><circle cx="${o.x}" cy="${o.y}" r="7" fill="#fff"/><circle cx="${o.x}" cy="${o.y}" r="14" fill="none" stroke="#fff" stroke-width="1.5" opacity=".6"/></g>`).join('')}
       <g id="im-cl" opacity="0"><circle cx="${CL.x}" cy="${CL.y}" r="9" fill="#e0262b"/><circle id="im-cl-ping" cx="${CL.x}" cy="${CL.y}" r="16" fill="none" stroke="#e0262b" stroke-width="2"/></g>
@@ -45,31 +47,33 @@ export function importacionScene(): Scene {
     </g>
     <g id="im-semi" transform="translate(-1000 800) scale(.75)" opacity="0">${lowboyTruck('ims', true)}</g>
   `)
-  const lt = lowerThird('Abastecimiento internacional', 'Red propia de repuestos')
+  // R3 · obs. 3: título inferior con las tres ideas (red internacional, agilidad, stock de mayor rotación)
+  const lt = lowerThird('Abastecimiento internacional', 'Red internacional de proveedores, operación ágil y stock de los repuestos de mayor rotación.')
+  Object.assign((lt.querySelector('.headline') as HTMLElement).style, { fontSize: '50px', maxWidth: '1500px' })
   const labels = origins.map((o) => {
     const t = tag(o.name, 0, 0, 'info')
     Object.assign(t.style, { left: `${110 + o.x * 1.7 + 22}px`, top: `${90 + o.y * 1.7 - 22}px` })
     return t
   })
-  const steps = el('div', { class: 'steps' })
-  ;['Orden de compra', 'Aéreo · EE.UU. y Europa', 'Marítimo · Asia', 'Camión propio a bodega'].forEach((s, i) => steps.append(el('div', { class: 'step', html: `<span class="n">0${i + 1}</span>${s}` })))
-  Object.assign(steps.style, { left: '110px', top: '150px' })
-  const tagNet = tag('Red internacional de abastecimiento de repuestos', 110, 640, 'ok')
+  // R3 · obs. 3: barra superior con los 6 pasos (01–03 se recorren aquí; 04–06 en Bodega)
+  const { steps, els: stepEls, activate } = stepsBar(SUPPLY_STEPS, 110, 100, true)
+  // R3 · obs. 4: copy del mapa
+  const copyMap = el('div', { class: 'abs headline', html: 'Proveedores del mundo para asegurar el abastecimiento y mantener activa la cadena de reparación.' })
+  Object.assign(copyMap.style, { left: '110px', top: '540px', width: '760px', fontSize: '36px', lineHeight: '1.02', opacity: '0', padding: '16px 22px', background: 'rgba(7,9,12,.72)', borderLeft: '6px solid var(--amber)', borderRadius: '4px' })
   const tagKind = tag('Repuestos originales + repuestos desarrollados por Ingeniería y Desarrollo', 110, 700, 'ok')
   const tagLoad = tag('Carga de EE.UU., Europa y Asia · rumbo a bodega PTT', 1100, 700, 'info')
-  root.append(bg, lt, ...labels, steps, tagNet, tagKind, tagLoad)
+  root.append(bg, lt, ...labels, steps, copyMap, tagKind, tagLoad)
 
   return {
     id: 'import', title: 'Abastecimiento', root,
     build(tl, at) {
       const q = (s: string) => root.querySelector(s) as SVGGElement
-      const stepEls = Array.from(steps.children) as HTMLElement[]
-      const activate = (i: number) => () => stepEls.forEach((s, k) => s.classList.toggle('active', k === i))
       sceneEnter(tl, root, at, 1)
       showLowerThird(tl, lt, at + 0.5, 3.4)
       tl.set(steps, { opacity: 1 }, at + 0.6); pop(tl, stepEls, at + 0.8)
-      // 01 — OC en el ERP
+      // 01 — análisis de repuestos (listado en el ERP) → 02 — compras (emisión de OC)
       tl.add(activate(0), at + 1)
+      tl.add(activate(1), at + 2.3)
       tl.to(q('#im-desk'), { opacity: 1, duration: 0.6 }, at + 0.6)
       tl.fromTo(root.querySelectorAll('.ocrow'), { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.4, stagger: 0.35 }, at + 1.2)
       tl.fromTo(q('#im-oc-btn'), { fill: '#e0262b' }, { fill: '#4ade80', duration: 0.3, repeat: 1, yoyo: true }, at + 2.4)
@@ -77,6 +81,7 @@ export function importacionScene(): Scene {
       const mAt = at + 2.8
       tl.to(q('#im-desk'), { opacity: 0, duration: 0.6 }, mAt)
       tl.fromTo(q('#im-map'), { opacity: 0, attr: { transform: 'translate(110 90) scale(1.8)' } }, { opacity: 1, attr: { transform: 'translate(110 90) scale(1.7)' }, duration: 1, ease: 'power3.out' }, mAt)
+      tl.to(q('#im-chile'), { opacity: 0.55, duration: 0.5 }, mAt + 0.4)
       tl.to(q('#im-cl'), { opacity: 1, duration: 0.3 }, mAt + 0.5)
       tl.fromTo(q('#im-cl-ping'), { attr: { r: 12 }, opacity: 1 }, { attr: { r: 40 }, opacity: 0, duration: 1.4, repeat: 6, ease: 'power2.out' }, mAt + 0.5)
       origins.forEach((o, i) => {
@@ -87,9 +92,9 @@ export function importacionScene(): Scene {
         pop(tl, labels[i], mAt + 1.6 + i * 0.2)
       })
       // 03 — aviones (EE.UU./Europa) llegan antes; barco (Asia) llega después
-      const sAt = mAt + 2.2
-      tl.add(activate(1), sAt)
-      tl.add(activate(2), sAt + 1.7)
+      // 03 — importación
+      const sAt = mAt + 2.0
+      tl.add(activate(2), sAt)
       origins.forEach((o, i) => {
         const route = q(`#im-route-${i}`) as unknown as SVGPathElement
         const len = route.getTotalLength ? route.getTotalLength() : 600
@@ -106,19 +111,18 @@ export function importacionScene(): Scene {
         } }, sAt)
         tl.to(v, { opacity: 0, duration: 0.3 }, sAt + dur)
       })
-      pop(tl, tagNet, sAt + 1.4)
+      tl.fromTo(copyMap, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, sAt + 1.2)
       pop(tl, tagKind, sAt + 2.1)
       // 04 — camión propio, claramente cargado, sale hacia bodega
       const tAt = sAt + 3.8
-      tl.add(activate(3), tAt)
       tl.to([q('#im-map'), ...labels], { opacity: 0.25, duration: 0.6 }, tAt)
       tl.to(q('#im-semi'), { opacity: 1, duration: 0.3 }, tAt)
-      tl.to(q('#im-semi'), { attr: { transform: 'translate(2100 800) scale(.75)' }, duration: 3.8, ease: 'power1.inOut' }, tAt)
-      tl.to(['#ims-w0', '#ims-w1', '#ims-w2', '#ims-w3', '#ims-w4'].map(q), { rotation: 1400, transformOrigin: '50% 50%', duration: 3.8, ease: 'power1.inOut' }, tAt)
-      pop(tl, tagLoad, tAt + 1, 1.6)
-      tl.to([steps, tagNet, tagKind, ...labels], { opacity: 0, duration: 0.5 }, tAt + 2.3)
-      sceneLeave(tl, root, tAt + 2.7, 0.9)
-      return tAt + 3.6 - at
+      tl.to(q('#im-semi'), { attr: { transform: 'translate(2100 800) scale(.75)' }, duration: 3.3, ease: 'power1.inOut' }, tAt)
+      tl.to(['#ims-w0', '#ims-w1', '#ims-w2', '#ims-w3', '#ims-w4'].map(q), { rotation: 1400, transformOrigin: '50% 50%', duration: 3.3, ease: 'power1.inOut' }, tAt)
+      pop(tl, tagLoad, tAt + 0.8, 1.5)
+      tl.to([steps, copyMap, tagKind, ...labels], { opacity: 0, duration: 0.5 }, tAt + 2)
+      sceneLeave(tl, root, tAt + 2.4, 0.9)
+      return tAt + 3.3 - at
     },
   }
 }

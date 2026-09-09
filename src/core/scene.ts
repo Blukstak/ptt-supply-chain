@@ -59,6 +59,22 @@ export function showLowerThird(tl: gsap.core.Timeline, lt: HTMLElement, at: numb
   tl.set(lt, { y: 0 }, at + hold + 0.6)
 }
 
+/** Pasos de la cadena de abastecimiento (R3 · obs. 3): se muestran en Abastecimiento (01–03) y Bodega (04–06). */
+export const SUPPLY_STEPS = [
+  'Análisis de repuestos', 'Compras', 'Importación',
+  'Recepción y revisión', 'Picking de repuestos disponibles en bodega', 'Entrega a taller de repuestos de bodega + compras',
+]
+
+/** Barra de pasos numerados; `activate(i)` devuelve un callback para resaltar el paso i. */
+export function stepsBar(items: string[], x: number, y: number, wrap = false) {
+  const steps = el('div', { class: `steps${wrap ? ' wrap' : ''}` })
+  items.forEach((s, i) => steps.append(el('div', { class: 'step', html: `<span class="n">0${i + 1}</span>${s}` })))
+  Object.assign(steps.style, { left: `${x}px`, top: `${y}px` })
+  const els = Array.from(steps.children) as HTMLElement[]
+  const activate = (i: number) => () => els.forEach((s, k) => s.classList.toggle('active', k === i))
+  return { steps, els, activate }
+}
+
 /** Etiqueta tipo HUD en una posición. */
 export function tag(text: string, x: number, y: number, kind: '' | 'ok' | 'info' = ''): HTMLElement {
   const t = el('div', { class: `tag abs ${kind}` }, text)

@@ -27,17 +27,21 @@ export function recepcionScene(): Scene {
   `)
   const lt = lowerThird('Recepción e inspección en taller PTT', 'Evaluación técnica')
   const tagScan = tag('SCAN OK · FD-797-0412 recepcionado en WMS', 560, 900, 'ok')
+  // R3 · obs. 2: evaluación → listado de repuestos → valorización → cotización → detalle al cliente
   const panel = el('div', { class: 'panel', html: `
-    <div class="ph">Protocolo de evaluación</div>
-    <div class="row"><span class="k">01 · Inspección visual y lavado</span><span class="v ok">✓</span></div>
-    <div class="row"><span class="k">02 · Desarme controlado</span><span class="v ok">✓</span></div>
-    <div class="row"><span class="k">03 · Metrología y ensayos NDT</span><span class="v ok">✓</span></div>
-    <div class="row"><span class="k">04 · Análisis de falla</span><span class="v warn">Desgaste corona · 0,8 mm</span></div>
-    <div class="row"><span class="k">05 · Informe técnico y presupuesto</span><span class="v ok">Emitido</span></div>
+    <div class="ph">Evaluación en taller</div>
+    <div class="row"><span class="k">01 · Evaluación del componente</span><span class="v ok">✓</span></div>
+    <div class="row"><span class="k">02 · Listado de repuestos</span><span class="v ok">Generado</span></div>
+    <div class="row"><span class="k">03 · Valorización del listado</span><span class="v ok">✓</span></div>
+    <div class="row"><span class="k">04 · Cotización al cliente</span><span class="v warn">Emitida</span></div>
+    <div class="row"><span class="k">05 · Detalle de la evaluación al cliente</span><span class="v ok">Entregado</span></div>
   ` })
   Object.assign(panel.style, { left: '1160px', top: '160px', width: '660px' })
   const tagLab = tag('Ingeniería retira la pieza, la estudia y la devuelve', 1060, 900, 'info')
-  root.append(bg, art, lt, tagScan, panel, tagLab)
+  // Copy propuesto por el cliente (R3 · obs. 2)
+  const copy = el('div', { class: 'abs', html: '<div class="headline" style="font-size:42px;line-height:1">Evaluamos el componente y generamos el listado de repuestos.</div><div class="sub" style="font-size:27px;margin-top:12px;max-width:900px;color:var(--ink)">Con eso valorizamos, cotizamos y entregamos al cliente el detalle de la evaluación.</div>' })
+  Object.assign(copy.style, { left: '120px', top: '850px', width: '1300px', opacity: '0' })
+  root.append(bg, art, lt, tagScan, panel, tagLab, copy)
 
   return {
     id: 'recepcion', title: 'Recepción e ingeniería', root,
@@ -61,10 +65,12 @@ export function recepcionScene(): Scene {
       tl.to(q('#rfd-carrier'), { x: 60, rotation: 30, transformOrigin: '50% 50%', duration: 1, ease: 'power3.inOut' }, openAt + 0.9)
       tl.to(q('#rfd-sun'), { x: 170, duration: 1, ease: 'power3.inOut' }, openAt + 0.9)
       tl.fromTo(panel, { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out' }, openAt + 1)
-      tl.fromTo(panel.querySelectorAll('.row'), { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.4, stagger: 0.26, ease: 'power2.out' }, openAt + 1.2)
+      tl.fromTo(panel.querySelectorAll('.row'), { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.4, stagger: 0.32, ease: 'power2.out' }, openAt + 1.2)
+      tl.fromTo(copy, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, openAt + 1.4)
       // Laboratorio de ingeniería: retira una pieza, la estudia y la devuelve
-      const labAt = openAt + 3
+      const labAt = openAt + 3.9
       tl.to(panel, { opacity: 0, y: -20, duration: 0.5 }, labAt - 0.2)
+      tl.to(copy, { opacity: 0, y: -16, duration: 0.5 }, labAt - 0.2)
       tl.to(q('#rc-tech'), { opacity: 0, duration: 0.4 }, labAt - 0.2)
       tl.fromTo(q('#rc-lab'), { opacity: 0, attr: { transform: 'translate(1600 700)' } }, { opacity: 1, attr: { transform: 'translate(1520 700)' }, duration: 0.8, ease: 'power3.out' }, labAt)
       tl.set(q('#rc-part'), { opacity: 1, attr: { transform: 'translate(700 600) scale(.6)' } }, labAt + 0.4)

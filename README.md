@@ -1,6 +1,6 @@
 # PTT · Supply Chain Film
 
-Video corporativo **renderizado en el navegador** (~2:03) sobre Power Train Technologies y su cadena de
+Video corporativo **renderizado en el navegador** (~2:05) sobre Power Train Technologies y su cadena de
 suministro: quiénes somos, nuestros clientes y el ciclo completo de un mando final, desde el contrato en faena
 hasta las mejoras de Ingeniería y Desarrollo.
 
@@ -31,7 +31,7 @@ src/
 public/media/        (opcional) fotografías reales para reemplazar fondos
 ```
 
-## Escenas (v2.0 · 02:03)
+## Escenas (v2.1 · 02:05)
 
 | # | Capítulo | Contenido |
 |---|----------|-----------|
@@ -40,10 +40,10 @@ public/media/        (opcional) fotografías reales para reemplazar fondos
 | 2 | Nuestros clientes | La gran minería del país; equipos que reparamos: motoniveladora, bulldozer, perforadora, Komatsu, CAT 797F |
 | 3 | Contrato en faena | El 797 entra al taller PTT dentro de la mina · despiece de componentes · close-up al mando final (exterior → engranajes) · horas 17.650/18.000 · el componente sale en cama baja. *"Todo comienza antes de que ocurra una falla (generalmente)."* |
 | 4 | Red de interacción | La minera interactúa internamente y sale una sola línea a PTT; dentro de PTT: taller, calidad, bodega, proveedores, prov. logísticos · comunicación rápida · 24/7 · componentes derivados a PTT vs. otros proveedores |
-| 5 | Recepción e ingeniería | Recepción, escaneo, desarme, protocolo de evaluación · el laboratorio de Ingeniería retira una pieza, la estudia y la devuelve |
-| 6 | Abastecimiento | OC en el ERP · aéreo desde EE.UU. y Europa · marítimo desde Asia · red internacional de repuestos originales y desarrollados por I+D · camión propio cargado |
-| 7 | Bodega | El camión cargado llega a bodega PTT, el personal revisa e ingresa la carga, y pasa directo a taller |
-| 8 | Taller PTT | Armado, pruebas y certificación con marca PTT · dos alternativas: componente reparado o componente de stock. *"Dos alternativas para el cliente. Una respuesta rápida."* |
+| 5 | Recepción e ingeniería | Recepción, escaneo, desarme · evaluación en taller: se evalúa el componente, se genera el listado de repuestos, se valoriza, se cotiza y se entrega al cliente el detalle · el laboratorio de Ingeniería retira una pieza, la estudia y la devuelve |
+| 6 | Abastecimiento | Barra de 6 pasos (análisis de repuestos → compras → importación → recepción y revisión → picking → entrega a taller); aquí se recorren 01–03: listado y OC en el ERP · aéreo desde EE.UU. y Europa · marítimo desde Asia · punto de recepción sobre Chile · camión propio cargado. *"Red internacional de proveedores, operación ágil y stock de los repuestos de mayor rotación."* |
+| 7 | Bodega | Pasos 04–06: el camión cargado llega y el personal revisa la carga (recepción) · picking de los repuestos que ya estaban en bodega · ambos flujos se consolidan en una sola caja que se entrega a taller. *"Bodega completa los repuestos para la reparación y entrega en la fecha planificada."* |
+| 8 | Taller PTT | Llega la caja consolidada de bodega · armado, pruebas y certificación con marca PTT · dos alternativas: componente reparado o componente de stock. *"Dos alternativas para el cliente. Una respuesta rápida."* |
 | 9 | Entrega y cierre | El componente PTT queda instalado en el camión · mejoras de Ingeniería y Desarrollo (la pieza mejorada vuelve y sale otro mando final) · fortalezas y limitaciones · cierre de marca |
 
 Observaciones del cliente y decisiones: `docs/DECISIONES.md`. Referencias visuales: `docs/referencias/`.

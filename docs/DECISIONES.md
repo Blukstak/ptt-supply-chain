@@ -2,6 +2,47 @@
 
 Bitácora de decisiones de diseño y contenido. Lo más reciente arriba.
 
+## 2026-09-09 (noche, 2) — Ronda 3 de Romina (v2.1 / R3)
+
+Fuente: `docs/Observaciones_Video_PTT_R3_2026-09-09.docx` (Romina De Filippi, Subgerencia de Supply Chain). Capturas del documento en `docs/referencias/r3-*.png`.
+
+**Nota importante:** las capturas y los minutos citados en R3 (pantalla "Supply chain no reacciona. Anticipa.", "ESCENA 05", "minuto 2:00", "minuto 2:12", "fill rate") corresponden a la **v1.2 (03:47)**, no a la v2.0 (02:03) que ya estaba publicada. Cada observación se mapeó a la escena equivalente de v2.0; lo que ya se había resuelto en R2 se marca como tal.
+
+| # | Observación R3 | Decisión / implementación | Estado |
+|---|---|---|---|
+| 1 | Eliminar la pantalla "Supply chain no reacciona. Anticipa." (Img 1) | Esa cita pertenecía a la escena de planificación/forecast de v1.2, eliminada en R2 (obs. 7). `grep -ri anticipa src/` no devuelve nada. | ✅ (ya aplicado en v2.0) |
+| 2 | Evaluación en taller (Img 2): agregar que se evalúa el componente, se genera el listado de repuestos, se valoriza, se emite la cotización y se entrega el detalle de la evaluación; copy sugerido | Escena "Recepción e ingeniería": el panel "Protocolo de evaluación" pasa a **"Evaluación en taller"** con 5 filas: 01 Evaluación del componente · 02 Listado de repuestos (Generado) · 03 Valorización del listado · 04 Cotización al cliente (Emitida) · 05 Detalle de la evaluación al cliente (Entregado). Debajo del componente desarmado aparece el copy textual: *"Evaluamos el componente y generamos el listado de repuestos. Con eso valorizamos, cotizamos y entregamos al cliente el detalle de la evaluación."* (+0,9 s para que se lea). La cita de v1.2 "Inspeccionar, evaluar, decidir. Con datos." ya no existía. | ✅ |
+| 3a | Abastecimiento (Img 3): barra superior con 6 pasos: Análisis de repuestos · Compras · Importación · Recepción y revisión · Picking de repuestos disponibles en bodega · Entrega a taller de repuestos de bodega + compras | Nuevo helper `stepsBar(SUPPLY_STEPS)` en `core/scene.ts` con los 6 textos exactos, en dos filas (4 + 2) para que quepan. En Abastecimiento se recorren 01 (listado en el ERP), 02 (emisión de OC) y 03 (aviones/barco y camión). Como los pasos 04–06 ocurren físicamente en bodega, **la misma barra continúa en la escena Bodega** y allí se resaltan 04, 05 y 06. Se eliminaron los 4 pasos antiguos (OC / Aéreo / Marítimo / Camión). | ✅ |
+| 3b | Título inferior: reemplazar "Repuestos originales, a tiempo" por un mensaje con red internacional de proveedores, agilidad y stock de mayor rotación | El lower-third de Abastecimiento ahora dice **"Red internacional de proveedores, operación ágil y stock de los repuestos de mayor rotación."** (texto exacto del documento, 50 px en dos líneas). En v2.0 el título era "Red propia de repuestos". | ✅ |
+| 4a | Mapa (min. 2:00 de v1.2): centrar el punto de recepción sobre Chile, no sobre Argentina | El punto pasa de (268, 418) a (232, 432) en coordenadas del mapa: sobre la costa oeste de Sudamérica. Además se dibuja **Chile como franja roja** semitransparente a lo largo de la costa para que se lea de inmediato. Las tres rutas (Houston, Rotterdam, Singapur) terminan en el nuevo punto; la marítima llega por el Pacífico. | ✅ |
+| 4b | Copy: reemplazar "Del mundo a la faena…" | Ese texto ya no existía en v2.0; en su lugar la etiqueta "Red internacional de abastecimiento de repuestos" se reemplaza por el bloque **"Proveedores del mundo para asegurar el abastecimiento y mantener activa la cadena de reparación."** (bloque con fondo oscuro y filete rojo sobre el Pacífico, para que las rutas no lo crucen). Se conserva la etiqueta R2 "Repuestos originales + repuestos desarrollados por Ingeniería y Desarrollo". | ✅ |
+| 5a | Bodega (min. 2:12 de v1.2): distinguir dos flujos — picking de repuestos que ya están en bodega y recepción de la carga de los países — que se consolidan en una misma caja que se entrega a taller | Escena "Bodega" reescrita: (04) el camión cargado llega y dos técnicos PTT revisan la carga → las tres cajas EE.UU./EUROPA/ASIA bajan del camión a una **zona de consolidación** (pallet con marco punteado "OT-4471"); (05) un tercer técnico hace **picking** en el rack y dos cajas "STOCK" bajan a la misma zona; (06) las cinco cajas se funden en **una sola caja "PTT · Repuestos de bodega + compras · OT-4471"** que sale hacia la derecha. Etiquetas: "Recepción de la carga de EE.UU., Europa y Asia", "Personal PTT revisa la carga · ingreso al WMS", "Picking de repuestos que ya están en bodega", "Ambos flujos se consolidan en una misma caja", "Entrega a taller en la fecha planificada →". En Taller entra esa misma caja consolidada (antes entraban dos cajas EUROPA/ASIA) y el primer paso dice "Caja de bodega: repuestos + compras". | ✅ |
+| 5b | Eliminar los indicadores numéricos del costado derecho (fill rate y similares) | Pertenecían a la escena Bodega/WMS de v1.2; en v2.0 ya no había indicadores numéricos. | ✅ (ya aplicado en v2.0) |
+| 5c | Copy: reemplazar "Cada repuesto en su lugar…" por "Bodega completa los repuestos para la reparación y entrega en la fecha planificada." | Lower-third de Bodega: kicker "Bodega PTT" + título con el texto exacto (50 px, dos líneas). | ✅ |
+
+### Duración y estructura resultante (02:05 · 125,2 s)
+
+La regla de 120 ± 5 s se mantiene: R3 añade contenido en Recepción (+0,9 s) y Bodega (+0,5 s); se compensó recortando el tramo del camión en Abastecimiento (−0,7 s).
+
+| # | Capítulo | Inicio | Dur. |
+|---|---|---|---|
+| 0 | Portada | 0:00 | 6 s |
+| 1 | Quiénes somos | 0:06 | 10 s |
+| 2 | Nuestros clientes | 0:15 | 9 s |
+| 3 | Contrato en faena | 0:24 | 19 s |
+| 4 | Red de interacción | 0:43 | 10 s |
+| 5 | Recepción e ingeniería (evaluación → listado → valorización → cotización → detalle; laboratorio) | 0:52 | 13 s |
+| 6 | Abastecimiento (pasos 01–03: análisis, compras, importación; mapa con Chile) | 1:05 | 12 s |
+| 7 | Bodega (pasos 04–06: recepción y revisión, picking, consolidación y entrega a taller) | 1:16 | 11 s |
+| 8 | Taller PTT (armado, QA, dos alternativas) | 1:26 | 15 s |
+| 9 | Entrega y cierre | 1:41 | 24 s |
+
+### Pendientes que requieren decisión del cliente
+
+- Los pasos 04–06 de la barra se muestran en la escena Bodega (no solo en Abastecimiento) porque es donde ocurren; si se prefiere que los seis pasos se recorran íntegros dentro de la pantalla de abastecimiento, habría que alargar esa escena ~6 s o quitar otra cosa.
+- "OT-4471" y las etiquetas "STOCK" de las cajas de picking son propuesta editorial.
+- La franja roja sobre Chile en el mapa es un recurso gráfico añadido para reforzar la obs. 4; se puede quitar si se prefiere solo el punto.
+
 ## 2026-09-09 (noche) — Ronda 2 de Romina + instrucciones de Gala (v2.0)
 
 Fuente: `docs/Observaciones_Video_PTT_R2_2026-09-09.docx` (Romina De Filippi, Subgerencia de Supply Chain, observaciones sobre la versión 03:47). Imágenes nuevas en `docs/referencias/r2-*.png`.

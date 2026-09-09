@@ -12,7 +12,7 @@ export function tallerScene(): Scene {
   const root = sceneRoot('taller')
   const bg = fullSvg(`${pttWorkshop('tf', ['D1', 'D2', 'D3'])}
     <rect id="tl-dim" width="1920" height="1080" fill="#05070a" opacity="0"/>
-    <g id="tl-boxes">${[0, 1].map((i) => `<g class="tl-box" transform="translate(${-400 - i * 200} 760) scale(.7)">${crate(`tlc${i}`, 130, 130, ['EUROPA', 'ASIA'][i])}</g>`).join('')}</g>
+    <g id="tl-boxes"><g class="tl-box" transform="translate(-500 780)">${crate('tlc0', 300, 180, 'PTT')}<text x="150" y="-14" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="22" fill="#fff" letter-spacing="3">REPUESTOS DE BODEGA + COMPRAS</text></g></g>
     <g id="tl-stand" transform="translate(960 660)"><rect x="-260" y="140" width="520" height="30" fill="#2a2f36"/><rect x="-200" y="30" width="26" height="120" fill="#4b525c"/><rect x="174" y="30" width="26" height="120" fill="#4b525c"/></g>
     <g id="tl-fd" transform="translate(960 560)">${finalDrive('tfd', 250)}</g>
     <g id="tl-t1" transform="translate(500 760)">${pttWorker('tt1', false)}</g>
@@ -27,7 +27,7 @@ export function tallerScene(): Scene {
   const sparks = new Dust({ count: 60, color: '255, 200, 87', speed: 1.4, size: [1, 2.5], drift: 1.2, area: { x: 760, y: 400, w: 400, h: 300 } })
   const lt = lowerThird('Armado en taller PTT', 'Estándar de fábrica')
   const steps = el('div', { class: 'steps' })
-  ;['Repuestos desde bodega', 'Armado y torque', 'Pruebas dinámicas', 'Certificación PTT'].forEach((s, i) => steps.append(el('div', { class: 'step', html: `<span class="n">0${i + 1}</span>${s}` })))
+  ;['Caja de bodega: repuestos + compras', 'Armado y torque', 'Pruebas dinámicas', 'Certificación PTT'].forEach((s, i) => steps.append(el('div', { class: 'step', html: `<span class="n">0${i + 1}</span>${s}` })))
   Object.assign(steps.style, { left: '120px', top: '160px' })
   const stamp = el('div', { class: 'abs', html: `<div style="font-family:var(--font-display);font-weight:700;font-size:54px;text-transform:uppercase;letter-spacing:.06em;color:#4ade80;border:6px solid #4ade80;padding:10px 30px;border-radius:10px;transform:rotate(-8deg);background:rgba(0,0,0,.4)">Aprobado · QA</div>` })
   Object.assign(stamp.style, { left: '1180px', top: '360px', opacity: '0' })
@@ -60,9 +60,9 @@ export function tallerScene(): Scene {
       tl.set(q('#tfd-hubface'), { opacity: 0 }, at)
       tl.add(activate(0), at + 0.8)
       const boxes = Array.from(root.querySelectorAll('.tl-box')) as SVGGElement[]
-      boxes.forEach((b, i) => {
-        tl.to(b, { attr: { transform: `translate(${640 - i * 150} 760) scale(.7)` }, duration: 1, ease: 'power2.out' }, at + 0.4 + i * 0.2)
-        tl.to(b, { opacity: 0, duration: 0.4 }, at + 2)
+      boxes.forEach((b) => {
+        tl.to(b, { attr: { transform: 'translate(1580 780)' }, duration: 1.5, ease: 'power2.out' }, at + 0.3)
+        tl.to(b, { opacity: 0, duration: 0.4 }, at + 2.2)
       })
       const aAt = at + 2
       tl.add(activate(1), aAt)
