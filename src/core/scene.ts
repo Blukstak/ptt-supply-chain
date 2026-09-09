@@ -107,3 +107,10 @@ export function photoBg(root: HTMLElement, file: string, vectorBg: Element) {
   img.addEventListener('error', () => img.remove())
   root.append(img)
 }
+
+/** Logo institucional PTT · Marubeni Group (HTML). `size` = tamaño base en px. */
+export function logoPTT(size = 120): HTMLElement {
+  const l = el('div', { class: 'ptt-logo', html: '<span class="l1">Power</span><span class="l2">Train</span><span class="l3">Technologies</span><span class="l4">Marubeni Group</span>' })
+  l.style.fontSize = `${size}px`
+  return l
+}

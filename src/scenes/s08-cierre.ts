@@ -1,7 +1,7 @@
 import { el } from '../core/dom'
-import { minePit, truck797, semiTruck, finalDriveSide, finalDrive } from '../art'
+import { minePit, truck797, lowboyTruck, finalDriveSide, finalDrive } from '../art'
 import { Dust } from '../fx/dust'
-import { Scene, sceneRoot, fullSvg, sceneEnter, photoBg, quote, revealQuote, lowerThird, showLowerThird, tag, pop } from '../core/scene'
+import { Scene, sceneRoot, fullSvg, sceneEnter, photoBg, quote, revealQuote, lowerThird, showLowerThird, tag, pop, logoPTT } from '../core/scene'
 
 /**
  * ESCENA 8 — Distribución, instalación y cierre del ciclo.
@@ -14,7 +14,7 @@ export function cierreScene(): Scene {
   dawn.style.background = 'linear-gradient(to bottom, rgba(245,166,35,.22), rgba(0,0,0,0) 55%)'
   const dust = new Dust({ count: 140, color: '201, 162, 122', speed: 0.5, size: [1, 4], area: { x: 0, y: 500, w: 1920, h: 600 } })
   const art = fullSvg(`
-    <g id="cl-semi" transform="translate(-1000 700) scale(.9)">${semiTruck('cls')}<g transform="translate(290 -30) scale(.5)">${finalDriveSide('clc', 'FD-797')}</g></g>
+    <g id="cl-semi" transform="translate(-1000 620) scale(.9)">${lowboyTruck('cls')}<g transform="translate(330 140) scale(.42)">${finalDriveSide('clc', 'FD-797')}</g></g>
     <g id="cl-797" transform="translate(2100 500) scale(.72)">${truck797('c7')}</g>
     <g id="cl-fd" transform="translate(1186 766) scale(.15)" opacity="0">${finalDrive('cfd', 250)}</g>
   `)
@@ -22,33 +22,43 @@ export function cierreScene(): Scene {
   const tagDel = tag('Entrega en faena · 100% a tiempo · Detención programada Sem. 38', 120, 940, 'ok')
   const q1 = quote('El ciclo se cierra. La operación continúa.', 120, 400, 1400)
 
+  // Balance honesto: fortalezas y limitaciones (observación 7)
+  const balance = el('div', { class: 'abs', html: `
+    <div class="kicker" style="margin-bottom:18px">Propuesta de valor</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;width:1680px">
+      <div class="panel" style="position:relative;opacity:1"><div class="ph" style="color:#4ade80">Fortalezas</div>
+        ${['Rapidez en el tiempo de respuesta', 'Soporte a la minería por múltiples vías', 'Alternativa real al OEM: reduce la dependencia', 'Contratos de mantención dentro de la mina (periféricos)', 'Flexibilidad: distintas alternativas para la operación', 'Área de Ingeniería propia desarrollando soluciones'].map((t) => `<div class="row bl"><span class="k" style="color:var(--ink)">${t}</span><span class="v ok">✓</span></div>`).join('')}
+      </div>
+      <div class="panel" style="position:relative;opacity:1"><div class="ph" style="color:var(--ptt-grey)">Limitaciones que reconocemos</div>
+        ${['Capacidad instalada aún limitada', 'Talleres de menor tamaño que los del OEM'].map((t) => `<div class="row bl"><span class="k" style="color:var(--ink)">${t}</span><span class="v" style="color:var(--ptt-grey)">—</span></div>`).join('')}
+        <div class="pl" style="margin-top:22px;font-size:18px;line-height:1.5">Un balance honesto: sabemos dónde estamos y hacia dónde crecemos, y por eso nuestra propuesta es flexible, rápida y cercana a la operación.</div>
+      </div>
+    </div>` })
+  Object.assign(balance.style, { left: '120px', top: '150px', opacity: '0' })
+
   // Cierre de marca: anillo de procesos
   const endCard = el('div', { class: 'abs' })
   Object.assign(endCard.style, { inset: '0', background: 'radial-gradient(ellipse at 50% 50%, #151c26, #05070a 70%)', opacity: '0' })
   const ringSvg = fullSvg(`
     <g id="ec-ring" transform="translate(1320 540)">
       <circle r="300" fill="none" stroke="#2a3441" stroke-width="2"/>
-      <circle id="ec-arc" r="300" fill="none" stroke="#f5a623" stroke-width="4" stroke-dasharray="${2 * Math.PI * 300}" stroke-dashoffset="${2 * Math.PI * 300}" transform="rotate(-90)"/>
-      ${['Planificación', 'Retiro', 'Recepción', 'Abastecimiento', 'Bodega · WMS', 'Reparación', 'Distribución'].map((s, i, a) => {
+      <circle id="ec-arc" r="300" fill="none" stroke="#e0262b" stroke-width="4" stroke-dasharray="${2 * Math.PI * 300}" stroke-dashoffset="${2 * Math.PI * 300}" transform="rotate(-90)"/>
+      ${['Planificación', 'Retiro', 'Recepción', 'Abastecimiento', 'Bodega · WMS', 'Respuesta rápida', 'Reparación', 'Entrega'].map((s, i, a) => {
         const ang = (i / a.length) * Math.PI * 2 - Math.PI / 2, x = Math.cos(ang) * 300, y = Math.sin(ang) * 300
         const lx = Math.cos(ang) * 360, ly = Math.sin(ang) * 360
         const anchor = Math.abs(Math.cos(ang)) < 0.2 ? 'middle' : Math.cos(ang) > 0 ? 'start' : 'end'
-        return `<g class="ec-node" opacity="0"><circle cx="${x}" cy="${y}" r="12" fill="#f5a623"/><text x="${lx}" y="${ly + 8}" text-anchor="${anchor}" font-family="Barlow Condensed" font-weight="600" font-size="26" fill="#e9eef4" letter-spacing="2">${s.toUpperCase()}</text></g>`
+        return `<g class="ec-node" opacity="0"><circle cx="${x}" cy="${y}" r="12" fill="#e0262b"/><text x="${lx}" y="${ly + 8}" text-anchor="${anchor}" font-family="Barlow Condensed" font-weight="600" font-size="26" fill="#e9eef4" letter-spacing="2">${s.toUpperCase()}</text></g>`
       }).join('')}
       <g transform="scale(.55)" opacity=".9">${finalDrive('ecfd', 250)}</g>
     </g>
   `)
   endCard.append(ringSvg)
-  const brand = el('div', { class: 'abs', html: `
-    <div class="kicker">Power Train Technologies</div>
-    <div class="headline" style="font-size:150px;margin-top:10px">PTT<em>.</em></div>
-    <div class="sub" style="margin-top:20px;max-width:640px">Supply Chain integrada para la continuidad operacional de la minería.</div>
-    <div class="mono" style="margin-top:40px;font-size:15px;letter-spacing:.2em;color:var(--ink-3)">REPARACIÓN DE COMPONENTES MAYORES · CAT 797 · MANDOS FINALES · TRANSMISIONES · DIFERENCIALES</div>
-  ` })
-  Object.assign(brand.style, { left: '120px', top: '330px', opacity: '0' })
+  const brand = el('div', { class: 'abs' })
+  brand.append(logoPTT(120), el('div', { class: 'sub', style: 'margin-top:26px;max-width:640px', html: 'Cadena de suministro integrada para la continuidad operacional de la gran minería.' }), el('div', { class: 'mono', style: 'margin-top:30px;font-size:15px;letter-spacing:.2em;color:var(--ink-3)', html: 'REPARACIÓN DE COMPONENTES MAYORES · CAT 797 · MANDOS FINALES · TRANSMISIONES · DIFERENCIALES' }))
+  Object.assign(brand.style, { left: '120px', top: '300px', opacity: '0' })
   root.append(bg)
   photoBg(root, 'mine-dawn.jpg', bg)
-  root.append(dawn, dust.canvas, art, lt, tagDel, q1, endCard, brand)
+  root.append(dawn, dust.canvas, art, lt, tagDel, q1, balance, endCard, brand)
 
   return {
     id: 'cierre', title: 'Escena 8 · Cierre', root,
@@ -58,7 +68,7 @@ export function cierreScene(): Scene {
       sceneEnter(tl, root, at, 1.4)
       showLowerThird(tl, lt, at + 0.6, 4)
       // Camión de reparto entra y se detiene
-      tl.to(q('#cl-semi'), { attr: { transform: 'translate(640 700) scale(.9)' }, duration: 4.5, ease: 'power2.out' }, at + 0.3)
+      tl.to(q('#cl-semi'), { attr: { transform: 'translate(400 620) scale(.9)' }, duration: 4.5, ease: 'power2.out' }, at + 0.3)
       tl.to(['#cls-w0', '#cls-w1', '#cls-w2', '#cls-w3', '#cls-w4'].map(q), { rotation: 900, transformOrigin: '50% 50%', duration: 4.5, ease: 'power2.out' }, at + 0.3)
       pop(tl, tagDel, at + 4.2)
       // 797 entra y el mando final "se instala" (tapa CAT en la rueda)
@@ -73,8 +83,14 @@ export function cierreScene(): Scene {
       tl.to([q('#cl-797'), q('#cl-fd')], { x: -1800, duration: 6, ease: 'power2.in' }, at + 11)
       tl.to(['#c7-w1', '#c7-w2', '#c7-w3'].map(q), { rotation: -1600, transformOrigin: '50% 50%', duration: 6, ease: 'power2.in' }, at + 11)
       const end = revealQuote(tl, q1, at + 12.6, 3.6)
+      // Balance fortalezas / limitaciones
+      const bAt = end + 0.2
+      tl.to([bg, dawn, art], { filter: 'brightness(.35) blur(6px)', duration: 0.8 }, bAt)
+      tl.fromTo(balance, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out' }, bAt)
+      tl.fromTo(balance.querySelectorAll('.bl'), { opacity: 0, x: -16 }, { opacity: 1, x: 0, duration: 0.4, stagger: 0.35 }, bAt + 0.5)
+      tl.to(balance, { opacity: 0, y: -20, duration: 0.6 }, bAt + 10)
       // End card
-      const eAt = end + 0.2
+      const eAt = bAt + 10.6
       tl.to(endCard, { opacity: 1, duration: 1.2 }, eAt)
       tl.to([bg, dawn, dust.canvas, art], { opacity: 0, duration: 1 }, eAt)
       tl.to(q('#ec-arc'), { strokeDashoffset: 0, duration: 3, ease: 'power2.inOut' }, eAt + 0.6)

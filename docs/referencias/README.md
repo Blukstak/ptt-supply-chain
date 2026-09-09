@@ -1,11 +1,16 @@
 # Referencias visuales
 
-Guarda aquí las imágenes de referencia enviadas por el cliente (no se usan en el build; son guía para el dibujo).
+Imágenes adjuntas por Romina De Filippi en `../Observaciones_Video_PTT_2026-09-09.docx` (numeración del documento).
 
-| Archivo | Descripción | Origen |
+| Archivo | Imagen | Uso en la animación |
 |---|---|---|
-| `cat-797f.jpg` | Camión CAT 797F, vista 3/4 frontal: tolva con visera sobre cabina, cabina izquierda sobre plataforma, radiador frontal con escalera diagonal, 2 ejes (trasero dual). | Enviada por Romi, 09-09-2026 |
-| `mando-final.jpg` | Mando final CAT (render): cilindro amarillo con bridas dentadas en ambos extremos. Romi pide dibujarlo **sin** el eje delgado que sobresale al final. | Enviada por Romi, 09-09-2026 |
-| — | Video del mando final: https://www.youtube.com/watch?v=j4ulsFhfqaA | Enviado por Romi, 09-09-2026 |
+| `01-camion-797.png` | 1 — Camión CAT 797F | Escena 1: dibujo del camión (visera, cabina elevada, radiador, escalera) |
+| `02-mando-final.png` | 2 — Mando final | Escenas 3/4/8: cilindro amarillo con bridas dentadas, sin el eje final |
+| `03-logo-ptt.png` | 3 — Logo PTT · Marubeni Group | Portada, cierre y splash (recreado tipográficamente: rojo / blanco / gris) |
+| `04-transporte-cama-baja.png` | 4 — Tracto rojo con cama baja | Escenas 3/8: camión de transporte de componentes |
+| `05-taller-estaciones.png` | 5 — Estaciones de desarme D1/D2 | Escenas 4/7: letreros de estación, mesas, carro de herramientas rojo |
+| `06-taller-personal.png` | 6 — Personal PTT | Uniforme negro/gris con detalle rojo |
+| `07-taller-nave.png` | 7 — Nave y puente grúa amarillo | Escenas 4/7: muros blancos ondulados, cerchas, puente grúa |
+| `08-mapa-rutas.png` | 8 — Mapa Mercator satelital | Escena 5: mapa azul/verde con grilla, rutas marítimas |
 
-> Las dos imágenes llegaron por chat; hay que copiarlas manualmente a esta carpeta con esos nombres.
+Video de referencia del mando final: https://www.youtube.com/watch?v=j4ulsFhfqaA

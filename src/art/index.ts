@@ -453,3 +453,140 @@ export function worldMap(id = 'map') {
     ${blobs.map((d) => `<path d="${d}" fill="#1b232e" stroke="#2f3b4b" stroke-width="1.5"/>`).join('')}
   </g>`
 }
+
+/* ---------------------------------------------------------------- */
+/* v1.2 — Referencias de Romina (docs/referencias)                     */
+/* ---------------------------------------------------------------- */
+
+/** Tracto rojo con cama baja (Imagen 4). Mide ~900 px de largo; el componente va sobre la cama en (620, 160). */
+export function lowboyTruck(id = 'lowboy') {
+  const wheel = (x: number, y: number, r: number, wid: string) => `<g id="${wid}" transform="translate(${x} ${y})"><circle r="${r}" fill="#0d0f12"/><circle r="${r * 0.55}" fill="#8a8f98"/><circle r="${r * 0.22}" fill="#2a2f36"/></g>`
+  return `
+  <defs>
+    <linearGradient id="${id}-red" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff5a5f"/><stop offset=".5" stop-color="#e0262b"/><stop offset="1" stop-color="#8f1216"/></linearGradient>
+    <linearGradient id="${id}-yel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd94a"/><stop offset="1" stop-color="#b8860b"/></linearGradient>
+  </defs>
+  <g id="${id}">
+    <ellipse cx="450" cy="292" rx="480" ry="16" fill="#000" opacity=".45"/>
+    <!-- cama baja (amarilla) con cuello de cisne -->
+    <g id="${id}-bed">
+      <path d="M0 200 L60 200 L60 240 L560 240 L560 200 L760 200 L760 260 L0 260Z" fill="url(#${id}-yel)"/>
+      <rect x="60" y="228" width="500" height="10" fill="#8a6a00"/>
+      ${[120, 220, 320, 420].map((x) => `<rect x="${x}" y="240" width="60" height="6" fill="#5a4600"/>`).join('')}
+      <rect x="0" y="180" width="60" height="20" fill="#8a6a00"/>
+    </g>
+    ${wheel(100, 270, 28, `${id}-w0`)}${wheel(160, 270, 28, `${id}-w1`)}${wheel(220, 270, 28, `${id}-w2`)}
+    <!-- tracto rojo -->
+    <g id="${id}-cab">
+      <path d="M700 260 L700 120 L740 40 L900 40 L920 90 L920 260Z" fill="url(#${id}-red)"/>
+      <path d="M760 55 L890 55 L905 100 L760 100Z" fill="#bfe7ff" opacity=".85"/>
+      <rect x="740" y="110" width="170" height="8" fill="#fff"/>
+      <rect x="720" y="180" width="200" height="60" fill="#2a2f36"/>
+      <rect x="740" y="130" width="80" height="24" rx="3" fill="#fff"/>
+      <text x="780" y="148" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="18" fill="#e0262b">PTT</text>
+      <rect x="900" y="200" width="24" height="12" fill="#fff5c4"/>
+      <rect x="760" y="20" width="16" height="20" fill="#ff9f1c"/>
+      <rect x="700" y="60" width="16" height="60" fill="#5b0e11"/>
+    </g>
+    ${wheel(760, 270, 34, `${id}-w3`)}${wheel(880, 270, 34, `${id}-w4`)}
+    <!-- lanza / quinta rueda -->
+    <rect x="560" y="200" width="140" height="20" fill="#8a6a00"/>
+    <rect x="620" y="150" width="70" height="50" fill="#1d2229"/>
+    <circle cx="655" cy="140" r="22" fill="#0d0f12"/>
+  </g>`
+}
+
+/** Técnico con uniforme PTT (polera negra con franja roja, pantalón gris) — Imágenes 5 y 6. */
+export function pttWorker(id = 'w', withTablet = true, shirt = '#1e2126') {
+  return `
+  <g id="${id}">
+    <ellipse cx="0" cy="250" rx="60" ry="10" fill="#000" opacity=".4"/>
+    <rect x="-28" y="110" width="24" height="130" rx="6" fill="#4b525c"/>
+    <rect x="4" y="110" width="24" height="130" rx="6" fill="#3e444d"/>
+    <rect x="-32" y="232" width="32" height="16" rx="4" fill="#111"/><rect x="0" y="232" width="32" height="16" rx="4" fill="#111"/>
+    <path d="M-38 0 L38 0 L44 118 L-44 118Z" fill="${shirt}"/>
+    <path d="M-38 0 L-20 0 L-26 118 L-44 118Z" fill="#e0262b"/>
+    <rect x="-64" y="6" width="22" height="90" rx="10" fill="${shirt}" transform="rotate(12 -53 6)"/>
+    <rect x="42" y="6" width="22" height="90" rx="10" fill="${shirt}" transform="rotate(${withTablet ? -40 : -12} 53 6)"/>
+    ${withTablet ? `<g transform="translate(40 40) rotate(-12)"><rect width="70" height="50" rx="4" fill="#111418" stroke="#4d5b6d" stroke-width="2"/><rect x="6" y="6" width="58" height="38" fill="#2fd4c8" opacity=".6"/></g>` : ''}
+    <text x="0" y="60" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="16" fill="#fff" opacity=".85">PTT</text>
+    <circle cx="0" cy="-28" r="22" fill="#d9a67a"/>
+    <path d="M-22 -34 Q0 -60 22 -34 Z" fill="#2a2a2a"/>
+  </g>`
+}
+
+/**
+ * Nave del taller PTT (Imágenes 5-7): muros blancos ondulados, cerchas, puente grúa amarillo,
+ * letreros de estación (D1, D2…), mesas de trabajo y carros de herramientas rojos.
+ */
+export function pttWorkshop(id = 'ws', stations = ['D1', 'D2', 'D3']) {
+  const ribs = Array.from({ length: 48 }, (_, i) => `<rect x="${i * 40}" y="0" width="20" height="600" fill="#ffffff" opacity=".035"/>`).join('')
+  const trusses = [200, 700, 1200, 1700].map((x) => `<path d="M${x - 250} 130 L${x} 40 L${x + 250} 130 M${x - 250} 130 L${x + 250} 130 M${x - 125} 85 L${x - 125} 130 M${x + 125} 85 L${x + 125} 130 M${x} 40 L${x} 130" stroke="#b9bec6" stroke-width="5" fill="none" opacity=".7"/>`).join('')
+  const signs = stations.map((s, i) => { const x = 380 + i * 560; return `<g><rect x="${x - 90}" y="250" width="180" height="70" rx="4" fill="#f4f4f2" stroke="#c9ccd1" stroke-width="2"/><text x="${x}" y="279" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="30" fill="#111">${s}</text><text x="${x}" y="305" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" fill="#555" letter-spacing="2">ESTACIÓN DE DESARME</text></g>` }).join('')
+  const table = (x: number) => `<g><rect x="${x}" y="720" width="340" height="16" fill="#2a2f36"/><rect x="${x + 10}" y="736" width="14" height="120" fill="#1d2229"/><rect x="${x + 316}" y="736" width="14" height="120" fill="#1d2229"/><rect x="${x + 10}" y="800" width="320" height="8" fill="#1d2229"/></g>`
+  const cart = (x: number) => `<g><rect x="${x}" y="760" width="110" height="110" rx="4" fill="#e0262b"/>${[0, 1, 2, 3].map((i) => `<rect x="${x + 8}" y="${768 + i * 26}" width="94" height="20" fill="#b3181d"/><rect x="${x + 44}" y="${775 + i * 26}" width="22" height="5" fill="#f1f1f1"/>`).join('')}<circle cx="${x + 20}" cy="878" r="8" fill="#111"/><circle cx="${x + 90}" cy="878" r="8" fill="#111"/></g>`
+  return `
+  <defs>
+    <linearGradient id="${id}-wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8d9d6"/><stop offset="1" stop-color="#a9aba8"/></linearGradient>
+    <linearGradient id="${id}-fl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a4f57"/><stop offset="1" stop-color="#1c1f24"/></linearGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#${id}-wall)"/>
+  ${ribs}
+  <rect width="1920" height="140" fill="#c4c6c3"/>
+  ${trusses}
+  <!-- puente grúa -->
+  <rect x="0" y="150" width="1920" height="34" fill="#f2c318"/><rect x="0" y="184" width="1920" height="10" fill="#b8860b"/>
+  <g id="${id}-hoist"><rect x="900" y="194" width="140" height="50" fill="#f2c318"/><line id="${id}-cable" x1="970" y1="244" x2="970" y2="360" stroke="#333" stroke-width="4"/><path d="M950 360 L990 360 L970 390Z" fill="#e0262b"/></g>
+  <g id="${id}-signs">${signs}</g>
+  <rect x="0" y="620" width="1920" height="460" fill="url(#${id}-fl)"/>
+  <rect x="0" y="616" width="1920" height="8" fill="#f2c318" opacity=".6"/>
+  ${[-6, -4, -2, 0, 2, 4, 6].map((i) => `<path d="M960 620 L${960 + i * 420} 1080" stroke="#fff" stroke-opacity=".05" stroke-width="2"/>`).join('')}
+  <g id="${id}-furniture">${table(120)}${cart(520)}${table(1460)}${cart(1300)}</g>`
+}
+
+/**
+ * Mapa Mercator estilo satelital (Imagen 8): océano azul con grilla, continentes verde/tierra.
+ * Espacio 1000×560. Puntos útiles: Chile-Antofagasta (270,415), Houston (190,225), Rotterdam (500,150), Singapur (770,320), Shanghái (800,240).
+ */
+export function mercatorMap(id = 'merc') {
+  const land = [
+    // Norteamérica + Groenlandia
+    'M40 60 L150 40 L200 20 L280 30 L300 60 L260 110 L230 140 L260 170 L250 220 L220 260 L200 290 L170 300 L120 250 L90 200 L60 150 L40 100Z',
+    'M300 10 L360 5 L370 60 L330 90 L300 60Z',
+    // Sudamérica
+    'M215 300 L270 295 L320 330 L330 380 L305 440 L280 500 L262 540 L250 520 L240 460 L225 400 L210 350Z',
+    // Europa
+    'M440 110 L520 90 L580 100 L600 130 L570 170 L520 180 L470 175 L440 150Z',
+    // África
+    'M460 200 L540 190 L600 230 L610 300 L580 380 L540 420 L510 410 L470 340 L455 270Z',
+    // Asia
+    'M600 90 L700 60 L820 60 L900 90 L940 150 L900 210 L840 250 L780 270 L720 250 L660 200 L620 160Z',
+    'M760 270 L800 280 L790 320 L760 310Z',
+    // Australia
+    'M790 380 L860 370 L890 420 L850 460 L800 450 L780 410Z',
+  ]
+  const grid = [...Array.from({ length: 21 }, (_, i) => `<line x1="${i * 50}" y1="0" x2="${i * 50}" y2="560" stroke="#fff" stroke-opacity=".12"/>`), ...Array.from({ length: 12 }, (_, i) => `<line x1="0" y1="${i * 50}" x2="1000" y2="${i * 50}" stroke="#fff" stroke-opacity=".12"/>`)].join('')
+  return `
+  <defs>
+    <linearGradient id="${id}-sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b6fa8"/><stop offset="1" stop-color="#0f4f80"/></linearGradient>
+    <linearGradient id="${id}-land" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6f8f4a"/><stop offset=".5" stop-color="#8a8f5a"/><stop offset="1" stop-color="#b9a77a"/></linearGradient>
+  </defs>
+  <g id="${id}">
+    <rect width="1000" height="560" fill="url(#${id}-sea)"/>
+    ${land.map((d) => `<path d="${d}" fill="url(#${id}-land)" stroke="#3f5a2e" stroke-width="1.5"/>`).join('')}
+    ${grid}
+  </g>`
+}
+
+/** Logo institucional PTT · Marubeni Group como SVG (para usar dentro de gráficos). */
+export function pttLogoSvg(id = 'logo', size = 60) {
+  return `
+  <g id="${id}" transform="skewX(-8)" font-family="Barlow Condensed, sans-serif" font-weight="700">
+    <text y="0" font-size="${size}" fill="#e0262b">POWER</text>
+    <line x1="0" y1="${size * 0.14}" x2="${size * 2.85}" y2="${size * 0.14}" stroke="#e0262b" stroke-width="${size * 0.05}"/>
+    <text y="${size * 1.06}" font-size="${size}" fill="#ffffff">TRAIN</text>
+    <line x1="0" y1="${size * 1.2}" x2="${size * 2.85}" y2="${size * 1.2}" stroke="#e0262b" stroke-width="${size * 0.05}"/>
+    <text y="${size * 1.82}" font-size="${size * 0.62}" fill="#8a8f98">TECHNOLOGIES</text>
+    <text x="${size * 1.4}" y="${size * 2.2}" text-anchor="middle" font-family="Inter, sans-serif" font-size="${size * 0.3}" fill="#e0262b">Marubeni Group</text>
+  </g>`
+}

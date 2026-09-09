@@ -23,13 +23,14 @@ export function faenaScene(): Scene {
       <path d="M760 620 L960 760 L1080 760" stroke="#f5a623" stroke-width="2" fill="none"/><text x="1090" y="765" fill="#e9eef4">PORTA PLANETARIOS</text>
       <path d="M660 540 L960 540 L1080 540" stroke="#f5a623" stroke-width="2" fill="none"/><text x="1090" y="545" fill="#e9eef4">SOLAR (SUN GEAR)</text>
     </g>
-    <g id="fd-gauge" transform="translate(1440 560)" opacity="0">${hoursGauge('g1', 170)}</g>
+    <g id="fd-gauge" transform="translate(1440 560)" opacity="0">${hoursGauge('g1', 170)}<text text-anchor="middle" y="${170 * 0.52}" font-family="JetBrains Mono, monospace" font-size="15" fill="#5f6d7d" letter-spacing="2">MÁX. 18.000 H</text></g>
+    <g id="fd-link" opacity="0"><text x="620" y="150" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="44" fill="#e9eef4" letter-spacing="2">MANDO FINAL · CAT 797F</text><text x="620" y="190" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="16" fill="#9aa7b6" letter-spacing="3">COMPONENTE DE LA RUEDA TRASERA DEL CAMIÓN</text><path d="M620 205 L620 250" stroke="#e0262b" stroke-width="3"/></g>
   `)
 
   const lt1 = lowerThird('Escena 01 · Nuestros clientes', 'La gran minería del país')
-  const intro = el('div', { class: 'sub abs', html: 'Nuestros principales clientes son la <b style="color:var(--ink);font-weight:600">gran minería del país</b>. Ellos desmontan componentes de sus camiones de extracción y equipos de apoyo, y los bajamos a nuestros talleres.' })
+  const intro = el('div', { class: 'sub abs', html: 'Nuestros principales clientes son la <b style="color:var(--ink);font-weight:600">gran minería del país</b>. Ellos desmontan componentes de sus camiones de extracción y equipos de apoyo, y nosotros los bajamos a nuestros talleres.' })
   Object.assign(intro.style, { left: '120px', top: '150px', maxWidth: '760px', opacity: '0', fontSize: '32px', textShadow: '0 4px 24px rgba(0,0,0,.8)' })
-  const q1 = quote('Todo comienza antes de que ocurra una falla.', 120, 380, 1300)
+  const q1 = quote('Todo comienza antes de que ocurra una falla (generalmente).', 120, 360, 1500)
   const q2 = quote('Planificación. Anticipación. Continuidad operacional.', 120, 400, 1500)
 
   const tagLife = tag('Próximo a cumplir vida útil programada', 1180, 820)
@@ -40,8 +41,8 @@ export function faenaScene(): Scene {
     <div class="ph">Programa de mantenimiento</div>
     <div class="row"><span class="k">Equipo</span><span class="v">CAT 797F · CE-014</span></div>
     <div class="row"><span class="k">Componente</span><span class="v">Mando Final · Lado izq.</span></div>
-    <div class="row"><span class="k">Horas actuales</span><span class="v warn">18.420 h</span></div>
-    <div class="row"><span class="k">Cambio programado</span><span class="v">20.000 h</span></div>
+    <div class="row"><span class="k">Horas actuales</span><span class="v warn">17.650 h</span></div>
+    <div class="row"><span class="k">Cambio programado</span><span class="v">18.000 h</span></div>
     <div class="row"><span class="k">Ventana de detención</span><span class="v">Sem. 38 · 36 h</span></div>
     <div class="row"><span class="k">Componente de reemplazo</span><span class="v ok" id="p-status">DISPONIBLE ✓</span></div>
   ` })
@@ -83,13 +84,14 @@ export function faenaScene(): Scene {
       tl.to(truckSvg, { scale: 3.2, x: -3175, y: -1911, transformOrigin: '50% 50%', duration: 2.2, ease: 'power3.inOut' }, zoomAt)
       tl.to([bg, dust.canvas], { scale: 3.2, x: -3175, y: -1911, transformOrigin: '50% 50%', duration: 2.2, ease: 'power3.inOut' }, zoomAt)
       tl.to(bg, { filter: 'blur(14px) brightness(.4)', duration: 1.2 }, zoomAt + 1)
-      tl.to(truckSvg, { opacity: 0, duration: 0.8 }, zoomAt + 1.4)
+      tl.to(truckSvg, { opacity: 0.12, duration: 0.8 }, zoomAt + 1.4)
       tl.to(q('#fd-bgrect'), { opacity: 0.92, duration: 1 }, zoomAt + 1.4)
       tl.fromTo(q('#fd-wrap'), { attr: { transform: 'translate(620 540) scale(.3)' }, opacity: 0 }, { attr: { transform: 'translate(620 540) scale(1)' }, opacity: 1, duration: 1.4, ease: 'power4.out' }, zoomAt + 1.6)
       tl.to(q('#fd-ringgear'), { rotation: 60, transformOrigin: '50% 50%', duration: 20, ease: 'none' }, zoomAt + 1.6)
       tl.to(q('#fd-carrier'), { rotation: -180, transformOrigin: '50% 50%', duration: 20, ease: 'none' }, zoomAt + 1.6)
       tl.to(q('#fd-sun'), { rotation: 540, transformOrigin: '50% 50%', duration: 20, ease: 'none' }, zoomAt + 1.6)
       tl.to(q('#fd-callouts'), { opacity: 1, duration: 0.8 }, zoomAt + 2.6)
+      tl.fromTo(q('#fd-link'), { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.8 }, zoomAt + 1.8)
 
       // Gauge de horas: 0 → 18.420 / 20.000
       const gAt = zoomAt + 2.8
@@ -97,14 +99,14 @@ export function faenaScene(): Scene {
       const val = { v: 0 }
       const valEl = q('#g1-val')
       tl.to(q('#fd-gauge'), { opacity: 1, duration: 0.6 }, gAt)
-      tl.to(q('#g1-arc'), { strokeDashoffset: circ * (1 - 18420 / 20000), duration: 2.6, ease: 'power2.out' }, gAt)
-      tl.to(val, { v: 18420, duration: 2.6, ease: 'power2.out', onUpdate: () => { valEl.textContent = Math.round(val.v).toLocaleString('es-CL') } }, gAt)
+      tl.to(q('#g1-arc'), { strokeDashoffset: circ * (1 - 17650 / 18000), duration: 2.6, ease: 'power2.out' }, gAt)
+      tl.to(val, { v: 17650, duration: 2.6, ease: 'power2.out', onUpdate: () => { valEl.textContent = Math.round(val.v).toLocaleString('es-CL') } }, gAt)
       tl.to(q('#g1-arc'), { stroke: '#f0503c', duration: 0.6, repeat: 3, yoyo: true }, gAt + 2.6)
       pop(tl, tagLife, gAt + 2.4)
 
       // Cita 1
       const qAt = gAt + 4.6
-      tl.to([q('#fd-callouts'), q('#fd-gauge'), tagLife], { opacity: 0, duration: 0.6 }, qAt - 0.4)
+      tl.to([q('#fd-callouts'), q('#fd-gauge'), q('#fd-link'), tagLife, truckSvg], { opacity: 0, duration: 0.6 }, qAt - 0.4)
       tl.to(q('#fd-wrap'), { opacity: 0.18, x: 700, duration: 1.2, ease: 'power2.inOut' }, qAt - 0.4)
       const afterQ1 = revealQuote(tl, q1, qAt, 3.8)
 

@@ -4,9 +4,12 @@
   --ink: #e9eef4;
   --ink-2: #9aa7b6;
   --ink-3: #5f6d7d;
-  --amber: #f5a623;
-  --amber-2: #ffc857;
-  --amber-deep: #c77a05;
+  /* Identidad PTT: rojo + grises (el amarillo CAT queda solo para el camión y los componentes) */
+  --amber: #e0262b;
+  --amber-2: #ff4d52;
+  --amber-deep: #9c1216;
+  --ptt-red: #e0262b;
+  --ptt-grey: #8a8f98;
   --cat: #ffcd11;
   --steel: #2a3441;
   --steel-2: #3d4a5a;
@@ -140,7 +143,7 @@ canvas.fx { position: absolute; inset: 0; width: 100%; height: 100%; }
   padding: 14px 22px; border: 1px solid rgba(255,255,255,.12); border-radius: 6px; background: rgba(9,13,19,.75);
 }
 .step .n { font-family: var(--font-mono); font-size: 14px; color: var(--amber); letter-spacing: .2em; }
-.step.active { color: var(--ink); border-color: var(--amber); box-shadow: 0 0 0 1px var(--amber), 0 12px 40px rgba(245,166,35,.25); }
+.step.active { color: var(--ink); border-color: var(--amber); box-shadow: 0 0 0 1px var(--amber), 0 12px 40px rgba(224,38,43,.25); }
 
 /* ---------- Player UI ---------- */
 .player {
@@ -180,9 +183,9 @@ canvas.fx { position: absolute; inset: 0; width: 100%; height: 100%; }
 .splash .logo span { color: var(--amber); }
 .splash p { color: var(--ink-2); max-width: 480px; font-size: 16px; line-height: 1.5; }
 .splash .play {
-  appearance: none; border: 0; background: var(--amber); color: #111; font-family: var(--font-display);
+  appearance: none; border: 0; background: var(--amber); color: #fff; font-family: var(--font-display);
   font-weight: 700; font-size: 26px; text-transform: uppercase; letter-spacing: .08em; padding: 16px 44px; border-radius: 6px; cursor: pointer;
-  box-shadow: 0 20px 60px rgba(245,166,35,.35); transition: transform .2s;
+  box-shadow: 0 20px 60px rgba(224,38,43,.35); transition: transform .2s;
 }
 .splash .play:hover { transform: translateY(-2px); }
 
@@ -192,3 +195,11 @@ canvas.fx { position: absolute; inset: 0; width: 100%; height: 100%; }
 
 /* Los overlays nacen ocultos; las escenas los revelan. */
 .scene .tag, .scene .panel, .scene .quote, .scene .lower-third, .scene .steps, .scene .hud { opacity: 0; }
+
+/* ---------- Logo PTT · Marubeni Group (recreación tipográfica del logo institucional) ---------- */
+.ptt-logo { display: inline-flex; flex-direction: column; align-items: flex-start; transform: skewX(-8deg); line-height: .86; font-family: var(--font-display); font-weight: 700; text-transform: uppercase; }
+.ptt-logo .l1 { color: var(--ptt-red); font-size: 1em; letter-spacing: .02em; }
+.ptt-logo .l2 { color: #fff; font-size: 1em; letter-spacing: .02em; border-top: .04em solid var(--ptt-red); border-bottom: .04em solid var(--ptt-red); padding: .02em 0; }
+.ptt-logo .l3 { color: var(--ptt-grey); font-size: .62em; letter-spacing: .01em; margin-top: .06em; }
+.ptt-logo .l4 { color: var(--ptt-red); font-family: var(--font-body); font-weight: 700; font-size: .3em; text-transform: none; margin-top: .3em; align-self: center; letter-spacing: .02em; }
+.ptt-logo.on-light .l2 { color: #111; }

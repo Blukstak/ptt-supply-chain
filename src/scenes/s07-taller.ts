@@ -1,7 +1,7 @@
 import { el } from '../core/dom'
-import { industrialFloor, hangingLights, finalDrive, technician } from '../art'
+import { pttWorkshop, finalDrive, pttWorker } from '../art'
 import { Dust } from '../fx/dust'
-import { Scene, sceneRoot, fullSvg, sceneEnter, photoBg, sceneLeave, quote, revealQuote, lowerThird, showLowerThird, tag, pop } from '../core/scene'
+import { Scene, sceneRoot, fullSvg, sceneEnter, sceneLeave, quote, revealQuote, lowerThird, showLowerThird, tag, pop } from '../core/scene'
 
 /**
  * ESCENA 7 — Reparación en taller y aseguramiento de calidad.
@@ -9,14 +9,11 @@ import { Scene, sceneRoot, fullSvg, sceneEnter, photoBg, sceneLeave, quote, reve
  */
 export function tallerScene(): Scene {
   const root = sceneRoot('taller')
-  const bg = fullSvg(`${industrialFloor('tf', '#12161c')}${hangingLights('tlg', [400, 960, 1520], 50)}
-    <!-- puente grúa -->
-    <rect x="0" y="120" width="1920" height="26" fill="#3d4a5a"/><rect x="0" y="146" width="1920" height="8" fill="#ffcd11"/>
-    <g id="tl-hoist"><rect x="880" y="154" width="160" height="60" fill="#2a3441"/><line id="tl-cable" x1="960" y1="214" x2="960" y2="330" stroke="#8a99ad" stroke-width="4"/><path d="M940 330 L980 330 L960 360Z" fill="#8a99ad"/></g>
-    <g id="tl-stand" transform="translate(960 660)"><rect x="-260" y="140" width="520" height="30" fill="#3d4a5a"/><rect x="-200" y="30" width="26" height="120" fill="#56657a"/><rect x="174" y="30" width="26" height="120" fill="#56657a"/></g>
+  const bg = fullSvg(`${pttWorkshop('tf', ['D1', 'D2', 'D3'])}
+    <g id="tl-stand" transform="translate(960 660)"><rect x="-260" y="140" width="520" height="30" fill="#2a2f36"/><rect x="-200" y="30" width="26" height="120" fill="#4b525c"/><rect x="174" y="30" width="26" height="120" fill="#4b525c"/></g>
     <g id="tl-fd" transform="translate(960 560)">${finalDrive('tfd', 250)}</g>
-    <g id="tl-t1" transform="translate(500 760)">${technician('tt1', '#ffcd11', false)}</g>
-    <g id="tl-t2" transform="translate(1420 760)">${technician('tt2', '#ffcd11', true)}</g>
+    <g id="tl-t1" transform="translate(500 760)">${pttWorker('tt1', false)}</g>
+    <g id="tl-t2" transform="translate(1420 760)">${pttWorker('tt2', true)}</g>
     <g id="tl-sparks" opacity="0">${Array.from({ length: 18 }, (_, i) => `<line x1="960" y1="560" x2="${960 + Math.cos(i) * 90}" y2="${560 + Math.sin(i * 1.7) * 90}" stroke="#ffc857" stroke-width="2"/>`).join('')}</g>
   `)
   const sparks = new Dust({ count: 60, color: '255, 200, 87', speed: 1.4, size: [1, 2.5], drift: 1.2, area: { x: 760, y: 400, w: 400, h: 300 } })
@@ -26,11 +23,10 @@ export function tallerScene(): Scene {
   Object.assign(steps.style, { left: '120px', top: '160px' })
   const stamp = el('div', { class: 'abs', html: `<div style="font-family:var(--font-display);font-weight:700;font-size:54px;text-transform:uppercase;letter-spacing:.06em;color:#4ade80;border:6px solid #4ade80;padding:10px 30px;border-radius:10px;transform:rotate(-8deg);background:rgba(0,0,0,.4)">Aprobado · QA</div>` })
   Object.assign(stamp.style, { left: '1180px', top: '360px', opacity: '0' })
-  const tagOT = tag('OT-4471 · Mando Final CAT 797F · Garantía 6.000 h', 120, 940, 'ok')
+  const tagOT = tag('OT-4471 · Mando Final CAT 797F · Estación D2', 120, 940, 'ok')
   const q1 = quote('Reparado a estándar de fábrica. Listo para volver a la faena.', 120, 380, 1560)
   root.append(bg)
-  photoBg(root, 'workshop.jpg', bg)
-  root.append(sparks.canvas, lt, steps, stamp, tagOT, q1)
+    root.append(sparks.canvas, lt, steps, stamp, tagOT, q1)
 
   return {
     id: 'taller', title: 'Escena 7 · Taller', root,
@@ -55,7 +51,7 @@ export function tallerScene(): Scene {
       tl.to(q('#tfd-ringgear'), { x: 0, y: 0, rotation: 0, duration: 1.4, ease: 'power3.inOut' }, aAt + 0.5)
       tl.to(q('#tfd-carrier'), { x: 0, y: 0, rotation: 0, duration: 1.4, ease: 'power3.inOut' }, aAt + 1)
       tl.to(q('#tfd-sun'), { x: 0, y: 0, duration: 1.2, ease: 'power3.inOut' }, aAt + 1.5)
-      tl.to(q('#tl-cable'), { attr: { y2: 400 }, duration: 1.2, ease: 'power2.inOut' }, aAt)
+      tl.to(q('#tf-cable'), { attr: { y2: 420 }, duration: 1.2, ease: 'power2.inOut' }, aAt)
       tl.fromTo(q('#tl-sparks'), { opacity: 0, scale: 0.4, transformOrigin: '960px 560px' }, { opacity: 1, scale: 1.2, duration: 0.5, repeat: 5, yoyo: true }, aAt + 1)
       // Pruebas dinámicas: rotación
       const pAt = aAt + 3.4

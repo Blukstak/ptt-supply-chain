@@ -1,7 +1,7 @@
 import { el } from '../core/dom'
 import { finalDrive } from '../art'
 import { Dust } from '../fx/dust'
-import { Scene, sceneRoot, fullSvg, sceneEnter, sceneLeave } from '../core/scene'
+import { Scene, sceneRoot, fullSvg, sceneEnter, sceneLeave, logoPTT } from '../core/scene'
 
 export function introScene(): Scene {
   const root = sceneRoot('intro')
@@ -16,16 +16,17 @@ export function introScene(): Scene {
     </g>
     <g id="in-fd" transform="translate(1400 540) scale(1.35)" opacity=".35">${finalDrive('in-fdrive', 260)}</g>
   `)
-  const dust = new Dust({ count: 90, color: '245, 166, 35', speed: 0.25, size: [1, 2.2] })
+  const dust = new Dust({ count: 90, color: '224, 38, 43', speed: 0.25, size: [1, 2.2] })
 
   const kicker = el('div', { class: 'kicker abs' }, 'Power Train Technologies')
-  Object.assign(kicker.style, { left: '120px', top: '400px' })
-  const logo = el('div', { class: 'headline abs', html: 'PTT<em>.</em>' })
-  Object.assign(logo.style, { left: '116px', top: '430px', fontSize: '200px' })
+  Object.assign(kicker.style, { left: '120px', top: '200px' })
+  const logo = el('div', { class: 'abs' })
+  logo.append(logoPTT(150))
+  Object.assign(logo.style, { left: '130px', top: '250px' })
   const title = el('div', { class: 'abs', html: '<div class="kicker" style="color:var(--ink-2)">Supply Chain</div><div class="headline" style="font-size:64px;margin-top:10px">Cadena de suministro <em>Power Train Technologies</em></div>' })
-  Object.assign(title.style, { left: '120px', top: '650px', maxWidth: '1300px' })
+  Object.assign(title.style, { left: '120px', top: '700px', maxWidth: '1300px' })
   const line = el('div', { class: 'abs' })
-  Object.assign(line.style, { left: '120px', top: '630px', width: '0px', height: '4px', background: 'var(--amber)' })
+  Object.assign(line.style, { left: '120px', top: '680px', width: '0px', height: '4px', background: 'var(--amber)' })
 
   const hud = [
     el('div', { class: 'hud tl', html: '<b>PTT</b> · REPARACIÓN DE COMPONENTES MAYORES' }),

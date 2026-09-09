@@ -11,6 +11,7 @@ import { retiroScene } from './scenes/s03-retiro'
 import { recepcionScene } from './scenes/s04-recepcion'
 import { importacionScene } from './scenes/s05-importacion'
 import { bodegaScene } from './scenes/s06-bodega'
+import { respuestaScene } from './scenes/s06b-respuesta'
 import { tallerScene } from './scenes/s07-taller'
 import { cierreScene } from './scenes/s08-cierre'
 
@@ -21,7 +22,7 @@ const player = new Player(app)
 
 const scenes: Scene[] = [
   introScene(), faenaScene(), planificacionScene(), retiroScene(),
-  recepcionScene(), importacionScene(), bodegaScene(), tallerScene(), cierreScene(),
+  recepcionScene(), importacionScene(), bodegaScene(), respuestaScene(), tallerScene(), cierreScene(),
 ]
 scenes.forEach((s) => player.stage.append(s.root))
 
@@ -56,8 +57,9 @@ gsap.ticker.add(() => {
 // Splash / botón de inicio (los navegadores exigen gesto para fullscreen y evita el arranque en frío).
 const splash = el('div', { class: 'splash' })
 splash.append(el('div', { class: 'card', html: `
-  <div class="logo">PTT<span>.</span> Cadena de suministro</div>
-  <p>El ciclo de vida de un Mando Final CAT 797 — cómo las áreas de la cadena de suministro trabajan integradas para asegurar la continuidad operacional.</p>
+  <div class="ptt-logo" style="font-size:64px"><span class="l1">Power</span><span class="l2">Train</span><span class="l3">Technologies</span><span class="l4">Marubeni Group</span></div>
+  <div class="logo" style="font-size:34px;color:var(--ink-2)">Cadena de suministro</div>
+  <p>Cómo las áreas de la cadena de suministro de PTT trabajan integradas para asegurar la continuidad operacional de la gran minería.</p>
   <button class="play">▶ Reproducir</button>
   <p style="font-size:13px;color:var(--ink-3)">Espacio: pausa · ← →: ±5 s · F: pantalla completa · 1–9: capítulos</p>
 ` }))

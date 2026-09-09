@@ -1,5 +1,5 @@
 import { el } from '../core/dom'
-import { minePit, semiTruck, finalDriveSide, truck797 } from '../art'
+import { minePit, lowboyTruck, finalDriveSide, truck797 } from '../art'
 import { Dust } from '../fx/dust'
 import { Scene, sceneRoot, fullSvg, sceneEnter, photoBg, sceneLeave, quote, revealQuote, lowerThird, showLowerThird, tag, pop } from '../core/scene'
 
@@ -17,19 +17,19 @@ export function retiroScene(): Scene {
 
   const art = fullSvg(`
     <g id="rt-797" transform="translate(1250 560) scale(.5)" opacity="0">${truck797('rt')}</g>
-    <g id="rt-semi" transform="translate(-900 760) scale(.95)">${semiTruck('semi')}
-      <g transform="translate(290 -30) scale(.5)">${finalDriveSide('cr', 'FD-797')}</g>
+    <g id="rt-semi" transform="translate(-1000 720) scale(.95)">${lowboyTruck('semi')}
+      <g transform="translate(330 140) scale(.42)">${finalDriveSide('cr', 'FD-797')}</g>
     </g>
     <g id="rt-crate-big" transform="translate(760 420)" opacity="0">${finalDriveSide('crb', 'FD-797')}</g>
   `)
   const lt = lowerThird('Escena 03 · Retiro y logística inversa', 'Detención programada')
   const steps = el('div', { class: 'steps' })
-  ;['Retiro del componente', 'Embalaje y protección', 'Guía de despacho', 'Trazabilidad activa'].forEach((s, i) => {
+  ;['Retiro del componente', 'Carga en cama baja', 'Guía de despacho', 'Trazabilidad activa'].forEach((s, i) => {
     steps.append(el('div', { class: 'step', html: `<span class="n">0${i + 1}</span>${s}` }))
   })
   Object.assign(steps.style, { left: '120px', top: '160px' })
   const tagId = tag('ID componente: FD-797-0412 · Serie 3XR01288', 760, 660, 'info')
-  const tagGD = tag('Guía de despacho emitida · Destino: PTT Antofagasta', 520, 940, 'ok')
+  const tagGD = tag('Guía de despacho emitida · Destino: Taller PTT', 520, 940, 'ok')
   const q1 = quote('Cada componente tiene una historia. Nosotros la registramos.', 120, 380, 1500)
 
   root.append(bg)
@@ -66,7 +66,7 @@ export function retiroScene(): Scene {
       tl.add(() => stepEls.forEach((s, i) => s.classList.toggle('active', i === 3)), s4)
       tl.to([tagId, tagGD], { opacity: 0, duration: 0.5 }, s4)
       tl.to(q('#rt-crate-big'), { opacity: 0, attr: { transform: 'translate(760 460) scale(.3)' }, duration: 0.9, ease: 'power3.in' }, s4)
-      tl.to(q('#rt-semi'), { attr: { transform: 'translate(2200 760) scale(.95)' }, duration: 8, ease: 'power1.inOut' }, s4 + 0.6)
+      tl.to(q('#rt-semi'), { attr: { transform: 'translate(2200 720) scale(.95)' }, duration: 8, ease: 'power1.inOut' }, s4 + 0.6)
       tl.to(['#semi-w0', '#semi-w1', '#semi-w2', '#semi-w3', '#semi-w4'].map(q), { rotation: 1400, transformOrigin: '50% 50%', duration: 8, ease: 'power1.inOut' }, s4 + 0.6)
       // Cita mientras el camión avanza
       tl.to(steps, { opacity: 0, y: -20, duration: 0.5 }, s4 + 2)

@@ -1,6 +1,6 @@
 import { el } from '../core/dom'
-import { industrialFloor, hangingLights, finalDrive, finalDriveSide, technician, wmsScreen } from '../art'
-import { Scene, sceneRoot, fullSvg, sceneEnter, photoBg, sceneLeave, quote, revealQuote, lowerThird, showLowerThird, tag, pop } from '../core/scene'
+import { pttWorkshop, finalDrive, finalDriveSide, pttWorker, wmsScreen } from '../art'
+import { Scene, sceneRoot, fullSvg, sceneEnter, sceneLeave, quote, revealQuote, lowerThird, showLowerThird, tag, pop } from '../core/scene'
 
 /**
  * ESCENA 4 — Recepción, inspección y evaluación técnica en PTT.
@@ -8,11 +8,11 @@ import { Scene, sceneRoot, fullSvg, sceneEnter, photoBg, sceneLeave, quote, reve
  */
 export function recepcionScene(): Scene {
   const root = sceneRoot('recepcion')
-  const bg = fullSvg(`${industrialFloor('rf')}${hangingLights('rl', [260, 700, 1180, 1660], 60)}
+  const bg = fullSvg(`${pttWorkshop('rf', ['D1', 'D2', 'D3'])}
     <!-- portón de recepción -->
-    <rect x="1380" y="180" width="440" height="440" fill="#0b0f15" stroke="#2a3441" stroke-width="6"/>
-    <g id="rc-door">${Array.from({ length: 8 }, (_, i) => `<rect x="1386" y="${186 + i * 54}" width="428" height="50" fill="#1b232e"/>`).join('')}</g>
-    <text x="1600" y="150" text-anchor="middle" font-family="Barlow Condensed" font-weight="700" font-size="34" fill="#ffcd11" letter-spacing="4">RECEPCIÓN</text>
+    <rect x="1500" y="220" width="400" height="400" fill="#3a3f47" stroke="#2a2f36" stroke-width="6"/>
+    <g id="rc-door">${Array.from({ length: 8 }, (_, i) => `<rect x="1506" y="${226 + i * 49}" width="388" height="45" fill="#4b525c"/>`).join('')}</g>
+    <text x="1700" y="205" text-anchor="middle" font-family="Barlow Condensed" font-weight="700" font-size="30" fill="#e0262b" letter-spacing="4">RECEPCIÓN</text>
   `)
   const art = fullSvg(`
     <g id="rc-crate" transform="translate(1600 520) scale(.5)" opacity="0">${finalDriveSide('rcc', 'FD-797')}</g>
@@ -20,7 +20,7 @@ export function recepcionScene(): Scene {
       <rect x="-200" y="120" width="400" height="26" fill="#3d4a5a"/><rect x="-160" y="20" width="24" height="110" fill="#56657a"/><rect x="136" y="20" width="24" height="110" fill="#56657a"/>
       <g transform="translate(0 -100) scale(.8)">${finalDrive('rfd', 250)}</g>
     </g>
-    <g id="rc-tech" transform="translate(1000 560) scale(1.05)" opacity="0">${technician('rt1', '#ffcd11', true)}</g>
+    <g id="rc-tech" transform="translate(1000 560) scale(1.05)" opacity="0">${pttWorker('rt1', true)}</g>
     <g id="rc-beam" opacity="0"><path d="M1030 590 L640 500 L640 620Z" fill="#f0503c" opacity=".35"/><line x1="1030" y1="590" x2="640" y2="560" stroke="#f0503c" stroke-width="3"/></g>
     <g id="rc-wms" transform="translate(1160 120) scale(.72)" opacity="0">${wmsScreen('rw', 760, 470)}</g>
   `)
@@ -32,14 +32,13 @@ export function recepcionScene(): Scene {
     <div class="row"><span class="k">02 · Desarme controlado</span><span class="v ok">✓</span></div>
     <div class="row"><span class="k">03 · Metrología y ensayos NDT</span><span class="v ok">✓</span></div>
     <div class="row"><span class="k">04 · Análisis de falla</span><span class="v warn">Desgaste corona · 0,8 mm</span></div>
-    <div class="row"><span class="k">05 · Informe técnico y presupuesto</span><span class="v">Emitido · 48 h</span></div>
+    <div class="row"><span class="k">05 · Informe técnico y presupuesto</span><span class="v ok">Emitido</span></div>
   ` })
   Object.assign(panel.style, { left: '1160px', top: '160px', width: '660px' })
   const q1 = quote('Inspeccionar, evaluar, decidir. Con datos.', 120, 400, 1300)
 
   root.append(bg)
-  photoBg(root, 'workshop.jpg', bg)
-  root.append(art, lt, tagScan, panel, q1)
+    root.append(art, lt, tagScan, panel, q1)
 
   return {
     id: 'recepcion', title: 'Escena 4 · Recepción', root,
@@ -48,7 +47,7 @@ export function recepcionScene(): Scene {
       sceneEnter(tl, root, at, 1.2)
       showLowerThird(tl, lt, at + 0.6, 4)
       // Portón sube, caja entra y se traslada al banco
-      tl.to(q('#rc-door'), { y: -430, duration: 1.6, ease: 'power2.inOut' }, at + 0.4)
+      tl.to(q('#rc-door'), { y: -390, duration: 1.6, ease: 'power2.inOut' }, at + 0.4)
       tl.to(q('#rc-crate'), { opacity: 1, duration: 0.5 }, at + 1.2)
       tl.to(q('#rc-crate'), { attr: { transform: 'translate(640 560) scale(1)' }, duration: 2.2, ease: 'power2.inOut' }, at + 1.6)
       tl.to(q('#rc-tech'), { opacity: 1, duration: 0.6 }, at + 2.6)
@@ -62,7 +61,7 @@ export function recepcionScene(): Scene {
       // Caja → mando final sobre banco (desembalaje)
       const openAt = scanAt + 3.2
       tl.to(q('#rc-crate'), { opacity: 0, attr: { transform: 'translate(640 560) scale(1.15)' }, duration: 0.6, ease: 'power2.in' }, openAt)
-      tl.fromTo(q('#rc-stand'), { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out' }, openAt + 0.3)
+      tl.fromTo(q('#rc-stand'), { opacity: 0, y: 680 }, { opacity: 1, y: 640, duration: 0.9, ease: 'power3.out' }, openAt + 0.3)
       tl.to(tagScan, { opacity: 0, duration: 0.4 }, openAt)
       tl.to(q('#rc-wms'), { opacity: 0, duration: 0.5 }, openAt)
       // Desarme "explode": ring / carrier / sun se separan
