@@ -240,38 +240,79 @@ export function truck797(id = 'truck') {
  * en ambos extremos. Longitud ≈ 520 px, centrado en (0,0), eje horizontal.
  */
 export function finalDriveSide(id = 'fds', label = 'PTT') {
-  const flange = (x: number, r: number, w: number, fid: string) => {
-    const rx = 48
-    const teeth = Array.from({ length: 96 }, (_, i) => {
-      const a = i * Math.PI / 48, b = a + .014, c = a + .045
-      const point = (angle: number, radial: number) => `${x + Math.cos(angle) * (rx + radial)} ${Math.sin(angle) * (r + radial)}`
-      return `<path d="M${point(a, 0)} L${point(b, 3)} L${point(c, 3)} L${point(a + .062, 0)}Z" fill="#b28a0a" stroke="#7e6210" stroke-width=".7"/>`
+  // Elliptical sections share a horizontal axis; nearer faces look to the left.
+  const faceRatio = .58
+  const section = (x: number, r: number, fill: string, stroke = '#a37a23') =>
+    `<ellipse cx="${x}" rx="${r * faceRatio}" ry="${r}" fill="${fill}" stroke="${stroke}" stroke-width="1.2"/>`
+  const barrel = (x: number, end: number, r: number) =>
+    `<path d="M${x} ${-r} H${end} A${r * faceRatio} ${r} 0 0 1 ${end} ${r} H${x} A${r * faceRatio} ${r} 0 0 1 ${x} ${-r}Z" fill="url(#${id}-g)" stroke="#bc902a" stroke-width="1"/>`
+  const bolts = (x: number, r: number, n: number, size: number) => Array.from({ length: n }, (_, i) => {
+    const a = (i + .5) * Math.PI * 2 / n
+    const bx = x + Math.cos(a) * r * faceRatio, by = Math.sin(a) * r
+    return `<ellipse cx="${bx}" cy="${by + .8}" rx="${size * .75}" ry="${size}" fill="#795c26"/><ellipse cx="${bx - .4}" cy="${by - .5}" rx="${size * .58}" ry="${size * .73}" fill="url(#${id}-bolt)" stroke="#9c7c37" stroke-width=".45"/>`
+  }).join('')
+  const flange = (x: number, r: number, w: number, fid?: string) => {
+    const point = (a: number, radius: number, shift = 0) => `${(x + shift + Math.cos(a) * radius * faceRatio).toFixed(2)} ${(Math.sin(a) * radius).toFixed(2)}`
+    const teeth = Array.from({ length: 100 }, (_, i) => {
+      const a = i * Math.PI / 50, d = Math.PI / 50
+      return `<path d="M${point(a, r)} L${point(a + d * .18, r + 3)} L${point(a + d * .70, r + 3)} L${point(a + d, r)} L${point(a + d, r, w)} L${point(a + d * .70, r + 3, w)} L${point(a + d * .18, r + 3, w)} L${point(a, r, w)}Z" fill="url(#${id}-g)" stroke="#8a6a2a" stroke-width=".45"/><path d="M${point(a + d * .22, r + 2.7)} L${point(a + d * .22, r + 2.7, w)}" stroke="#ffe4a0" stroke-opacity=".7" stroke-width=".8"/>`
     }).join('')
-    return `<g id="${fid}">
-      <path d="M${x - w} ${-r} H${x} A${rx} ${r} 0 0 1 ${x} ${r} H${x - w} A${rx} ${r} 0 0 1 ${x - w} ${-r}Z" fill="url(#${id}-g)"/>
-      ${Array.from({ length: 46 }, (_, i) => { const y = -r + 5 + i * (2 * r - 10) / 45; const edge = x - rx * Math.sqrt(1 - (y / r) ** 2); return `<path d="M${edge - w} ${y} h${w}" stroke="#8e6b0c" stroke-width="1"/>` }).join('')}
-      ${teeth}<ellipse cx="${x}" rx="${rx}" ry="${r}" fill="url(#${id}-g)" stroke="#8a6a0b" stroke-width="3"/>
-      <ellipse cx="${x}" rx="39" ry="${r * .81}" fill="#b58c13" stroke="#ffe185" stroke-width="2"/>
-      <ellipse cx="${x}" rx="30" ry="${r * .63}" fill="url(#${id}-g)" stroke="#826613" stroke-width="3"/>
-      ${Array.from({ length: 24 }, (_, i) => { const a = i * Math.PI / 12; return `<ellipse cx="${x + Math.cos(a) * 43}" cy="${Math.sin(a) * r * .91}" rx="2.2" ry="3.3" fill="#5e501f" stroke="#ffe5a1" stroke-width=".8"/>` }).join('')}
-      <ellipse cx="${x}" rx="19" ry="${r * .38}" fill="#b98e23" stroke="#f2ce61" stroke-width="2"/>
-      ${Array.from({ length: 8 }, (_, i) => { const a = i * Math.PI / 4; return `<ellipse cx="${x + Math.cos(a) * 15}" cy="${Math.sin(a) * r * .29}" rx="2" ry="2.5" fill="#625329"/>` }).join('')}
-      <ellipse cx="${x}" rx="11" ry="${r * .20}" fill="#927122" stroke="#e6ba4c" stroke-width="2"/>
-    </g>`
+    return `<g${fid ? ` id="${fid}"` : ''}>${barrel(x, x + w, r)}${teeth}${section(x, r - 2, `url(#${id}-face)`)}${section(x, r - 8, 'none', '#f5d477')}${section(x, r - 12, `url(#${id}-face)`, '#97712d')}${bolts(x, r - 6, 40, 1.9)}</g>`
   }
-  return `<defs><linearGradient id="${id}-g" x2="0" y2="1"><stop stop-color="#ffe490"/><stop offset=".3" stop-color="#ffcd11"/><stop offset=".58" stop-color="#eabb20"/><stop offset="1" stop-color="#947015"/></linearGradient></defs>
+  const safeLabel = label.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  return `<defs>
+    <linearGradient id="${id}-g" x1="0" y1="0" x2=".12" y2="1">
+      <stop stop-color="#b48a32"/><stop offset=".12" stop-color="#f7d477"/><stop offset=".29" stop-color="#ffdc65"/><stop offset=".46" stop-color="#efb72b"/><stop offset=".65" stop-color="#edbc3f"/><stop offset=".84" stop-color="#b17b1e"/><stop offset="1" stop-color="#926621"/>
+    </linearGradient>
+    <linearGradient id="${id}-face" x1="0" y1=".8" x2="1" y2=".12"><stop stop-color="#806020"/><stop offset=".42" stop-color="#bb913b"/><stop offset=".74" stop-color="#ead080"/><stop offset="1" stop-color="#bd9545"/></linearGradient>
+    <linearGradient id="${id}-rear" x1="0" y1="1" x2=".7" y2="0"><stop stop-color="#9b7b39"/><stop offset=".45" stop-color="#c4a35f"/><stop offset=".8" stop-color="#e2c782"/><stop offset="1" stop-color="#b99a52"/></linearGradient>
+    <radialGradient id="${id}-cap" cx=".68" cy=".28" r=".85"><stop stop-color="#bb953c"/><stop offset=".56" stop-color="#8e7028"/><stop offset="1" stop-color="#66501f"/></radialGradient>
+    <linearGradient id="${id}-bolt" x2=".4" y2="1"><stop stop-color="#fff0b6"/><stop offset=".45" stop-color="#d5b76b"/><stop offset="1" stop-color="#80632c"/></linearGradient>
+    <radialGradient id="${id}-glint"><stop stop-color="#fff2b6" stop-opacity=".55"/><stop offset="1" stop-color="#fff0ae" stop-opacity="0"/></radialGradient>
+    <radialGradient id="${id}-shadow"><stop stop-color="#302614" stop-opacity=".28"/><stop offset="1" stop-color="#302614" stop-opacity="0"/></radialGradient>
+  </defs>
   <g id="${id}">
-    <ellipse cx="0" cy="130" rx="270" ry="15" fill="#000" opacity=".28"/>
-    ${flange(208, 112, 28, `${id}-fl2`)}
-    <path d="M-197 -76 L-135 -76 Q-106 -61 -70 -52 H12 Q57 -52 97 -89 L165 -100 V100 L97 89 Q57 52 12 52 H-70 Q-106 61 -135 76 H-197Z" fill="url(#${id}-g)" stroke="#a27b0f" stroke-width="2"/>
-    <ellipse cx="165" rx="24" ry="89" fill="url(#${id}-g)" stroke="#bd9318" stroke-width="4"/>
-    <path d="M143 -85 Q176 0 143 85 M111 -83 Q143 0 111 83 M-124 -72 Q-100 0 -124 72 M-101 -65 Q-78 0 -101 65" fill="none" stroke="#b38b16" stroke-width="6"/>
-    <path d="M-76 -49 H43 L78 -65 M-76 49 H43 L78 65 M-76 -34 H37 M-76 34 H37" fill="none" stroke="#ffdf69" stroke-width="5"/>
-    <path d="M-63 -53 V-37 M-12 -53 V-37 M38 -54 V-39 M-63 37 V54 M-12 37 V54 M38 39 V54" stroke="#b68b0d" stroke-width="4"/>
-    ${flange(-182, 94, 30, `${id}-fl1`)}
-    <rect x="-48" y="-13" width="61" height="25" rx="3" fill="#e0262b" stroke="#b51d24" stroke-width="2"/>
-    <text x="-17" y="5" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="16" fill="#fff" letter-spacing="2">${label}</text>
-    <circle cx="-44" cy="-9" r="2" fill="#e4e6e1"/><circle cx="9" cy="8" r="2" fill="#e4e6e1"/>
+    <ellipse cx="0" cy="130" rx="270" ry="17" fill="url(#${id}-shadow)"/>
+    ${flange(185, 113, 13, `${id}-fl2`)}
+    ${section(184, 94, `url(#${id}-rear)`)}
+    ${section(183, 89, 'none', '#e8cf8c')}
+    ${bolts(184, 83, 20, 2.8)}
+    ${barrel(115, 181, 77)}
+    <path d="M144 -75 A45 77 0 0 1 144 75 M169 -76 A45 77 0 0 1 169 76" fill="none" stroke="#a27b30" stroke-width="2"/>
+    ${flange(112, 108, 12)}
+    ${barrel(81, 110, 86)}
+    ${section(81, 86, `url(#${id}-g)`)}
+    <path d="M-130 -72 L-77 -56 Q-53 -50 -20 -52 L20 -59 Q41 -65 53 -79 L78 -86 A50 86 0 0 1 78 86 L53 79 Q30 57 -20 52 H-77 L-130 72Z" fill="url(#${id}-g)" stroke="#c09630" stroke-width="1.2"/>
+    ${[54, 66, 77].map((x, i) => `<path d="M${x} ${-77 - i * 3} A${45 + i * 2} ${77 + i * 3} 0 0 1 ${x} ${77 + i * 3}" fill="none" stroke="${i === 1 ? '#ffe190' : '#b8882c'}" stroke-width="${i === 1 ? 3 : 2}"/>`).join('')}
+    <path d="M-79 -43 Q-44 -36 8 -47 L14 -27 Q-36 -16 -76 -23Z" fill="url(#${id}-glint)"/>
+    <path d="M-74 -17 L-66 23 Q-33 30 12 18 L5 -22 M-65 27 Q-28 36 16 22" fill="none" stroke="#b58a27" stroke-width="2"/>
+    <path d="M-69 -17 L-62 19 Q-27 25 9 15" fill="none" stroke="#ffdf76" stroke-width="2.5"/>
+    <path d="M-66 -48 l5 9 12 2 -5 -9Z M-14 -52 l6 9 13 -3 -7 -8Z M-59 41 l3 10 12 1 -2 -10Z M-3 38 l4 10 13 -3 -4 -10Z" fill="#ba8d29" opacity=".65"/>
+    <path d="M-64 -48 l12 2 M-12 -52 l12 -2 M-57 41 l12 1 M-1 38 l12 -2" stroke="#ffe089" stroke-width="2"/>
+    ${[-109, -94].map(x => `<path d="M${x} -64 A37 64 0 0 1 ${x} 64" fill="none" stroke="#c79529" stroke-width="4"/><path d="M${x + 3} -63 A37 63 0 0 1 ${x + 3} 63" fill="none" stroke="#ffdd73" stroke-width="2"/>`).join('')}
+    ${flange(-132, 90, 13)}
+    ${barrel(-202, -131, 88)}
+    <path d="M-183 -87 H-139 M-179 86 H-137" stroke="#f9dd8f" stroke-width="2" opacity=".7"/>
+    ${[-180, -172, -150].map((x, i) => `<path d="M${x} -88 A51 88 0 0 1 ${x} 88" fill="none" stroke="${i === 1 ? '#f5d37a' : '#b18a36'}" stroke-width="${i === 1 ? 3 : 1.5}"/>`).join('')}
+    <path d="M-163 -83 A49 83 0 0 1 -163 83" fill="none" stroke="#ffe8a2" stroke-width="5" stroke-opacity=".3"/>
+    ${flange(-203, 94, 13, `${id}-fl1`)}
+    ${section(-205, 80, `url(#${id}-cap)`, '#e5bd5d')}
+    ${section(-206, 72, 'none', '#644e22')}
+    ${section(-206, 76, 'none', '#dfbd69')}
+    ${section(-207, 65, 'none', '#c6a353')}
+    ${bolts(-207, 69, 16, 3.2)}
+    ${section(-208, 48, `url(#${id}-cap)`, '#e3bb59')}
+    ${section(-209, 42, 'none', '#6c5527')}
+    ${section(-210, 25, `url(#${id}-face)`, '#705822')}
+    ${bolts(-210, 32, 8, 2.8)}
+    ${section(-211, 14, `url(#${id}-cap)`, '#d1ad52')}
+    <ellipse cx="-22" cy="-32" rx="80" ry="21" fill="url(#${id}-glint)"/>
+    <ellipse cx="70" cy="-51" rx="24" ry="36" fill="url(#${id}-glint)"/>
+    <g transform="translate(-25 4)">
+      <rect x="-16" y="-7" width="32" height="14" rx="1.5" fill="#e0262b"/>
+      <text y="3.2" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="8.5" fill="#fff">${safeLabel}</text>
+      <circle cx="-13.5" cy="-4.5" r=".8" fill="#ffe5a1"/><circle cx="13.5" cy="4.5" r=".8" fill="#ffe5a1"/>
+    </g>
   </g>`
 }
 

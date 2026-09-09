@@ -2,6 +2,10 @@
 
 Bitácora de decisiones de diseño y contenido. Lo más reciente arriba.
 
+## 2026-09-09 — v2.5: mando final rehecho desde el render de referencia (Codex GPT-6 Astra, razonamiento medio)
+
+Gala pidió que el componente se vea como `docs/referencias/02-mando-final.png` (render CAT), sin el eje delgado trasero. Codex recibió las dos imágenes adjuntas (`-i`) y rehízo solo `finalDriveSide()`: tambor con tapa plana, cuerpo dorado escalonado, doble corona derecha con 100 dientes por corona, pernos, brillos, sombra; sin eje saliente; placa PTT roja discreta. Ids `-fl1/-fl2/-g` preservados; sin cambios en escenas. Comparación en `docs/revisiones/finalDrive-comparacion.png`.
+
 ## 2026-09-09 — v2.4: CAT 797F rehecho desde foto lateral (Codex GPT-6 Astra, razonamiento medio)
 
 Gala aportó una foto del 797F en **vista lateral pura** (`docs/referencias/r4-01-cat-797f-lateral.png`, rescatada del portapapeles). Se le pasó a Codex como imagen adjunta (`codex exec -i`, acceso confirmado antes de lanzar) y rehízo `truck797()` iterando 3 rondas render-vs-foto (Swift/AppKit). Comparación final guardada en `docs/revisiones/truck797-comparacion.png`.
