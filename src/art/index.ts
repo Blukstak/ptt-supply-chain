@@ -516,50 +516,207 @@ export function torqueWrench(id = 'tw') {
 
 /** R4 · obs. 02:03 (Imagen 4): transmisión CAT — cuerpo cilíndrico amarillo con tapas, brida frontal, bloque de válvulas y patas. Centrada en (0,0), ≈ 320 × 220. */
 export function transmission(id = 'tx') {
-  const bolts = (cx: number, cy: number, r: number, n: number) => Array.from({ length: n }, (_, i) => { const a = (i / n) * Math.PI * 2; return `<circle cx="${cx + Math.cos(a) * r}" cy="${cy + Math.sin(a) * r}" r="3.2" fill="#8a6a12" stroke="#4a3808" stroke-width="1"/>` }).join('')
+  // Compact casting, with elliptical covers normal to the receding shaft axis.
+  const bolt = (x: number, y: number, r = 2.2) => `<g transform="translate(${x} ${y})"><ellipse cy=".8" rx="${r + .6}" ry="${r + .4}" fill="#765522"/><path d="M${-r} 0 l${r / 2} ${-r * .85} h${r} l${r / 2} ${r * .85} -${r / 2} ${r * .85} h${-r}Z" fill="url(#${id}-bolt)" stroke="#8a682c" stroke-width=".45"/><path d="M${-r * .5} ${-r * .6} h${r}" stroke="#ffe4a0" stroke-width=".6"/></g>`
+  const ring = (x: number, y: number, rx: number, ry: number, n: number, size = 2.2) => Array.from({ length: n }, (_, i) => {
+    const a = (i + .5) * 2 * Math.PI / n
+    return bolt(x + Math.cos(a) * rx, y + Math.sin(a) * ry, size)
+  }).join('')
   return `<defs>
-    <linearGradient id="${id}-y" x2="0" y2="1"><stop stop-color="#ffd84a"/><stop offset=".55" stop-color="#e6b512"/><stop offset="1" stop-color="#a87f08"/></linearGradient>
-    <linearGradient id="${id}-c" x1="0" x2="1"><stop stop-color="#c99a10"/><stop offset=".4" stop-color="#ffd84a"/><stop offset="1" stop-color="#b58a0c"/></linearGradient>
-  </defs><g id="${id}">
-    <ellipse cx="0" cy="112" rx="170" ry="12" fill="#000" opacity=".3"/>
-    <rect x="-40" y="-40" width="180" height="150" rx="10" fill="url(#${id}-y)" stroke="#8a6a12" stroke-width="2"/>
-    <rect x="-150" y="-70" width="150" height="150" rx="14" fill="url(#${id}-c)" stroke="#8a6a12" stroke-width="2"/>
-    <ellipse cx="-150" cy="5" rx="34" ry="78" fill="#d9ab14" stroke="#8a6a12" stroke-width="2"/>
-    <ellipse cx="-152" cy="5" rx="24" ry="60" fill="#f2c62c" stroke="#a37a23" stroke-width="1.5"/>
-    <ellipse cx="-154" cy="5" rx="10" ry="24" fill="#3a3220" stroke="#8a6a12" stroke-width="1.5"/>
-    ${bolts(-152, 5, 68, 14).replace(/cx="([^"]+)"/g, (_m, v) => `cx="${(-152 + (parseFloat(v) + 152) * 0.45).toFixed(1)}"`)}
-    <rect x="-110" y="-96" width="70" height="30" rx="4" fill="#e0b41b" stroke="#8a6a12" stroke-width="2"/>
-    <rect x="-100" y="-104" width="50" height="10" rx="2" fill="#c49a10"/>
-    <circle cx="20" cy="30" r="40" fill="#e9bd21" stroke="#8a6a12" stroke-width="2"/><circle cx="20" cy="30" r="27" fill="#d6a712"/>${bolts(20, 30, 33, 10)}
-    <circle cx="100" cy="-10" r="22" fill="#e9bd21" stroke="#8a6a12" stroke-width="2"/><circle cx="100" cy="-10" r="10" fill="#3a3220"/>
-    <rect x="40" y="70" width="110" height="46" rx="4" fill="#d6a712" stroke="#8a6a12" stroke-width="2"/>
-    ${[52, 76, 100, 124].map((x) => `<rect x="${x}" y="78" width="14" height="30" rx="3" fill="#3a3220"/>`).join('')}
-    <rect x="140" y="-30" width="34" height="90" rx="4" fill="#c99a10" stroke="#8a6a12" stroke-width="2"/>
-    <path d="M-125 80 L-125 110 L-95 110 M110 110 L140 110 L140 80" stroke="#3a3220" stroke-width="10" fill="none"/>
-    <text x="10" y="-10" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="22" fill="#4a3808" letter-spacing="3">TRANSMISIÓN</text>
-  </g>`
+    <linearGradient id="${id}-y" x2=".12" y2="1"><stop stop-color="#b48a32"/><stop offset=".12" stop-color="#f7d477"/><stop offset=".3" stop-color="#ffdc65"/><stop offset=".48" stop-color="#efb72b"/><stop offset=".68" stop-color="#edbc3f"/><stop offset="1" stop-color="#926621"/></linearGradient>
+    <linearGradient id="${id}-c" x1="0" y1=".8" x2="1" y2=".12"><stop stop-color="#896225"/><stop offset=".4" stop-color="#c39538"/><stop offset=".76" stop-color="#edcc79"/><stop offset="1" stop-color="#bd9545"/></linearGradient>
+    <linearGradient id="${id}-bolt" x2=".4" y2="1"><stop stop-color="#fff0b6"/><stop offset=".45" stop-color="#d5b76b"/><stop offset="1" stop-color="#80632c"/></linearGradient>
+    <radialGradient id="${id}-glint"><stop stop-color="#fff2b6" stop-opacity=".5"/><stop offset="1" stop-color="#fff0ae" stop-opacity="0"/></radialGradient>
+    <radialGradient id="${id}-shadow"><stop stop-color="#302614" stop-opacity=".3"/><stop offset="1" stop-color="#302614" stop-opacity="0"/></radialGradient>
+  </defs><g id="${id}"><g transform="scale(.9 1)">
+    <ellipse cx="4" cy="116" rx="153" ry="13" fill="url(#${id}-shadow)"/>
+    <!-- Rear bell flange and the descending auxiliary gear housing. -->
+    <path d="M49 -89 Q103 -94 126 -40 L131 10 112 42 66 42 33 -16Z" fill="url(#${id}-y)" stroke="#9e742a" stroke-width="1.2"/>
+    <path d="M64 21 L127 7 123 91 94 116 45 96 32 47Z" fill="url(#${id}-y)" stroke="#986e25" stroke-width="1.2"/>
+    <path d="M94 39 L127 24 123 91 94 116Z" fill="#b0832e"/>
+    <path d="M40 44 L92 62 94 116 46 97Z" fill="url(#${id}-c)" stroke="#b08634"/>
+    <path d="M96 46 l22 -10 -1 22 -21 10Z M98 78 l17 -8 -1 18 -16 10Z" fill="#44463e" stroke="#d4ad58" stroke-width="1.5"/>
+    <path d="M45 90 l13 4 1 10 -13 -5Z M75 101 l12 4 1 8 -12 -4Z" fill="#e4b548"/>
+    ${[48, 66, 85].map(x => bolt(x, 97 + (x - 48) * .36, 1.6)).join('')}
+    <ellipse cx="62" cy="64" rx="23" ry="26" fill="#b38939" stroke="#f0cd75" stroke-width="2"/>
+    <ellipse cx="58" cy="64" rx="19" ry="24" fill="url(#${id}-c)" stroke="#896329"/>
+    <ellipse cx="57" cy="64" rx="11" ry="15" fill="#535248" stroke="#d8b35f" stroke-width="3"/>
+    <ellipse cx="54" cy="64" rx="6" ry="10" fill="#302f29"/>
+    ${ring(57, 64, 16, 21, 8, 1.6)}
+    <ellipse cx="75" cy="-21" rx="51" ry="81" fill="url(#${id}-c)" stroke="#9e782f" stroke-width="1.5"/>
+    <ellipse cx="70" cy="-22" rx="49" ry="78" fill="url(#${id}-y)" stroke="#f2d07d" stroke-width="1.3"/>
+    ${ring(72, -22, 44, 72, 20)}
+    <!-- Broad cylindrical wall; ribs follow its curved cross-section. -->
+    <path d="M-68 -70 L57 -97 C100 -91 124 -3 75 49 L-55 76Z" fill="url(#${id}-y)" stroke="#ab7e2a" stroke-width="1.2"/>
+    ${[36, 47, 58].map(x => `<path d="M${x} -93 C${x + 43} -69 ${x + 61} 4 ${x + 21} 53" fill="none" stroke="#b8892b" stroke-width="1.9"/><path d="M${x - 2} -92 C${x + 41} -68 ${x + 58} 4 ${x + 18} 53" fill="none" stroke="#f8d373" stroke-width="1.2"/>`).join('')}
+    <path d="M-51 -52 L38 -72 M-43 58 L58 35" stroke="#ffe49a" stroke-width="2" opacity=".65"/>
+    <path d="M-19 -52 L-7 -57 8 27 -3 35Z" fill="#e5ae34"/>
+    <path d="M-18 -52 L-5 27" stroke="#f8d57c" stroke-width="2"/>
+    <!-- Thick front flange with a closed service cover and small lower pump. -->
+    <path d="M-83 -77 L-60 -81 C-7 -77 20 36 -39 77 L-61 82Z" fill="url(#${id}-y)" stroke="#98702a"/>
+    <ellipse cx="-77" cy="1" rx="53" ry="79" fill="url(#${id}-c)" stroke="#906c2d" stroke-width="1.5"/>
+    <ellipse cx="-79" cy="1" rx="47" ry="72" fill="url(#${id}-y)" stroke="#f1d182" stroke-width="1.5"/>
+    <ellipse cx="-86" cy="-20" rx="36" ry="48" fill="url(#${id}-c)" stroke="#936b28" stroke-width="1.5"/>
+    <path d="M-111 -48 C-92 -75 -61 -52 -53 -24" fill="none" stroke="#f6d992" stroke-width="1.5"/>
+    ${ring(-79, 1, 47, 72, 16, 2.5)}
+    ${ring(-86, -20, 33, 45, 10, 1.7)}
+    <path d="M-120 -7 L-57 6 -55 11 -121 -2Z" fill="#a27b30"/>
+    <path d="M-120 -8 L-57 5" stroke="#e8c273" stroke-width="1.3"/>
+    <path d="M-129 -25 l13 -4 8 7 -1 21 -14 2 -8 -8Z M-124 22 l16 -2 9 14 -4 18 -15 1 -9 -11Z" fill="url(#${id}-c)" stroke="#936d2b"/>
+    ${bolt(-122, -18)}${bolt(-121, 32)}
+    <ellipse cx="-84" cy="45" rx="23" ry="28" fill="url(#${id}-y)" stroke="#99712c"/>
+    <ellipse cx="-88" cy="46" rx="18" ry="24" fill="url(#${id}-c)" stroke="#f1d18a"/>
+    ${ring(-88, 46, 15, 20, 8, 1.7)}
+    <ellipse cx="-90" cy="46" rx="7" ry="10" fill="#9d782f" stroke="#daba70"/>
+    <path d="M-53 36 l20 -6 12 9 -2 27 -20 8 -12 -10Z" fill="#606257" stroke="#bca35f"/>
+    ${bolt(-47, 42, 1.5)}${bolt(-29, 60, 1.5)}
+    <!-- Raised hydraulic valve chest, cap screws, plugs and rigid oil line. -->
+    <path d="M-55 -77 V-106 L-9 -116 17 -106 V-65 L-29 -54 -55 -64Z" fill="url(#${id}-y)" stroke="#ad8131"/>
+    <path d="M-55 -106 L-9 -116 17 -106 -29 -96Z" fill="#edc76e" stroke="#ae8332"/>
+    <path d="M-29 -96 L17 -106 V-65 L-29 -54Z" fill="url(#${id}-y)"/>
+    <path d="M-48 -98 v21 l12 4 v-23" fill="url(#${id}-c)" stroke="#9d742d"/>
+    ${[-44, -23, -3, 10].map((x, i) => bolt(x, -105 + (i % 2 ? 2 : -3), 1.7)).join('')}
+    <path d="M-7 -117 v-6 h15 v5 M-39 -109 v-8 h10" fill="none" stroke="#5b594b" stroke-width="2"/>
+    <path d="M-122 29 C-140 14 -131 -20 -128 -33 Q-126 -39 -119 -36 L-109 -31" fill="none" stroke="#454b46" stroke-width="2.8"/>
+    <path d="M-125 28 C-136 12 -128 -14 -126 -31" fill="none" stroke="#b6b39a" stroke-width=".8"/>
+    <path d="M-128 -12 l10 2 M-129 9 l10 2" stroke="#d9ad51" stroke-width="4"/>
+    <path d="M-106 -40 l13 -3 9 6 -1 11 -16 -1Z" fill="#686a58" stroke="#a9a074"/>
+    <path d="M-103 -37 l16 4 M-102 -32 l16 4" stroke="#bbb38a" stroke-width="1.3"/>
+    <path d="M-117 -20 Q-91 -10 -71 -18" fill="none" stroke="#353f37" stroke-width="3"/>
+    <path d="M-115 -16 Q-89 -4 -73 -11" fill="none" stroke="#8c8b69" stroke-width="1.4"/>
+    <path d="M-114 3 l24 5 v9 l-22 -5Z M-110 18 l23 5 v7 l-20 -5Z" fill="url(#${id}-y)" stroke="#ae8539"/>
+    <path d="M-64 64 l8 -15 5 -3 M-47 71 l9 -7 M-118 51 l5 8" fill="none" stroke="#e6bf64" stroke-width="2.5"/>
+    <path d="M-43 -88 l12 -3 v13 l-12 3Z" fill="#af8130" stroke="#e6c274"/>
+    ${bolt(-39, -82, 2)}
+    <path d="M-17 -105 v14 M-3 -108 v13 M11 -109 v13" stroke="#e0b760" stroke-width="2"/>
+    <path d="M104 -76 v-14 q4 -10 9 0 v17" fill="none" stroke="#a68b48" stroke-width="3"/>
+    <path d="M96 17 l23 -9 5 3 -1 7 -25 9Z" fill="#383f36" stroke="#9f9b70"/>
+    <ellipse cx="73" cy="97" rx="9" ry="11" fill="url(#${id}-y)" stroke="#a27a2c"/>
+    <ellipse cx="73" cy="97" rx="3" ry="5" fill="#686447"/>
+    ${ring(73, 97, 7, 9, 6, 1)}
+    <path d="M-92 -51 l11 -3 5 5 -2 9 -12 -1Z" fill="url(#${id}-y)" stroke="#8e6c2d"/>
+    ${bolt(-86, -47, 2.2)}
+    <path d="M-117 -27 l6 2 v9 l-6 -2Z M-79 -21 l6 -2 v10 l-6 1Z" fill="url(#${id}-bolt)"/>
+    <path d="M-48 -92 l6 -2 v9 l-6 2Z M-47 -70 l7 -1 v9 l-7 1Z" fill="#e4ba60" stroke="#9b762e"/>
+    ${bolt(-45, -88, 1.5)}${bolt(-44, -66, 1.5)}
+    <path d="M-23 -110 l9 -2 4 3 -8 2Z" fill="#71694b"/>
+    <path d="M-13 -91 l12 -3 v9 l-12 3Z" fill="#c59439" stroke="#eac778"/>
+    ${bolt(-7, -88, 2)}
+    <path d="M-40 37 l5 -1 7 5 -1 17 -6 3 -5 -4Z" fill="#707264"/>
+    ${[43, 55].map(y => `<ellipse cx="-33" cy="${y}" rx="1.2" ry="1.7" fill="#353c35"/>`).join('')}
+    <path d="M36 76 l9 3 2 16 -8 -3Z" fill="#d8a744" stroke="#a98033"/>
+    <path d="M104 70 l10 -5 v5 l-10 5Z" fill="#e4c072"/>
+    ${bolt(112, 31, 1.5)}${bolt(117, 87, 1.5)}
+    <ellipse cx="7" cy="-36" rx="40" ry="23" fill="url(#${id}-glint)"/>
+  </g></g>`
 }
 
 /** R4 · obs. 02:03 (Imagen 5): motor diésel CAT sobre bastidor negro — bloque, culatas, múltiples, turbo y cañerías. Centrado en (0,0), ≈ 420 × 220. */
 export function engine(id = 'eng') {
+  const bolt = (x: number, y: number, r = 1.7) => `<circle cx="${x}" cy="${y + .5}" r="${r + .5}" fill="#815d26"/><path d="M${x - r} ${y} l${r * .5} ${-r * .85} h${r} l${r * .5} ${r * .85} -${r * .5} ${r * .85} h${-r}Z" fill="url(#${id}-metal)"/>`
+  const pipe = (d: string, w = 6, color = `url(#${id}-y)`) => `<path d="${d}" fill="none" stroke="#806027" stroke-width="${w + 2}" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="${color}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`
+  const turbo = (x: number) => `<g transform="translate(${x} -79)"><path d="M-16 4 V-15 Q-15 -23 -5 -23 H22 V-10 H9 V4Z" fill="url(#${id}-y)" stroke="#906a2c"/><ellipse rx="18" ry="16" fill="url(#${id}-y)" stroke="#9b742e"/><ellipse cx="-4" rx="11" ry="10" fill="#b79758" stroke="#f0d18a"/><ellipse cx="-5" rx="7" ry="6" fill="#42483f" stroke="#8b8c6f" stroke-width="2"/><path d="M-7 -5 l5 5 -5 5 M-11 0 h12" stroke="#7f8370" fill="none" stroke-width="1"/>${bolt(10, -6, 1.2)}${bolt(10, 8, 1.2)}</g>`
   return `<defs>
-    <linearGradient id="${id}-y" x2="0" y2="1"><stop stop-color="#ffd84a"/><stop offset=".6" stop-color="#e2b011"/><stop offset="1" stop-color="#a87f08"/></linearGradient>
+    <linearGradient id="${id}-y" x2=".12" y2="1"><stop stop-color="#b48a32"/><stop offset=".12" stop-color="#f7d477"/><stop offset=".3" stop-color="#ffdc65"/><stop offset=".48" stop-color="#efb72b"/><stop offset=".68" stop-color="#edbc3f"/><stop offset="1" stop-color="#926621"/></linearGradient>
+    <linearGradient id="${id}-face" x1="0" y1=".8" x2="1" y2=".12"><stop stop-color="#896225"/><stop offset=".45" stop-color="#bf9137"/><stop offset=".8" stop-color="#edcc79"/><stop offset="1" stop-color="#bd9545"/></linearGradient>
+    <linearGradient id="${id}-metal" x2=".3" y2="1"><stop stop-color="#f3df9d"/><stop offset=".5" stop-color="#b29e69"/><stop offset="1" stop-color="#655d40"/></linearGradient>
+    <linearGradient id="${id}-steel" x2="0" y2="1"><stop stop-color="#65685c"/><stop offset=".3" stop-color="#393f39"/><stop offset="1" stop-color="#222823"/></linearGradient>
+    <radialGradient id="${id}-shadow"><stop stop-color="#302614" stop-opacity=".32"/><stop offset="1" stop-color="#302614" stop-opacity="0"/></radialGradient>
+    <radialGradient id="${id}-glint"><stop stop-color="#fff2b6" stop-opacity=".4"/><stop offset="1" stop-color="#fff0ae" stop-opacity="0"/></radialGradient>
   </defs><g id="${id}">
-    <ellipse cx="0" cy="118" rx="230" ry="12" fill="#000" opacity=".3"/>
-    <rect x="-210" y="84" width="420" height="22" rx="3" fill="#1f2226" stroke="#0d0f11" stroke-width="2"/>
-    <rect x="-190" y="106" width="30" height="12" fill="#1f2226"/><rect x="160" y="106" width="30" height="12" fill="#1f2226"/>
-    <rect x="-170" y="-10" width="340" height="96" rx="6" fill="url(#${id}-y)" stroke="#8a6a12" stroke-width="2"/>
-    ${[-150, -95, -40, 15, 70, 125].map((x) => `<rect x="${x}" y="-62" width="46" height="56" rx="4" fill="#e9bd21" stroke="#8a6a12" stroke-width="2"/><rect x="${x + 6}" y="-56" width="34" height="10" rx="2" fill="#c49a10"/>`).join('')}
-    <rect x="-160" y="-76" width="316" height="14" rx="3" fill="#d6a712" stroke="#8a6a12" stroke-width="2"/>
-    <path d="M-140 -6 H150" stroke="#2b2f36" stroke-width="10" stroke-linecap="round"/>
-    <path d="M-150 20 H160 M-150 44 H160" stroke="#3a3220" stroke-width="5" opacity=".6"/>
-    ${[-130, -75, -20, 35, 90].map((x) => `<circle cx="${x}" cy="32" r="12" fill="#3a3220" stroke="#8a6a12" stroke-width="1.5"/>`).join('')}
-    <circle cx="150" cy="-30" r="30" fill="#8a8f98" stroke="#3a3f47" stroke-width="3"/><circle cx="150" cy="-30" r="16" fill="#3a3f47"/><circle cx="150" cy="-30" r="7" fill="#8a8f98"/>
-    <path d="M120 -30 L60 -30 L60 -20" stroke="#8a8f98" stroke-width="10" fill="none" stroke-linecap="round"/>
-    <path d="M-200 60 L-170 60 M-200 40 L-200 70" stroke="#8a8f98" stroke-width="8" stroke-linecap="round"/>
-    <rect x="-215" y="0" width="45" height="60" rx="6" fill="#c99a10" stroke="#8a6a12" stroke-width="2"/>
-    <path d="M-120 86 L-120 100 M120 86 L120 100" stroke="#0d0f11" stroke-width="6"/>
-    <text x="0" y="66" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="24" fill="#4a3808" letter-spacing="4">MOTOR DIÉSEL</text>
+    <ellipse cx="0" cy="117" rx="235" ry="13" fill="url(#${id}-shadow)"/>
+    <!-- Skid has a visible top plane, crossmembers and fork pockets. -->
+    <path d="M-214 90 L-191 77 H218 L203 94Z" fill="#666859" stroke="#363d35"/>
+    ${[-177, -72, 58, 169].map(x => `<path d="M${x} 82 l17 -8 v31 l-17 11Z" fill="#353b34"/>`).join('')}
+    <path d="M-215 94 H207 V108 H-215Z" fill="url(#${id}-steel)" stroke="#282e29"/>
+    <path d="M-214 94 H207" stroke="#858473" stroke-width="2"/>
+    <path d="M-184 101 h31 v12 h-31Z M144 101 h32 v12 h-32Z" fill="#222824" stroke="#585e51"/>
+    <!-- Far cylinder bank and the flywheel bell, partially hidden by the near bank. -->
+    <path d="M-171 -42 L-146 -68 H172 L199 -36 V46 L171 70 H-174Z" fill="url(#${id}-face)" stroke="#98712b"/>
+    ${[-147, -96, -45, 6, 57, 108].map(x => `<path d="M${x} -64 v-19 l9 -7 h36 v24Z" fill="url(#${id}-y)" stroke="#a47c2f"/><path d="M${x + 3} -84 h38" stroke="#eed18a" stroke-width="2"/>`).join('')}
+    <path d="M159 -44 L184 -50 C222 -34 224 39 196 62 L173 70Z" fill="url(#${id}-y)" stroke="#94702d"/>
+    <ellipse cx="190" cy="8" rx="24" ry="52" fill="url(#${id}-face)" stroke="#e6c472" stroke-width="2"/>
+    <ellipse cx="200" cy="9" rx="15" ry="43" fill="#4b5045" stroke="#9e833e" stroke-width="3"/>
+    <ellipse cx="201" cy="9" rx="9" ry="30" fill="#292e28" stroke="#6c705e"/>
+    <!-- Long crankcase and sloping oil sump. -->
+    <path d="M-179 -13 L165 -13 179 3 V60 L153 76 H-153 L-180 53Z" fill="url(#${id}-y)" stroke="#936c27" stroke-width="1.3"/>
+    <path d="M-154 56 H153 L136 86 H-124 L-150 75Z" fill="url(#${id}-face)" stroke="#a2792f"/>
+    <path d="M-151 61 H146 M-129 80 H134" stroke="#f4cf72" stroke-width="1.5"/>
+    <path d="M-175 47 H164" stroke="#85662b" stroke-width="2"/>
+    ${[-154, -102, -50, 2, 54, 106].map(x => `<rect x="${x}" y="5" width="44" height="35" rx="5" fill="url(#${id}-face)" stroke="#a77b2d"/><path d="M${x + 4} 9 h34" stroke="#eecd79"/>${bolt(x + 5, 12, 1.2)}${bolt(x + 38, 34, 1.2)}`).join('')}
+    ${Array.from({ length: 15 }, (_, i) => bolt(-165 + i * 23, 51, 1.3)).join('')}
+    <!-- Individual heads, raised valve covers and injection equipment. -->
+    ${[-156, -105, -54, -3, 48, 99].map((x, i) => `<g>
+      <path d="M${x} -20 V-61 L${x + 8} -72 H${x + 44} V-21Z" fill="url(#${id}-y)" stroke="#9f7429"/>
+      <path d="M${x - 2} -62 l9 -12 h36 l4 5 -8 12Z" fill="#edc773" stroke="#ae8537"/>
+      <path d="M${x - 2} -62 l41 5 v12 l-41 -3Z" fill="url(#${id}-face)" stroke="#a2782e"/>
+      <path d="M${x + 7} -68 h26 M${x + 4} -57 l27 2" stroke="#f9df99" stroke-width="1.3"/>
+      ${bolt(x + 4, -61, 1.4)}${bolt(x + 35, -58, 1.4)}
+      <rect x="${x + 8}" y="-43" width="14" height="17" rx="2" fill="url(#${id}-face)" stroke="#9b7129"/>
+      <path d="M${x + 25} -45 v18 l9 7" fill="none" stroke="#f2cd72" stroke-width="4"/>
+      ${pipe(`M${x + 10} 6 V-13 Q${x + 10} -19 ${x + 18} -19 V-43`, 1.5, '#d6bd7c')}
+      <path d="M${x + 6} -44 v-7 h6 v8" stroke="#645d3c" stroke-width="1.4" fill="none"/>
+      ${i % 2 === 0 ? `<path d="M${x + 29} -72 v-9 q0 -5 5 -5 h3 v13" fill="none" stroke="#887239" stroke-width="3"/>` : ''}
+    </g>`).join('')}
+    <!-- Cast exhaust runners merge into the long warm yellow manifold. -->
+    ${[-136, -85, -34, 17, 68, 119].map(x => pipe(`M${x} -38 V-27 Q${x} -20 ${x + 9} -20 H${x + 18}`, 8)).join('')}
+    ${pipe('M-154 -13 H145 Q158 -13 158 -28 V-55', 11)}
+    <path d="M-149 -16 H144" stroke="#fbe19b" stroke-width="1.5"/>
+    ${[-111, -60, -9, 42, 93].map(x => `<path d="M${x} -20 v14 m4 -14 v14" stroke="#ab8236" stroke-width="1.6"/>`).join('')}
+    ${turbo(-99)}${turbo(99)}
+    ${pipe('M-83 -80 H-59 Q-48 -80 -48 -69 V-57 M113 -82 H136 Q148 -82 148 -69 V-56', 8)}
+    <!-- Upper balance line and individual injector fittings. -->
+    ${pipe('M-160 -75 V-87 H-133 M-70 -79 V-91 H65 V-82 M125 -98 H162 V-71', 3)}
+    ${[-146, -121, -70, -45, 32, 57, 108, 135].map((x, i) => `<path d="M${x} -73 v${i % 2 ? -12 : -7}" stroke="#7e7249" stroke-width="2"/><ellipse cx="${x}" cy="${i % 2 ? -85 : -80}" rx="3" ry="1.7" fill="url(#${id}-metal)"/>`).join('')}
+    ${[-142, -91, -40, 11, 62, 113].map(x => `<g>
+      <rect x="${x}" y="-44" width="7" height="13" rx="1" fill="url(#${id}-metal)" stroke="#897443" stroke-width=".6"/>
+      <path d="M${x - 1} -41 h9 M${x - 1} -34 h9" stroke="#655f42" stroke-width="1.2"/>
+      ${pipe(`M${x + 3} -32 V-5 Q${x + 3} 3 ${x + 11} 3 H${x + 18} V15`, 1.7, '#e4ca83')}
+      ${pipe(`M${x + 18} -51 H${x + 27} V-29`, 1.3, '#777355')}
+      <path d="M${x + 3} -26 h5 M${x + 3} -8 h5" stroke="#504f38" stroke-width="2"/>
+    </g>`).join('')}
+    <!-- Water rail, fuel lines and front accessory drive. -->
+    ${pipe('M-174 29 H144 Q157 29 157 17', 7)}
+    ${[-145, -78, -11, 56, 123].map(x => `<path d="M${x} 24 v10" stroke="#896b32" stroke-width="3"/>${bolt(x, 28, 1.3)}`).join('')}
+    <path d="M-163 15 H142 M-148 19 H117" stroke="#b39955" stroke-width="1.5" fill="none"/>
+    <path d="M-168 -51 L-178 -53 Q-198 -50 -194 -20 L-186 27 Q-182 36 -177 38 M173 -62 Q195 -58 187 -24 L179 13" fill="none" stroke="#393f36" stroke-width="7"/>
+    <path d="M-178 -54 Q-197 -50 -193 -22 M174 -63 Q192 -57 188 -34" fill="none" stroke="#7a806b" stroke-width="1.5"/>
+    <path d="M-193 -24 l8 -2 M184 -26 l8 2" stroke="#b6ac82" stroke-width="4"/>
+    <path d="M-204 1 l23 -7 13 8 v43 l-12 10 -26 -4Z" fill="url(#${id}-y)" stroke="#9a7029"/>
+    <ellipse cx="-197" cy="26" rx="13" ry="20" fill="url(#${id}-face)" stroke="#e5c374"/>
+    <ellipse cx="-199" cy="26" rx="6" ry="11" fill="#6f6037" stroke="#bea25b"/>
+    ${[-29, -11].map(x => `<rect x="${x}" y="34" width="13" height="26" rx="4" fill="url(#${id}-y)" stroke="#a58036"/><path d="M${x + 1} 38 h11" stroke="#f2d081"/>`).join('')}
+    ${pipe('M-172 3 V-28 H-165 V-48', 4)}
+    <path d="M-158 74 l-7 16 h-22 v-8 l13 -17 M144 73 l15 17 h26 v-8 l-18 -16" fill="url(#${id}-y)" stroke="#9b782f"/>
+    <rect x="-134" y="78" width="16" height="23" fill="url(#${id}-steel)"/><rect x="121" y="78" width="16" height="23" fill="url(#${id}-steel)"/>
+    <!-- Service pumps, braided hoses, clamps and lower return plumbing. -->
+    ${[-118, 57].map(x => `<path d="M${x - 3} -34 h7 v12 h-7Z" fill="url(#${id}-metal)" stroke="#796c40" stroke-width=".6"/><path d="M${x - 4} -30 h9 M${x - 4} -25 h9" stroke="#676343" stroke-width="1.4"/>`).join('')}
+    ${[-86, 80].map(x => `<rect x="${x - 4}" y="15" width="9" height="9" rx="1" fill="url(#${id}-metal)" stroke="#7c6b3b"/>${bolt(x, 19, 1.6)}`).join('')}
+    ${Array.from({ length: 12 }, (_, i) => { const a = (i + .5) * Math.PI / 6; return bolt(190 + Math.cos(a) * 21, 8 + Math.sin(a) * 48, 1.5) }).join('')}
+    ${[-154, -103, -52, -1, 50, 101].map(x => `<path d="M${x + 1} -45 h7 M${x + 1} -41 h7 M${x + 1} -37 h7" stroke="#967530" stroke-width="1"/>${bolt(x + 33, -31, 1.5)}${bolt(x + 33, -23, 1.5)}<path d="M${x + 38} -12 v8" stroke="#e1c384" stroke-width="3"/>`).join('')}
+    <path d="M-197 -4 V-26 h10 v18 M-175 -57 v-9 h11 v14" fill="url(#${id}-y)" stroke="#937030"/>
+    ${bolt(-170, -62, 2)}
+    <path d="M-207 10 l8 -2 M-210 22 l8 -1 M-208 35 l7 2" stroke="#f2ce77" stroke-width="2.2"/>
+    ${[-15, 0, 15, 30, 45].map(a => bolt(-197 + Math.cos(a * Math.PI / 45) * 10, 26 + Math.sin(a * Math.PI / 45) * 16, 1.2)).join('')}
+    <path d="M-191 -6 Q-181 -13 -170 -5 L-159 5 M153 -45 Q174 -46 176 -28" fill="none" stroke="#b1a16c" stroke-width="2"/>
+    <path d="M-134 -49 v5 M-84 -49 v5 M-33 -49 v5 M18 -49 v5 M69 -49 v5 M120 -49 v5" stroke="#655f42" stroke-width="3"/>
+    <path d="M-72 -67 v11 M-65 -67 v11 M126 -66 v10 M133 -66 v10" stroke="#b0924c" stroke-width="2"/>
+    <rect x="-49" y="-56" width="11" height="12" rx="2" fill="url(#${id}-face)" stroke="#8c6d2b"/>
+    ${bolt(-43, -50, 2)}
+    ${pipe('M-170 57 H-84 Q-75 57 -75 65 H70 Q85 65 85 51 H166 V36', 4)}
+    ${pipe('M-161 43 H-120 Q-111 43 -111 32 V-3', 3)}
+    <path d="M-119 -23 Q-131 -7 -113 9 L-86 18 M57 -33 Q40 -11 63 7 L80 21 M-52 33 Q-66 56 -44 63 H-19" fill="none" stroke="#44493b" stroke-width="2.6"/>
+    <path d="M-118 -23 Q-128 -7 -112 7 M57 -32 Q43 -11 64 6" fill="none" stroke="#9a9876" stroke-width=".7"/>
+    ${[-163, -72, 80, 157].map(x => `<rect x="${x}" y="39" width="11" height="13" rx="2" fill="url(#${id}-face)" stroke="#937332"/>${bolt(x + 5, 45, 1.6)}`).join('')}
+    <path d="M-172 -16 l18 -1 v28 l-18 1Z" fill="url(#${id}-face)" stroke="#8d6e2f"/>
+    ${[-11, -3, 5].map(y => `<path d="M-170 ${y} h12" stroke="#e4c175" stroke-width="1.4"/>`).join('')}
+    <ellipse cx="-164" cy="20" rx="10" ry="8" fill="url(#${id}-metal)" stroke="#947b3f"/>
+    ${bolt(-164, 20, 3)}
+    <path d="M-137 82 h21 v5 h-21 M118 82 h21 v5 h-21" fill="#b69b55"/>
+    <path d="M-130 85 v13 M128 85 v13" stroke="#818675" stroke-width="2"/>
+    <rect x="21" y="2" width="35" height="18" rx="1" fill="#292e28" stroke="#c5a150"/>
+    <text x="25" y="14" font-family="Arial, sans-serif" font-weight="900" font-size="13" fill="#f6f4dd">CAT</text><path d="M34 17 l5 -6 5 6Z" fill="#efbe35"/>
+    <ellipse cx="-22" cy="-2" rx="128" ry="10" fill="url(#${id}-glint)"/>
   </g>`
 }
 

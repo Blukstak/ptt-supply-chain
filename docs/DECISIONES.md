@@ -2,6 +2,10 @@
 
 Bitácora de decisiones de diseño y contenido. Lo más reciente arriba.
 
+## 2026-09-09 — v2.7: transmisión y motor rehechos desde las imágenes de R4 (Codex GPT-6 Astra, razonamiento medio)
+
+Las ilustraciones `transmission()` y `engine()` creadas en R4 quedaban muy simples frente al mando final. Codex recibió adjuntas `r4-05-transmision.png` y `r4-06-motor.png` y las rehízo con el mismo acabado (3/4, gradientes dorados, pernos, sombra). Transmisión: carcasa, tapas atornilladas, nervaduras, bloque hidráulico, brida inferior. Motor: bloque largo, culatas en fila, dos turbos, colectores, tuberías, cárter, bastidor, rótulo CAT. Ids preservados; sin cambios en escenas. Comparaciones en `docs/revisiones/`.
+
 ## 2026-09-09 — v2.6 / R4: Ronda 4 de Romina (14 observaciones)
 
 Fuente: `docs/Observaciones_Video_PTT_R4_2026-09-09.docx` (Romina De Filippi, Subgerencia de Supply Chain, 09/09/2026; observaciones sobre la v2.5 · 02:05). Capturas y fotos en `docs/referencias/r4-02…r4-07`.
