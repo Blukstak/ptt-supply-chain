@@ -10,7 +10,7 @@ import { Scene, sceneRoot, fullSvg, sceneEnter, photoBg, sceneLeave, quote, reve
 export function faenaScene(): Scene {
   const root = sceneRoot('faena')
   const bg = fullSvg(minePit('mine'))
-  const truckSvg = fullSvg(`<g id="truck-wrap" transform="translate(2100 560) scale(.72)">${truck797('t')}</g>`)
+  const truckSvg = fullSvg(`<g id="truck-wrap" transform="translate(2100 500) scale(.72)">${truck797('t')}</g>`)
   const dust = new Dust({ count: 160, color: '201, 162, 122', speed: 0.5, size: [1, 4], area: { x: 0, y: 500, w: 1920, h: 600 } })
 
   // Vista técnica del mando final (aparece al hacer zoom sobre la rueda)
@@ -26,7 +26,9 @@ export function faenaScene(): Scene {
     <g id="fd-gauge" transform="translate(1440 560)" opacity="0">${hoursGauge('g1', 170)}</g>
   `)
 
-  const lt1 = lowerThird('Escena 01 · Faena minera', 'Operación 24/7')
+  const lt1 = lowerThird('Escena 01 · Nuestros clientes', 'La gran minería del país')
+  const intro = el('div', { class: 'sub abs', html: 'Nuestros principales clientes son la <b style="color:var(--ink);font-weight:600">gran minería del país</b>. Ellos desmontan componentes de sus camiones de extracción y equipos de apoyo, y los bajamos a nuestros talleres.' })
+  Object.assign(intro.style, { left: '120px', top: '150px', maxWidth: '760px', opacity: '0', fontSize: '32px', textShadow: '0 4px 24px rgba(0,0,0,.8)' })
   const q1 = quote('Todo comienza antes de que ocurra una falla.', 120, 380, 1300)
   const q2 = quote('Planificación. Anticipación. Continuidad operacional.', 120, 400, 1500)
 
@@ -51,7 +53,7 @@ export function faenaScene(): Scene {
 
   root.append(bg)
   photoBg(root, 'mine-day.jpg', bg)
-  root.append(dust.canvas, truckSvg, fdSvg, newSvg, lt1, q1, q2, tagLife, tagPlan, panel, tagNew)
+  root.append(dust.canvas, truckSvg, fdSvg, newSvg, lt1, intro, q1, q2, tagLife, tagPlan, panel, tagNew)
 
   return {
     id: 'faena', title: 'Escena 1 · Faena', root,
@@ -66,18 +68,20 @@ export function faenaScene(): Scene {
       tl.fromTo(q('#mine-far'), { y: 30 }, { y: 0, duration: 6, ease: 'power2.out' }, at)
       tl.fromTo(q('#mine-benches'), { y: 60, scale: 1.04, transformOrigin: '50% 100%' }, { y: 0, scale: 1, duration: 6, ease: 'power2.out' }, at)
       tl.fromTo(haze, { opacity: 0.2 }, { opacity: 0.8, duration: 6 }, at)
-      showLowerThird(tl, lt1, at + 0.8, 4)
+      showLowerThird(tl, lt1, at + 0.8, 5.5)
+      tl.fromTo(intro, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out' }, at + 2)
+      tl.to(intro, { opacity: 0, y: -10, duration: 0.5 }, at + 7.6)
       // Camión entra por la derecha, en marcha hacia la izquierda
-      tl.set(truck, { attr: { transform: 'translate(2100 560) scale(.72)' } }, at)
-      tl.to(truck, { attr: { transform: 'translate(560 560) scale(.72)' }, duration: 7, ease: 'power2.out' }, at + 0.6)
+      tl.set(truck, { attr: { transform: 'translate(2100 500) scale(.72)' } }, at)
+      tl.to(truck, { attr: { transform: 'translate(560 500) scale(.72)' }, duration: 7, ease: 'power2.out' }, at + 0.6)
       tl.to(wheels, { rotation: -900, transformOrigin: '50% 50%', duration: 8, ease: 'power2.out' }, at + 0.6)
       // Vibración sutil del cuerpo
       tl.to(q('#t-bed'), { y: 2, duration: 0.15, repeat: 40, yoyo: true, ease: 'sine.inOut' }, at + 0.6)
 
       // Zoom sobre rueda trasera → corte del mando final
       const zoomAt = at + 8.4
-      tl.to(truckSvg, { scale: 3.2, x: -3156, y: -2058, transformOrigin: '50% 50%', duration: 2.2, ease: 'power3.inOut' }, zoomAt)
-      tl.to([bg, dust.canvas], { scale: 3.2, x: -3156, y: -2058, transformOrigin: '50% 50%', duration: 2.2, ease: 'power3.inOut' }, zoomAt)
+      tl.to(truckSvg, { scale: 3.2, x: -3175, y: -1911, transformOrigin: '50% 50%', duration: 2.2, ease: 'power3.inOut' }, zoomAt)
+      tl.to([bg, dust.canvas], { scale: 3.2, x: -3175, y: -1911, transformOrigin: '50% 50%', duration: 2.2, ease: 'power3.inOut' }, zoomAt)
       tl.to(bg, { filter: 'blur(14px) brightness(.4)', duration: 1.2 }, zoomAt + 1)
       tl.to(truckSvg, { opacity: 0, duration: 0.8 }, zoomAt + 1.4)
       tl.to(q('#fd-bgrect'), { opacity: 0.92, duration: 1 }, zoomAt + 1.4)

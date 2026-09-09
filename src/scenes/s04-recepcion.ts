@@ -1,5 +1,5 @@
 import { el } from '../core/dom'
-import { industrialFloor, hangingLights, finalDrive, technician, crate, wmsScreen } from '../art'
+import { industrialFloor, hangingLights, finalDrive, finalDriveSide, technician, wmsScreen } from '../art'
 import { Scene, sceneRoot, fullSvg, sceneEnter, photoBg, sceneLeave, quote, revealQuote, lowerThird, showLowerThird, tag, pop } from '../core/scene'
 
 /**
@@ -15,13 +15,13 @@ export function recepcionScene(): Scene {
     <text x="1600" y="150" text-anchor="middle" font-family="Barlow Condensed" font-weight="700" font-size="34" fill="#ffcd11" letter-spacing="4">RECEPCIÓN</text>
   `)
   const art = fullSvg(`
-    <g id="rc-crate" transform="translate(1520 560) scale(.6)" opacity="0">${crate('rcc', 420, 210, 'FD-797 · USADO')}</g>
+    <g id="rc-crate" transform="translate(1600 520) scale(.5)" opacity="0">${finalDriveSide('rcc', 'FD-797')}</g>
     <g id="rc-stand" transform="translate(620 640)" opacity="0">
       <rect x="-200" y="120" width="400" height="26" fill="#3d4a5a"/><rect x="-160" y="20" width="24" height="110" fill="#56657a"/><rect x="136" y="20" width="24" height="110" fill="#56657a"/>
       <g transform="translate(0 -100) scale(.8)">${finalDrive('rfd', 250)}</g>
     </g>
     <g id="rc-tech" transform="translate(1000 560) scale(1.05)" opacity="0">${technician('rt1', '#ffcd11', true)}</g>
-    <g id="rc-beam" opacity="0"><path d="M1030 590 L560 520 L560 640Z" fill="#f0503c" opacity=".35"/><line x1="1030" y1="590" x2="560" y2="580" stroke="#f0503c" stroke-width="3"/></g>
+    <g id="rc-beam" opacity="0"><path d="M1030 590 L640 500 L640 620Z" fill="#f0503c" opacity=".35"/><line x1="1030" y1="590" x2="640" y2="560" stroke="#f0503c" stroke-width="3"/></g>
     <g id="rc-wms" transform="translate(1160 120) scale(.72)" opacity="0">${wmsScreen('rw', 760, 470)}</g>
   `)
   const lt = lowerThird('Escena 04 · Recepción e inspección', 'Evaluación técnica')
@@ -50,7 +50,7 @@ export function recepcionScene(): Scene {
       // Portón sube, caja entra y se traslada al banco
       tl.to(q('#rc-door'), { y: -430, duration: 1.6, ease: 'power2.inOut' }, at + 0.4)
       tl.to(q('#rc-crate'), { opacity: 1, duration: 0.5 }, at + 1.2)
-      tl.to(q('#rc-crate'), { attr: { transform: 'translate(560 470) scale(1)' }, duration: 2.2, ease: 'power2.inOut' }, at + 1.6)
+      tl.to(q('#rc-crate'), { attr: { transform: 'translate(640 560) scale(1)' }, duration: 2.2, ease: 'power2.inOut' }, at + 1.6)
       tl.to(q('#rc-tech'), { opacity: 1, duration: 0.6 }, at + 2.6)
       // Escaneo
       const scanAt = at + 4.2
@@ -61,7 +61,7 @@ export function recepcionScene(): Scene {
       pop(tl, tagScan, scanAt + 1)
       // Caja → mando final sobre banco (desembalaje)
       const openAt = scanAt + 3.2
-      tl.to(q('#rc-crate'), { opacity: 0, attr: { transform: 'translate(560 470) scale(1.15)' }, duration: 0.6, ease: 'power2.in' }, openAt)
+      tl.to(q('#rc-crate'), { opacity: 0, attr: { transform: 'translate(640 560) scale(1.15)' }, duration: 0.6, ease: 'power2.in' }, openAt)
       tl.fromTo(q('#rc-stand'), { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out' }, openAt + 0.3)
       tl.to(tagScan, { opacity: 0, duration: 0.4 }, openAt)
       tl.to(q('#rc-wms'), { opacity: 0, duration: 0.5 }, openAt)

@@ -56,7 +56,7 @@ gsap.ticker.add(() => {
 // Splash / botón de inicio (los navegadores exigen gesto para fullscreen y evita el arranque en frío).
 const splash = el('div', { class: 'splash' })
 splash.append(el('div', { class: 'card', html: `
-  <div class="logo">PTT<span>.</span> Supply Chain</div>
+  <div class="logo">PTT<span>.</span> Cadena de suministro</div>
   <p>El ciclo de vida de un Mando Final CAT 797 — cómo las áreas de la cadena de suministro trabajan integradas para asegurar la continuidad operacional.</p>
   <button class="play">▶ Reproducir</button>
   <p style="font-size:13px;color:var(--ink-3)">Espacio: pausa · ← →: ±5 s · F: pantalla completa · 1–9: capítulos</p>

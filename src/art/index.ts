@@ -101,66 +101,96 @@ export function truck797(id = 'truck') {
   const wheel = (cx: number, cy: number, r: number, wid: string) => `
     <g id="${wid}" transform="translate(${cx} ${cy})">
       <circle r="${r}" fill="#0d0f12"/>
-      <circle r="${r * 0.96}" fill="none" stroke="#1e2126" stroke-width="${r * 0.08}" stroke-dasharray="${r * 0.18} ${r * 0.12}"/>
-      <circle r="${r * 0.62}" fill="#2a2f36"/>
-      <circle r="${r * 0.58}" fill="#3a414b"/>
-      <circle r="${r * 0.3}" fill="#1a1d22"/>
-      <circle r="${r * 0.22}" fill="${C.cat}"/>
-      <circle r="${r * 0.08}" fill="#111"/>
-      ${[0, 60, 120, 180, 240, 300].map((a) => `<circle cx="${Math.cos((a * Math.PI) / 180) * r * 0.42}" cy="${Math.sin((a * Math.PI) / 180) * r * 0.42}" r="${r * 0.045}" fill="#15181d"/>`).join('')}
+      <circle r="${r * 0.97}" fill="none" stroke="#22262c" stroke-width="${r * 0.09}" stroke-dasharray="${r * 0.16} ${r * 0.1}"/>
+      <circle r="${r * 0.66}" fill="#262b32"/>
+      <circle r="${r * 0.5}" fill="${C.cat}"/>
+      <circle r="${r * 0.44}" fill="${C.catDark}"/>
+      <circle r="${r * 0.3}" fill="#2a2f36"/>
+      <circle r="${r * 0.12}" fill="#15181d"/>
+      ${[0, 45, 90, 135, 180, 225, 270, 315].map((a) => `<circle cx="${Math.cos((a * Math.PI) / 180) * r * 0.37}" cy="${Math.sin((a * Math.PI) / 180) * r * 0.37}" r="${r * 0.04}" fill="#15181d"/>`).join('')}
     </g>`
   return `
   <defs>
-    <linearGradient id="${id}-body" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${C.cat}"/><stop offset="1" stop-color="${C.catDark}"/></linearGradient>
-    <linearGradient id="${id}-bed" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5a6270"/><stop offset="1" stop-color="#2c333d"/></linearGradient>
+    <linearGradient id="${id}-body" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd94a"/><stop offset=".6" stop-color="${C.cat}"/><stop offset="1" stop-color="${C.catDark}"/></linearGradient>
+    <linearGradient id="${id}-bed" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffdc55"/><stop offset="1" stop-color="${C.catDark}"/></linearGradient>
+    <linearGradient id="${id}-shade" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8a6a00"/><stop offset="1" stop-color="${C.catDark}"/></linearGradient>
   </defs>
   <g id="${id}">
-    <!-- sombra -->
-    <ellipse cx="520" cy="392" rx="560" ry="26" fill="#000" opacity=".45"/>
-    <!-- tolva -->
+    <ellipse cx="560" cy="470" rx="600" ry="26" fill="#000" opacity=".45"/>
+    <!-- tolva (con visera que cubre la cabina) -->
     <g id="${id}-bed">
-      <path d="M120 60 L980 60 L1060 110 L1060 250 L200 250 L120 200Z" fill="url(#${id}-bed)"/>
-      <path d="M120 60 L980 60 L1060 110 L200 110Z" fill="#6f7886"/>
-      <path d="M140 130 L1040 130" stroke="#1d2229" stroke-width="10"/>
-      <path d="M140 190 L1040 190" stroke="#1d2229" stroke-width="10"/>
-      ${[260, 380, 500, 620, 740, 860, 980].map((x) => `<path d="M${x} 110 L${x} 250" stroke="#1d2229" stroke-width="8"/>`).join('')}
-      <path d="M980 60 L1200 20 L1200 70 L1060 110Z" fill="#8a94a2"/>
-      <path d="M1180 25 L1180 300" stroke="#6f7886" stroke-width="16"/>
+      <path d="M0 40 L1100 40 L1200 -10 L1230 100 L1150 300 L330 300 L330 190 L0 100Z" fill="url(#${id}-bed)"/>
+      <path d="M0 40 L1100 40 L1100 100 L0 100Z" fill="#ffe27a"/>
+      <path d="M0 40 L1100 40 L1100 60 L0 60Z" fill="#fff0b0" opacity=".7"/>
+      <path d="M330 190 L1150 190" stroke="${C.catShadow}" stroke-width="6" opacity=".5"/>
+      ${[420, 540, 660, 780, 900, 1020].map((x) => `<path d="M${x} 110 L${x} 300" stroke="${C.catShadow}" stroke-width="8" opacity=".5"/>`).join('')}
+      <path d="M1100 40 L1200 -10 L1230 100 L1150 300 L1100 300Z" fill="url(#${id}-shade)"/>
+      <text x="1130" y="200" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="34" fill="#111" transform="rotate(-70 1130 200)">797F</text>
       <!-- carga -->
-      <path d="M200 60 Q500 -40 980 60Z" fill="#4a3d33"/>
-      <path d="M260 60 Q520 -10 900 60Z" fill="#5f5044"/>
+      <path d="M340 110 Q720 20 1090 110Z" fill="#4a3d33"/><path d="M400 110 Q720 45 1030 110Z" fill="#5f5044"/>
+    </g>
+    <!-- plataforma + cabina + radiador -->
+    <g id="${id}-cab">
+      <rect x="-40" y="190" width="380" height="16" fill="#3a414b"/>
+      <path d="M130 105 L130 190 L300 190 L300 105 L270 90 L150 90Z" fill="url(#${id}-body)"/>
+      <path d="M150 100 L260 100 L280 150 L150 150Z" fill="#9fd8ff" opacity=".85"/>
+      <rect x="150" y="150" width="130" height="8" fill="#1d2229"/>
+      <!-- barandas -->
+      <path d="M-40 150 L-40 190 M0 150 L0 190 M40 150 L40 190 M80 150 L80 190 M-40 150 L120 150 M-40 168 L120 168" stroke="#e9eef4" stroke-width="3" fill="none"/>
+      <path d="M310 150 L310 190 M345 150 L345 190 M310 150 L345 150 M310 168 L345 168" stroke="#e9eef4" stroke-width="3" fill="none"/>
+      <!-- radiador / frontal -->
+      <rect x="-40" y="206" width="180" height="120" fill="#2a3441"/>
+      <rect x="-30" y="214" width="160" height="104" fill="#1a2028"/>
+      ${[0, 1, 2, 3, 4, 5, 6].map((i) => `<rect x="-24" y="${220 + i * 14}" width="148" height="5" fill="#3d4a5a"/>`).join('')}
+      <rect x="-60" y="206" width="24" height="120" fill="${C.cat}"/>
+      <rect x="140" y="206" width="190" height="120" fill="url(#${id}-body)"/>
+      <rect x="180" y="220" width="120" height="50" rx="4" fill="#111418"/>
+      <text x="240" y="256" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="30" fill="${C.cat}">CAT</text>
+      <!-- escalera diagonal -->
+      <path d="M-70 440 L-40 206" stroke="#e9eef4" stroke-width="4"/><path d="M-100 440 L-70 206" stroke="#e9eef4" stroke-width="4"/>
+      ${Array.from({ length: 9 }, (_, i) => { const t = i / 8, x = -70 + 30 * t, y = 440 - 234 * t; return `<path d="M${x - 30} ${y} L${x} ${y}" stroke="#e9eef4" stroke-width="3"/>` }).join('')}
+      <rect x="-80" y="326" width="24" height="10" fill="#fff5c4"/>
+      <rect x="-80" y="340" width="24" height="6" fill="${C.amber}"/>
     </g>
     <!-- chasis -->
-    <rect x="80" y="250" width="1000" height="60" fill="#1d2229"/>
-    <rect x="40" y="290" width="1080" height="34" fill="#111418"/>
-    <!-- cabina + capó (frente a la izquierda) -->
-    <g id="${id}-cab">
-      <path d="M0 130 L0 260 L130 260 L130 120 L60 110Z" fill="url(#${id}-body)"/>
-      <path d="M-60 250 L-60 300 L60 300 L60 250Z" fill="#1d2229"/>
-      <path d="M-40 250 L130 250 L130 300 L-40 300Z" fill="#23282f"/>
-      <path d="M0 130 L60 110 L130 120 L130 200 L0 200Z" fill="${C.catDark}"/>
-      <rect x="20" y="132" width="90" height="46" rx="4" fill="#9fd8ff" opacity=".85"/>
-      <rect x="10" y="182" width="112" height="60" fill="#3a414b"/>
-      <rect x="20" y="190" width="90" height="44" fill="#26303a"/>
-      ${[0, 1, 2, 3].map((i) => `<rect x="24" y="${196 + i * 10}" width="82" height="3" fill="#1a2028"/>`).join('')}
-      <path d="M-60 250 L-100 250 L-100 290 L-60 290Z" fill="#2c333d"/>
-      <path d="M-160 200 L-100 200 L-100 250 L-160 250Z" fill="#2c333d"/>
-      <rect x="-40" y="222" width="180" height="14" fill="${C.cat}"/>
-      <!-- escalera -->
-      ${[0, 1, 2, 3, 4].map((i) => `<rect x="-30" y="${300 + i * 14}" width="70" height="4" fill="#3d4a5a"/>`).join('')}
-      <!-- luces -->
-      <rect x="-56" y="262" width="14" height="10" fill="#fff5c4"/>
-      <rect x="-56" y="278" width="14" height="6" fill="${C.amber}"/>
-    </g>
-    <!-- estanque / motor -->
-    <rect x="160" y="250" width="200" height="90" rx="6" fill="#3a414b"/>
-    <rect x="620" y="250" width="240" height="90" rx="6" fill="#2c333d"/>
-    ${wheel(220, 350, 118, `${id}-w1`)}
-    ${wheel(860, 350, 118, `${id}-w2`)}
-    ${wheel(960, 350, 118, `${id}-w3`)}
-    <!-- escape -->
-    <rect x="400" y="230" width="36" height="24" fill="#111418"/>
-    <text x="330" y="292" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="44" fill="#111" letter-spacing="2">797F</text>
+    <rect x="80" y="300" width="1060" height="50" fill="#1d2229"/>
+    <rect x="60" y="340" width="1100" height="28" fill="#111418"/>
+    ${wheel(230, 370, 128, `${id}-w1`)}
+    ${wheel(870, 370, 128, `${id}-w2`)}
+    ${wheel(990, 370, 128, `${id}-w3`)}
+  </g>`
+}
+
+/**
+ * Mando Final (vista exterior, como el componente real): cilindro amarillo con bridas dentadas
+ * en ambos extremos. Longitud ≈ 520 px, centrado en (0,0), eje horizontal.
+ */
+export function finalDriveSide(id = 'fds', label = 'FD-797') {
+  const flange = (x: number, r: number, w: number, fid: string) => {
+    const n = Math.round(r / 5)
+    const teeth = Array.from({ length: n }, (_, i) => {
+      const y = -r + (i / n) * 2 * r
+      return `<rect x="${x - w / 2 - 6}" y="${y}" width="${w + 12}" height="${(2 * r) / n * 0.5}" fill="#8a6a00" opacity=".7"/>`
+    }).join('')
+    return `<g id="${fid}">${teeth}<rect x="${x - w / 2}" y="${-r}" width="${w}" height="${2 * r}" rx="6" fill="url(#${id}-g)"/><ellipse cx="${x + w / 2}" cy="0" rx="${w * 0.35}" ry="${r}" fill="url(#${id}-g)"/><ellipse cx="${x + w / 2}" cy="0" rx="${w * 0.22}" ry="${r * 0.72}" fill="#c99d05"/><circle cx="${x + w / 2}" cy="0" r="${r * 0.2}" fill="#2a3441"/></g>`
+  }
+  return `
+  <defs>
+    <linearGradient id="${id}-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe27a"/><stop offset=".45" stop-color="${C.cat}"/><stop offset="1" stop-color="#8a6a00"/></linearGradient>
+  </defs>
+  <g id="${id}">
+    <ellipse cx="0" cy="130" rx="280" ry="18" fill="#000" opacity=".4"/>
+    <!-- cuerpo cónico -->
+    <path d="M-190 -70 L-40 -78 L60 -60 L170 -60 L170 60 L60 60 L-40 78 L-190 70Z" fill="url(#${id}-g)"/>
+    <path d="M-190 -70 L-40 -78 L60 -60 L170 -60" stroke="#fff3b8" stroke-width="3" fill="none" opacity=".6"/>
+    ${[-120, -60, 0, 110].map((x) => `<line x1="${x}" y1="-64" x2="${x}" y2="64" stroke="#8a6a00" stroke-width="3" opacity=".5"/>`).join('')}
+    <!-- brida grande (lado rueda) -->
+    ${flange(-220, 105, 50, `${id}-fl1`)}
+    <!-- brida central -->
+    <g><rect x="60" y="-80" width="26" height="160" rx="4" fill="#c99d05"/></g>
+    <!-- brida pequeña (lado eje) -->
+    ${flange(200, 84, 40, `${id}-fl2`)}
+    <text x="-20" y="10" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="30" fill="#111" opacity=".8">${label}</text>
   </g>`
 }
 
@@ -200,7 +230,7 @@ export function finalDrive(id = 'fd', r = 260) {
       <circle r="${r * 0.9}" fill="none" stroke="#4d5b6d" stroke-width="3"/>
     </g>
     <g id="${id}-carrier">
-      ${[0, 1, 2].map((i) => planet(((i * 120 + 90) * Math.PI) / 180, i)).join('')}
+      ${[0, 1, 2, 3].map((i) => planet(((i * 90 + 45) * Math.PI) / 180, i)).join('')}
     </g>
     <g id="${id}-sun">
       <path d="${teeth(r * 0.24, 16, r * 0.04)}" fill="#c9a86b"/>

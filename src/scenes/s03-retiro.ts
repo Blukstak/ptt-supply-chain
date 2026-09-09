@@ -1,5 +1,5 @@
 import { el } from '../core/dom'
-import { minePit, semiTruck, crate, truck797 } from '../art'
+import { minePit, semiTruck, finalDriveSide, truck797 } from '../art'
 import { Dust } from '../fx/dust'
 import { Scene, sceneRoot, fullSvg, sceneEnter, photoBg, sceneLeave, quote, revealQuote, lowerThird, showLowerThird, tag, pop } from '../core/scene'
 
@@ -16,11 +16,11 @@ export function retiroScene(): Scene {
   const dust = new Dust({ count: 120, color: '201, 162, 122', speed: 0.4, size: [1, 3], area: { x: 0, y: 500, w: 1920, h: 600 } })
 
   const art = fullSvg(`
-    <g id="rt-797" transform="translate(1250 600) scale(.5)" opacity="0">${truck797('rt')}</g>
+    <g id="rt-797" transform="translate(1250 560) scale(.5)" opacity="0">${truck797('rt')}</g>
     <g id="rt-semi" transform="translate(-900 760) scale(.95)">${semiTruck('semi')}
-      <g transform="translate(120 -40)">${crate('cr', 260, 130, 'PTT · FD-797')}</g>
+      <g transform="translate(290 -30) scale(.5)">${finalDriveSide('cr', 'FD-797')}</g>
     </g>
-    <g id="rt-crate-big" transform="translate(760 420)" opacity="0">${crate('crb', 420, 210, 'FD-797 · USADO')}</g>
+    <g id="rt-crate-big" transform="translate(760 420)" opacity="0">${finalDriveSide('crb', 'FD-797')}</g>
   `)
   const lt = lowerThird('Escena 03 · Retiro y logística inversa', 'Detención programada')
   const steps = el('div', { class: 'steps' })
@@ -51,7 +51,7 @@ export function retiroScene(): Scene {
       // 01 retiro: la caja grande "sale" del camión (desde la rueda) hacia el centro
       const s1 = at + 3.2
       tl.add(() => stepEls.forEach((s, i) => s.classList.toggle('active', i === 0)), s1)
-      tl.fromTo(q('#rt-crate-big'), { opacity: 0, attr: { transform: 'translate(1500 720) scale(.2)' } }, { opacity: 1, attr: { transform: 'translate(760 420) scale(1)' }, duration: 1.4, ease: 'power3.out' }, s1)
+      tl.fromTo(q('#rt-crate-big'), { opacity: 0, attr: { transform: 'translate(1500 720) scale(.2)' } }, { opacity: 1, attr: { transform: 'translate(760 460) scale(1.1)' }, duration: 1.4, ease: 'power3.out' }, s1)
       pop(tl, tagId, s1 + 1.2)
       // 02 embalaje: flash sobre la caja
       const s2 = s1 + 3.4
@@ -65,7 +65,7 @@ export function retiroScene(): Scene {
       const s4 = s3 + 2.8
       tl.add(() => stepEls.forEach((s, i) => s.classList.toggle('active', i === 3)), s4)
       tl.to([tagId, tagGD], { opacity: 0, duration: 0.5 }, s4)
-      tl.to(q('#rt-crate-big'), { opacity: 0, attr: { transform: 'translate(760 420) scale(.3)' }, duration: 0.9, ease: 'power3.in' }, s4)
+      tl.to(q('#rt-crate-big'), { opacity: 0, attr: { transform: 'translate(760 460) scale(.3)' }, duration: 0.9, ease: 'power3.in' }, s4)
       tl.to(q('#rt-semi'), { attr: { transform: 'translate(2200 760) scale(.95)' }, duration: 8, ease: 'power1.inOut' }, s4 + 0.6)
       tl.to(['#semi-w0', '#semi-w1', '#semi-w2', '#semi-w3', '#semi-w4'].map(q), { rotation: 1400, transformOrigin: '50% 50%', duration: 8, ease: 'power1.inOut' }, s4 + 0.6)
       // Cita mientras el camión avanza

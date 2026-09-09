@@ -1,5 +1,5 @@
 import { el } from '../core/dom'
-import { minePit, truck797, semiTruck, crate, finalDrive } from '../art'
+import { minePit, truck797, semiTruck, finalDriveSide, finalDrive } from '../art'
 import { Dust } from '../fx/dust'
 import { Scene, sceneRoot, fullSvg, sceneEnter, photoBg, quote, revealQuote, lowerThird, showLowerThird, tag, pop } from '../core/scene'
 
@@ -14,9 +14,9 @@ export function cierreScene(): Scene {
   dawn.style.background = 'linear-gradient(to bottom, rgba(245,166,35,.22), rgba(0,0,0,0) 55%)'
   const dust = new Dust({ count: 140, color: '201, 162, 122', speed: 0.5, size: [1, 4], area: { x: 0, y: 500, w: 1920, h: 600 } })
   const art = fullSvg(`
-    <g id="cl-semi" transform="translate(-1000 700) scale(.9)">${semiTruck('cls')}<g transform="translate(120 -40)">${crate('clc', 260, 130, 'PTT · FD-797 · REP.')}</g></g>
-    <g id="cl-797" transform="translate(2100 560) scale(.72)">${truck797('c7')}</g>
-    <g id="cl-fd" transform="translate(1180 812) scale(.15)" opacity="0">${finalDrive('cfd', 250)}</g>
+    <g id="cl-semi" transform="translate(-1000 700) scale(.9)">${semiTruck('cls')}<g transform="translate(290 -30) scale(.5)">${finalDriveSide('clc', 'FD-797')}</g></g>
+    <g id="cl-797" transform="translate(2100 500) scale(.72)">${truck797('c7')}</g>
+    <g id="cl-fd" transform="translate(1186 766) scale(.15)" opacity="0">${finalDrive('cfd', 250)}</g>
   `)
   const lt = lowerThird('Escena 08 · Distribución e instalación', 'Continuidad operacional')
   const tagDel = tag('Entrega en faena · 100% a tiempo · Detención programada Sem. 38', 120, 940, 'ok')
@@ -62,11 +62,11 @@ export function cierreScene(): Scene {
       tl.to(['#cls-w0', '#cls-w1', '#cls-w2', '#cls-w3', '#cls-w4'].map(q), { rotation: 900, transformOrigin: '50% 50%', duration: 4.5, ease: 'power2.out' }, at + 0.3)
       pop(tl, tagDel, at + 4.2)
       // 797 entra y el mando final "se instala" (tapa CAT en la rueda)
-      tl.to(q('#cl-797'), { attr: { transform: 'translate(560 560) scale(.72)' }, duration: 4, ease: 'power2.out' }, at + 5)
+      tl.to(q('#cl-797'), { attr: { transform: 'translate(560 500) scale(.72)' }, duration: 4, ease: 'power2.out' }, at + 5)
       tl.to(['#c7-w1', '#c7-w2', '#c7-w3'].map(q), { rotation: -600, transformOrigin: '50% 50%', duration: 4, ease: 'power2.out' }, at + 5)
       tl.to(q('#cl-semi'), { opacity: 0, duration: 0.8 }, at + 6)
       tl.set(q('#cfd-hubface'), { opacity: 1 }, at)
-      tl.fromTo(q('#cl-fd'), { opacity: 0, attr: { transform: 'translate(1180 812) scale(.6)' } }, { opacity: 1, attr: { transform: 'translate(1180 812) scale(.15)' }, duration: 1.2, ease: 'power3.in' }, at + 9)
+      tl.fromTo(q('#cl-fd'), { opacity: 0, attr: { transform: 'translate(1186 766) scale(.6)' } }, { opacity: 1, attr: { transform: 'translate(1186 766) scale(.15)' }, duration: 1.2, ease: 'power3.in' }, at + 9)
       tl.fromTo(q('#cl-fd'), { filter: 'brightness(3)' }, { filter: 'brightness(1)', duration: 0.6 }, at + 10.2)
       tl.to(tagDel, { opacity: 0, duration: 0.4 }, at + 10)
       // El 797 retoma la operación: sale por la izquierda
