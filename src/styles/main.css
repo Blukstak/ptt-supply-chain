@@ -204,9 +204,6 @@ canvas.fx { position: absolute; inset: 0; width: 100%; height: 100%; }
 .scene .tag, .scene .panel, .scene .quote, .scene .lower-third, .scene .steps, .scene .hud { opacity: 0; }
 
 /* ---------- Logo PTT · Marubeni Group (recreación tipográfica del logo institucional) ---------- */
-.ptt-logo { display: inline-flex; flex-direction: column; align-items: flex-start; transform: skewX(-8deg); line-height: .86; font-family: var(--font-display); font-weight: 700; text-transform: uppercase; }
-.ptt-logo .l1 { color: var(--ptt-red); font-size: 1em; letter-spacing: .02em; }
-.ptt-logo .l2 { color: #fff; font-size: 1em; letter-spacing: .02em; border-top: .04em solid var(--ptt-red); border-bottom: .04em solid var(--ptt-red); padding: .02em 0; }
-.ptt-logo .l3 { color: var(--ptt-grey); font-size: .62em; letter-spacing: .01em; margin-top: .06em; }
-.ptt-logo .l4 { color: var(--ptt-red); font-family: var(--font-body); font-weight: 700; font-size: .3em; text-transform: none; margin-top: .3em; align-self: center; letter-spacing: .02em; }
-.ptt-logo.on-light .l2 { color: #111; }
+.ptt-logo { display:inline-block; width:3.2em; height:2.76em; line-height:0; }
+.ptt-logo svg { width:100%; height:100%; overflow:visible; }
+.ptt-logo.on-light svg path:nth-child(2) { fill:#242222; }

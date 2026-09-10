@@ -2,6 +2,37 @@
 
 Bitácora de decisiones de diseño y contenido. Lo más reciente arriba.
 
+## 2026-09-09 — v2.9: ajustes de proporción tras R6 (Claude)
+
+Sobre el trabajo de Astra en R6 se corrigieron dos proporciones que habían quedado exageradas por la instrucción inicial:
+- **Tracto con cama baja vs. CAT 797F** (Contrato en faena y Entrega): de escala .20 (≈17 % de la altura del 797) a **.55** (≈55 %, un tracto real de ~4 m frente a ~7,5 m del 797). El camión de entrega ahora queda dentro del encuadre.
+- **Personas en el taller de faena**: de .25 a **.50** (una persona ≈ 45 % del diámetro de la rueda del 797), pies sobre la línea de suelo.
+Sin cambios de duración (02:04).
+
+## R6 (Feedback n1)
+
+2026-09-09 · v2.9 · Fuente: `referencias/r6-feedback-n1.md`, texto completo de Romina. Se confirmó acceso visual a las **22 imágenes adjuntas antes de modificar archivos**.
+
+| Punto | Qué hicimos | Estado |
+|---|---|---|
+| 1 · Logo | Contornos vectoriales del logo oficial r6-01 en `art/logo-paths.ts`: proporciones, pesos, inclinación del bloque y Marubeni Group horizontal en dos líneas. `logoPTT()` y `pttLogoSvg()` comparten ese arte; splash actualizado. TRAIN blanco sobre oscuro; rojo #e0262b y gris. | Implementado; comparación y portada verificadas |
+| 2 · Chile | Silueta continental larga y estrecha con Patagonia e islas australes; Antofagasta y Santiago ancladas en norte/centro, y centro del marcador de contrato dentro del territorio. Se conserva mapa ilustrativo, sin inventar una faena identificada. | Implementado; PNG de Quiénes somos verificado |
+| 3 · Equipos | `bulldozer`: CAT 854K sobre neumáticos, articulación y hoja lateral; `komatsuTruck`: tolva 830E, gran visera y neumáticos; `motorGrader`: CAT 24, tándem trasero, bastidor, hidráulicos y hoja de perfil. Vista lateral, gradientes sutiles. | Implementado; dos pasadas comparadas con r6-04/06/08 |
+| 4 · Taller y personal | Galpón de faena de 340 a 470 unidades de alto; cerchas y puente grúa de `pttWorkshop` elevados 45 unidades. Personas a .25 en faena, .48 en recepción/armado; escala del laboratorio ajustada. Puerta de recepción recortada a su vano. | Implementado; capturas revisadas |
+| 5 · Mando exterior | `finalDriveSide`: tambor trasero liso, cuerpo central estrecho, brida delantera con dientes, pernos y bastidor con apoyos y orejas rojas, según r6-12. Placa PTT. | Implementado; comparación r6-mando-v2.png |
+| 6 · Capas | Nuevo `finalDriveLayers(id)`: base/carcasa/eje, primera reducción, segunda reducción, tapa y wheel en la misma vista 3/4. Recepción retira las capas en orden inverso; Taller las monta secuencialmente y conserva ese componente en Reparación. Instalación final dentro del aro del 797 en Entrega. | Implementado; cinco estados de arte y capturas de desarme/armado/opciones |
+| 7 · Transporte | Cama baja a .20 en Faena/Entrega; en Entrega su cabina mide ~54 px frente a ~184 px de diámetro de rueda del 797 (menor que la mitad). Carga y punto de partida de instalación recalculados. | Implementado; r6-scene-104/106.png |
+| 8 · Contenido | Texto exacto “Componentes de los siguientes equipos, entre otros.”; galpón “Taller Minera” / “Contrato mantención PTT”. | Implementado; capturas 21 y 26 s |
+| 9 · Ruedas, mandos y horas | Ruedas giran desde 29,4 s; dos mandos nacen en los centros de las ruedas traseras y salen hacia primer plano; cada uno muestra un horómetro rojo conectado. Máximo 18.000 h y cita con “(generalmente)” conservados. Se elimina de Faena todo el bloque de lupa/conos/corte y engranajes girando. | Implementado; capturas 31/33/35/37 s |
+
+**Duración comprobada ejecutando el código en WebView de WebKit:** `window.__player.master.duration()` = **124,65 s** (02:04), dentro de 120 ± 5 s. Los `build()` suman 130,10 s; menos nueve solapes de 0,60 s = 124,70 s de espacio reservado; el último callback está 0,05 s antes. No se alteran los inicios de capítulos respecto de v2.8.
+
+**Verificación:** `npx tsc --noEmit` y `npm run build` correctos. Dos pasadas de renders SVG a PNG con Swift/AppKit por función modificada; revisión adicional de los cinco estados de armado. Capturas reales del DOM/GSAP con Swift + WebView clásico a 1920×1080 en `revisiones/r6-scene-*.png`. Tras la primera captura se corrigieron el rótulo recortado de la caja, la posición del SCAN, el recorte de la puerta, el haz del escáner y el recorrido de las piezas retiradas. Detalle en `revisiones/r6-verificacion.md`.
+
+**Compatibilidad:** todas las firmas exportadas preexistentes se conservan. Comparación del SVG generado confirma sin cambios `truck797()`, `transmission()`, `engine()`, `finalDrive()`, `pttWorker()` y `lowboyTruck()`; solo se modifica su uso/escala donde corresponde. IDs de ruedas, bridas, grúa, letreros y puertas preservados. Las capas nuevas no tienen transform propio en el wrapper animado; las traslaciones/zoom de componentes principales usan `artLayer/artAt`.
+
+**Límites de validación:** no se midió FPS ni se exportó video en tiempo real. Vite no pudo escuchar en 5173 por EPERM y WKWebView/Chrome headless fallaron en este sandbox; WebView clásico sí permitió ejecutar GSAP, medir duración y capturar. Las capturas usan las fuentes de respaldo del sistema cuando no están cargadas las webfonts; el logo no depende de fuentes. Los equipos y límites geográficos siguen siendo ilustraciones, no planos técnicos. Horómetros 17.650 h (heredado) y 17.280 h (ejemplo añadido para distinguir el segundo mando); no son telemetría real. No quedan puntos R6 sin implementar; queda fuera de esta verificación la fluidez en el equipo final del cliente. Sin commit.
+
 ## 2026-09-09 — v2.8 / R5: Ronda 5 de Romina (7 observaciones) + fluidez
 
 Fuente: `docs/Observaciones_Video_PTT_R5_2026-09-09.docx` (Romina De Filippi, Subgerencia de Supply Chain, 09/09/2026; observaciones sobre la v2.7 · 02:05). Imagen en `docs/referencias/r5-01-engranajes-extremo-mando-final.png`.

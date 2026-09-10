@@ -23,7 +23,7 @@ export function cierreScene(): Scene {
   // Aro amarillo de la rueda: r 52 (borde) / 47 en coordenadas de la rueda. finalDrive(250) tiene carcasa r 320 → scale .15 ⇒ r 48.
   const CAP_S = 0.15
   const art = fullSvg(`
-    <g id="cl-semi" transform="translate(-1000 620) scale(.9)">${lowboyTruck('cls')}</g>
+    <g id="cl-semi" transform="translate(-1100 686) scale(.55)">${lowboyTruck('cls')}</g>
     <g id="cl-797" transform="translate(2100 500) scale(.72)">${truck797('c7')}</g>
     <g id="cl-fd" transform="scale(${CAP_S})" opacity="0">${finalDrive('cfd', 250)}</g>
     <g id="cl-flash" opacity="0"><circle cx="${HUB.x}" cy="${HUB.y}" r="70" fill="#fff"/></g>
@@ -31,7 +31,7 @@ export function cierreScene(): Scene {
   // El mando final instalado se fija a la rueda: pasa a ser hijo del grupo de la rueda trasera (rota y se traslada con ella).
   art.querySelector('#c7-w3')!.append(art.querySelector('#cl-fd')!)
   // Componente que llega en la cama baja y sube a la rueda (capa GPU propia)
-  const COMP = { x: 420, y: 746, s: 0.38 }
+  const COMP = { x: 506, y: 828, s: 0.084 }
   const compSvg = artLayer(`<g transform="translate(${COMP.x} ${COMP.y}) scale(${COMP.s})">${finalDriveSide('clc', 'PTT')}</g>`, COMP.x, COMP.y)
   compSvg.style.opacity = '0'
   // Cierre I+D: otro mando final llega al taller; la pieza mejorada vuelve con brillo y se arma; sale otro mando final a la mina
@@ -83,7 +83,7 @@ export function cierreScene(): Scene {
       <rect x="${A.x - CW / 2}" y="${A.y - CH / 2}" width="${CW}" height="${CH}" fill="#1a1e24"/>
       <rect x="${A.x - CW / 2}" y="${A.y + 96}" width="${CW}" height="40" fill="#3a3129"/>
       <g transform="translate(${A.x - 200} ${A.y + 100}) scale(.365)">${fieldWorkshop('plfw')}</g>
-      <g transform="translate(${A.x - 130} ${A.y + 4}) scale(.32)">${pttWorker('plw1', true)}</g>`)}
+      <g transform="translate(${A.x - 130} ${A.y + 4}) scale(.16)">${pttWorker('plw1', true)}</g>`)}
     ${card('pl-b', B, 'Taller de componentes', 'SANTIAGO · ANTOFAGASTA', `
       <g transform="translate(${B.x - CW / 2} ${B.y - CH / 2}) scale(${CW / 1920})">${pttWorkshop('plws', STATIONS_ARMADO, 'ARMADO')}<g transform="translate(960 700) scale(1.05)"><use href="#pl-fds"/></g></g>`)}
     ${card('pl-c', Cc, 'Laboratorio de Ingeniería y Desarrollo', 'MEJORAS QUE VUELVEN AL COMPONENTE', `
@@ -119,7 +119,7 @@ export function cierreScene(): Scene {
       sceneEnter(tl, root, at, 1.2)
       showLowerThird(tl, lt, at + 0.5, 3.4)
       // Cama baja con el componente llega; el 797 entra
-      tl.to(q('#cl-semi'), { attr: { transform: 'translate(120 620) scale(.9)' }, duration: 2, ease: 'power2.out' }, at + 0.2)
+      tl.to(q('#cl-semi'), { attr: { transform: 'translate(60 686) scale(.55)' }, duration: 2, ease: 'power2.out' }, at + 0.2)
       tl.to(['#cls-w0', '#cls-w1', '#cls-w2', '#cls-w3', '#cls-w4'].map(q), { rotation: 900, transformOrigin: '50% 50%', duration: 2, ease: 'power2.out' }, at + 0.2)
       tl.set(compSvg, { opacity: 1, ...artAt(COMP.x, COMP.y, -700, COMP.y, 1) }, at)
       tl.to(compSvg, { ...artAt(COMP.x, COMP.y, COMP.x, COMP.y, 1), duration: 2, ease: 'power2.out' }, at + 0.2)

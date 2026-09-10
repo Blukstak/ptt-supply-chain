@@ -3,7 +3,7 @@ import './styles/main.css'
 import { el } from './core/dom'
 import { Player } from './core/player'
 import type { Scene } from './core/scene'
-import { wipe } from './core/scene'
+import { wipe, logoPTT } from './core/scene'
 import { introScene } from './scenes/s00-intro'
 import { empresaScene } from './scenes/s01-empresa'
 import { clientesScene } from './scenes/s02-clientes'
@@ -57,7 +57,7 @@ gsap.ticker.add(() => {
 // Splash / botón de inicio (los navegadores exigen gesto para fullscreen y evita el arranque en frío).
 const splash = el('div', { class: 'splash' })
 splash.append(el('div', { class: 'card', html: `
-  <div class="ptt-logo" style="font-size:64px"><span class="l1">Power</span><span class="l2">Train</span><span class="l3">Technologies</span><span class="l4">Marubeni Group</span></div>
+  ${logoPTT(64).outerHTML}
   <div class="logo" style="font-size:34px;color:var(--ink-2)">Cadena de suministro</div>
   <p>Quiénes somos y cómo nuestra cadena de suministro —talleres, contrato en faena, red de abastecimiento e Ingeniería y Desarrollo— responde a la gran minería.</p>
   <button class="play">▶ Reproducir</button>

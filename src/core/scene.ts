@@ -1,3 +1,4 @@
+import { pttLogoSvg } from '../art'
 import { el, svg, splitWords } from './dom'
 
 /**
@@ -141,7 +142,7 @@ export function photoBg(root: HTMLElement, file: string, vectorBg: Element) {
 
 /** Logo institucional PTT · Marubeni Group (HTML). `size` = tamaño base en px. */
 export function logoPTT(size = 120): HTMLElement {
-  const l = el('div', { class: 'ptt-logo', html: '<span class="l1">Power</span><span class="l2">Train</span><span class="l3">Technologies</span><span class="l4">Marubeni Group</span>' })
+  const l = el('div', { class: 'ptt-logo', html: `<svg viewBox="0 ${-size} ${size*3.2} ${size*2.76}" role="img" aria-label="Power Train Technologies · Marubeni Group">${pttLogoSvg('',size).replace(' id=""','')}</svg>` })
   l.style.fontSize = `${size}px`
   return l
 }

@@ -1,3 +1,4 @@
+import { officialLogoPaths } from './logo-paths'
 /**
  * Biblioteca de ilustración vectorial procedural (estética industrial / minera).
  * Cada función devuelve markup SVG. Los ids con prefijo permiten animar sub-partes.
@@ -239,86 +240,59 @@ export function truck797(id = 'truck') {
  * Mando Final exterior: cuerpo cónico amarillo con coronas dentadas
  * en ambos extremos. Longitud ≈ 520 px, centrado en (0,0), eje horizontal.
  */
+/** Mando sobre bastidor, referencia R6-12. Mismo origen y bridas públicas. */
 export function finalDriveSide(id = 'fds', label = 'PTT') {
-  // Elliptical sections share a horizontal axis; nearer faces look to the left.
-  const faceRatio = .58
-  const section = (x: number, r: number, fill: string, stroke = '#a37a23') =>
-    `<ellipse cx="${x}" rx="${r * faceRatio}" ry="${r}" fill="${fill}" stroke="${stroke}" stroke-width="1.2"/>`
-  const barrel = (x: number, end: number, r: number) =>
-    `<path d="M${x} ${-r} H${end} A${r * faceRatio} ${r} 0 0 1 ${end} ${r} H${x} A${r * faceRatio} ${r} 0 0 1 ${x} ${-r}Z" fill="url(#${id}-g)" stroke="#bc902a" stroke-width="1"/>`
-  const bolts = (x: number, r: number, n: number, size: number) => Array.from({ length: n }, (_, i) => {
-    const a = (i + .5) * Math.PI * 2 / n
-    const bx = x + Math.cos(a) * r * faceRatio, by = Math.sin(a) * r
-    return `<ellipse cx="${bx}" cy="${by + .8}" rx="${size * .75}" ry="${size}" fill="#795c26"/><ellipse cx="${bx - .4}" cy="${by - .5}" rx="${size * .58}" ry="${size * .73}" fill="url(#${id}-bolt)" stroke="#9c7c37" stroke-width=".45"/>`
-  }).join('')
-  const flange = (x: number, r: number, w: number, fid?: string) => {
-    const point = (a: number, radius: number, shift = 0) => `${(x + shift + Math.cos(a) * radius * faceRatio).toFixed(2)} ${(Math.sin(a) * radius).toFixed(2)}`
-    const teeth = Array.from({ length: 100 }, (_, i) => {
-      const a = i * Math.PI / 50, d = Math.PI / 50
-      return `<path d="M${point(a, r)} L${point(a + d * .18, r + 3)} L${point(a + d * .70, r + 3)} L${point(a + d, r)} L${point(a + d, r, w)} L${point(a + d * .70, r + 3, w)} L${point(a + d * .18, r + 3, w)} L${point(a, r, w)}Z" fill="url(#${id}-g)" stroke="#8a6a2a" stroke-width=".45"/><path d="M${point(a + d * .22, r + 2.7)} L${point(a + d * .22, r + 2.7, w)}" stroke="#ffe4a0" stroke-opacity=".7" stroke-width=".8"/>`
-    }).join('')
-    return `<g${fid ? ` id="${fid}"` : ''}>${barrel(x, x + w, r)}${teeth}${section(x, r - 2, `url(#${id}-face)`)}${section(x, r - 8, 'none', '#f5d477')}${section(x, r - 12, `url(#${id}-face)`, '#97712d')}${bolts(x, r - 6, 40, 1.9)}</g>`
-  }
-  const safeLabel = label.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-  return `<defs>
-    <linearGradient id="${id}-g" x1="0" y1="0" x2=".12" y2="1">
-      <stop stop-color="#b48a32"/><stop offset=".12" stop-color="#f7d477"/><stop offset=".29" stop-color="#ffdc65"/><stop offset=".46" stop-color="#efb72b"/><stop offset=".65" stop-color="#edbc3f"/><stop offset=".84" stop-color="#b17b1e"/><stop offset="1" stop-color="#926621"/>
-    </linearGradient>
-    <linearGradient id="${id}-face" x1="0" y1=".8" x2="1" y2=".12"><stop stop-color="#806020"/><stop offset=".42" stop-color="#bb913b"/><stop offset=".74" stop-color="#ead080"/><stop offset="1" stop-color="#bd9545"/></linearGradient>
-    <linearGradient id="${id}-rear" x1="0" y1="1" x2=".7" y2="0"><stop stop-color="#9b7b39"/><stop offset=".45" stop-color="#c4a35f"/><stop offset=".8" stop-color="#e2c782"/><stop offset="1" stop-color="#b99a52"/></linearGradient>
-    <radialGradient id="${id}-cap" cx=".68" cy=".28" r=".85"><stop stop-color="#bb953c"/><stop offset=".56" stop-color="#8e7028"/><stop offset="1" stop-color="#66501f"/></radialGradient>
-    <linearGradient id="${id}-bolt" x2=".4" y2="1"><stop stop-color="#fff0b6"/><stop offset=".45" stop-color="#d5b76b"/><stop offset="1" stop-color="#80632c"/></linearGradient>
-    <radialGradient id="${id}-glint"><stop stop-color="#fff2b6" stop-opacity=".55"/><stop offset="1" stop-color="#fff0ae" stop-opacity="0"/></radialGradient>
-    <radialGradient id="${id}-shadow"><stop stop-color="#302614" stop-opacity=".28"/><stop offset="1" stop-color="#302614" stop-opacity="0"/></radialGradient>
-  </defs>
-  <g id="${id}">
-    <ellipse cx="0" cy="130" rx="270" ry="17" fill="url(#${id}-shadow)"/>
-    ${flange(185, 113, 13, `${id}-fl2`)}
-    ${section(184, 94, `url(#${id}-rear)`)}
-    ${section(183, 89, 'none', '#e8cf8c')}
-    ${bolts(184, 83, 20, 2.8)}
-    ${barrel(115, 181, 77)}
-    <path d="M144 -75 A45 77 0 0 1 144 75 M169 -76 A45 77 0 0 1 169 76" fill="none" stroke="#a27b30" stroke-width="2"/>
-    ${flange(112, 108, 12)}
-    ${barrel(81, 110, 86)}
-    ${section(81, 86, `url(#${id}-g)`)}
-    <path d="M-130 -72 L-77 -56 Q-53 -50 -20 -52 L20 -59 Q41 -65 53 -79 L78 -86 A50 86 0 0 1 78 86 L53 79 Q30 57 -20 52 H-77 L-130 72Z" fill="url(#${id}-g)" stroke="#c09630" stroke-width="1.2"/>
-    ${[54, 66, 77].map((x, i) => `<path d="M${x} ${-77 - i * 3} A${45 + i * 2} ${77 + i * 3} 0 0 1 ${x} ${77 + i * 3}" fill="none" stroke="${i === 1 ? '#ffe190' : '#b8882c'}" stroke-width="${i === 1 ? 3 : 2}"/>`).join('')}
-    <path d="M-79 -43 Q-44 -36 8 -47 L14 -27 Q-36 -16 -76 -23Z" fill="url(#${id}-glint)"/>
-    <path d="M-74 -17 L-66 23 Q-33 30 12 18 L5 -22 M-65 27 Q-28 36 16 22" fill="none" stroke="#b58a27" stroke-width="2"/>
-    <path d="M-69 -17 L-62 19 Q-27 25 9 15" fill="none" stroke="#ffdf76" stroke-width="2.5"/>
-    <path d="M-66 -48 l5 9 12 2 -5 -9Z M-14 -52 l6 9 13 -3 -7 -8Z M-59 41 l3 10 12 1 -2 -10Z M-3 38 l4 10 13 -3 -4 -10Z" fill="#ba8d29" opacity=".65"/>
-    <path d="M-64 -48 l12 2 M-12 -52 l12 -2 M-57 41 l12 1 M-1 38 l12 -2" stroke="#ffe089" stroke-width="2"/>
-    ${[-109, -94].map(x => `<path d="M${x} -64 A37 64 0 0 1 ${x} 64" fill="none" stroke="#c79529" stroke-width="4"/><path d="M${x + 3} -63 A37 63 0 0 1 ${x + 3} 63" fill="none" stroke="#ffdd73" stroke-width="2"/>`).join('')}
-    ${flange(-132, 90, 13)}
-    ${barrel(-202, -131, 88)}
-    <path d="M-183 -87 H-139 M-179 86 H-137" stroke="#f9dd8f" stroke-width="2" opacity=".7"/>
-    ${[-180, -172, -150].map((x, i) => `<path d="M${x} -88 A51 88 0 0 1 ${x} 88" fill="none" stroke="${i === 1 ? '#f5d37a' : '#b18a36'}" stroke-width="${i === 1 ? 3 : 1.5}"/>`).join('')}
-    <path d="M-163 -83 A49 83 0 0 1 -163 83" fill="none" stroke="#ffe8a2" stroke-width="5" stroke-opacity=".3"/>
-    ${flange(-203, 94, 13, `${id}-fl1`)}
-    ${section(-205, 80, `url(#${id}-cap)`, '#e5bd5d')}
-    ${section(-206, 72, 'none', '#644e22')}
-    ${section(-206, 76, 'none', '#dfbd69')}
-    ${section(-207, 65, 'none', '#c6a353')}
-    ${bolts(-207, 69, 16, 3.2)}
-    ${section(-208, 48, `url(#${id}-cap)`, '#e3bb59')}
-    ${section(-209, 42, 'none', '#6c5527')}
-    ${section(-210, 25, `url(#${id}-face)`, '#705822')}
-    ${bolts(-210, 32, 8, 2.8)}
-    ${section(-211, 14, `url(#${id}-cap)`, '#d1ad52')}
-    <ellipse cx="-22" cy="-32" rx="80" ry="21" fill="url(#${id}-glint)"/>
-    <ellipse cx="70" cy="-51" rx="24" ry="36" fill="url(#${id}-glint)"/>
-    <g transform="translate(-25 4)">
-      <rect x="-16" y="-7" width="32" height="14" rx="1.5" fill="#e0262b"/>
-      <text y="3.2" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="8.5" fill="#fff">${safeLabel}</text>
-      <circle cx="-13.5" cy="-4.5" r=".8" fill="#ffe5a1"/><circle cx="13.5" cy="4.5" r=".8" fill="#ffe5a1"/>
-    </g>
+  const bolts = (x: number, r: number) => Array.from({length:32},(_,i)=>{const a=i*Math.PI/16; return `<ellipse cx="${x+Math.cos(a)*r*.3}" cy="${Math.sin(a)*r}" rx="1.6" ry="2.4" fill="#8e732f" stroke="#ffe699" stroke-width=".6"/>`}).join('')
+  return `<defs><linearGradient id="${id}-g" x2="0" y2="1"><stop stop-color="#c4a13f"/><stop offset=".25" stop-color="#f8dc76"/><stop offset=".48" stop-color="#e6bf47"/><stop offset=".8" stop-color="#b58d27"/><stop offset="1" stop-color="#8e6b20"/></linearGradient></defs><g id="${id}">
+    <ellipse cy="144" rx="292" ry="12" fill="#000" opacity=".2"/>
+    <g id="${id}-skid"><path d="M-278 118 H278 V141 H-278Z M-247 82 H247 V94 H-247Z" fill="url(#${id}-g)" stroke="#a38635"/><path d="M-212 23 L-249 119 H-168Z M114 22 L77 119 H151Z" fill="#c3a047" stroke="#eccb69" stroke-width="3"/><path d="M-250 122 h66 v15 h-66Z M163 122 h66 v15 h-66Z" fill="#393c38"/>${[-262,254].map(x=>`<path d="M${x-12} 115 V98 Q${x} 77 ${x+12} 98 V115Z" fill="#b62b35"/><circle cx="${x}" cy="100" r="5" fill="#62532f"/>`).join('')}</g>
+    <g id="${id}-fl2"><path d="M117 -97 H227 A30 97 0 0 1 227 97 H117Z" fill="url(#${id}-g)" stroke="#a1832a"/><ellipse cx="227" rx="29" ry="97" fill="#c5a13f"/>${bolts(227,91)}<path d="M195 -97 A30 97 0 0 1 195 97 M204 -97 A30 97 0 0 1 204 97" stroke="#a58632" stroke-width="2" fill="none"/></g>
+    <path d="M-149 -91 C-117 -91 -107 -51 -39 -52 L38 -53 Q83 -56 117 -97 A30 97 0 0 1 117 97 Q85 60 38 54 H-39 C-102 55 -123 91 -149 91Z" fill="url(#${id}-g)" stroke="#b39332" stroke-width="1.5"/>
+    <path d="M56 -56 Q76 0 56 57 M64 -58 Q84 0 64 58" stroke="#9c7e2c" stroke-width="1.5" fill="none"/>
+    <path d="M-199 -88 H-143 A28 88 0 0 1 -143 88 H-199Z" fill="url(#${id}-g)"/>
+    <ellipse cx="-147" rx="30" ry="98" fill="url(#${id}-g)" stroke="#9f812d" stroke-width="2"/>
+    ${Array.from({length:48},(_,i)=>{const a=i*Math.PI/24;return `<path d="M${-148+Math.cos(a)*31} ${Math.sin(a)*98} h12" stroke="#f4d26a" stroke-width="4"/>`}).join('')}
+    <g id="${id}-fl1"><ellipse cx="-203" rx="29" ry="103" fill="url(#${id}-g)" stroke="#a78a39" stroke-width="2"/><ellipse cx="-207" rx="22" ry="86" fill="#b99a3d" stroke="#ffe191" stroke-width="2"/>${bolts(-204,96)}<ellipse cx="-208" rx="15" ry="68" fill="#c6a441"/></g>
+    <path d="M-211 25 L-223 117 M117 26 L108 116" stroke="#ecd074" stroke-width="3"/><path d="M-211 28 L-215 77 M117 29 L113 77" stroke="#93772c" stroke-width="1"/><ellipse cx="-208" rx="18" ry="77" fill="none" stroke="#a8872e" stroke-width="2"/>
+    <rect x="-38" y="2" width="32" height="14" rx="2" fill="#e0262b"/><text x="-22" y="12" text-anchor="middle" font-size="9" font-family="Arial" font-weight="700" fill="#fff">${label.replace(/[<>&]/g,'')}</text>
   </g>`
 }
 
-/* ---------------------------------------------------------------- */
-/* Mando Final (corte técnico, planetario)                            */
-/* ---------------------------------------------------------------- */
+/** R6: vista 3/4 común a desarme y armado. Wrappers sin transform para GSAP. */
+function gearPath(outer: number, inner: number, n: number) {
+  return Array.from({length:n*4},(_,i)=>{const a=i*Math.PI/(n*2);const r=i%4===0||i%4===3?inner:outer;return `${i?'L':'M'}${Math.cos(a)*r} ${Math.sin(a)*r}`}).join(' ')+'Z'
+}
+
+export function finalDriveLayers(id = 'fdl') {
+  const rim = (x: number, y: number, r: number) => `<ellipse cx="${x}" cy="${y}" rx="${r*.52}" ry="${r}" fill="url(#${id}-gold)" stroke="#ad862b" stroke-width="3"/>${Array.from({length:36},(_,i)=>{const a=i*Math.PI/18;return `<ellipse cx="${x+Math.cos(a)*r*.46}" cy="${y+Math.sin(a)*r*.92}" rx="2" ry="3" fill="#ffe494"/>`}).join('')}`
+  const gearset = (x: number,y: number) => `<g transform="translate(${x} ${y}) scale(.55 1)"><circle r="94" fill="#9b781e" stroke="#efc855" stroke-width="8"/><circle r="85" fill="none" stroke="#f6d260" stroke-width="9" stroke-dasharray="3 4"/>${[[0,-51],[51,0],[0,51],[-51,0],[0,0]].map(([gx,gy],i)=>`<g transform="translate(${gx} ${gy})"><path d="${gearPath(i===4?23:31,i===4?19:26,18)}" fill="#acb4ba" stroke="#3f484f" stroke-width="2"/><circle r="${i===4?10:14}" fill="${i===4?'#343b40':'#d0a337'}" stroke="#f4d377" stroke-width="2"/></g>`).join('')}</g>`
+  return `<defs><linearGradient id="${id}-gold" x2=".25" y2="1"><stop stop-color="#ffe693"/><stop offset=".45" stop-color="#ffcd11"/><stop offset="1" stop-color="#a67e22"/></linearGradient></defs><g id="${id}"><g transform="rotate(-18)">
+    <g id="${id}-base"><g id="${id}-housing">
+      <path d="M170 0 H278" stroke="#929b9f" stroke-width="18"/>
+      ${rim(178,0,132)}${rim(132,0,115)}
+      <path d="M84 -65 L132 -97 A50 97 0 0 1 132 97 L84 65Z" fill="url(#${id}-gold)" stroke="#b18c29" stroke-width="2"/>
+      <path d="M-142 -62 H84 A34 65 0 0 1 84 65 H-142Z" fill="url(#${id}-gold)" stroke="#ad892d" stroke-width="2"/>
+      <path d="M42 -63 A32 63 0 0 1 42 63" fill="none" stroke="#ab8828" stroke-width="2"/>
+      <path d="M-176 -100 H-128 A49 100 0 0 1 -128 100 H-176Z" fill="url(#${id}-gold)"/>
+      ${rim(-176,0,102)}<ellipse cx="-179" rx="43" ry="87" fill="#806329" stroke="#e8c65e" stroke-width="5"/>
+      <ellipse cx="-180" rx="36" ry="77" fill="none" stroke="#edce67" stroke-width="6" stroke-dasharray="2 4"/>
+      <g transform="translate(-181 0) scale(.52 1)"><path d="${gearPath(29,24,18)}" fill="#b5bbc0" stroke="#515a60" stroke-width="2"/></g>
+      <path d="M-183 0 H-247" stroke="#808b90" stroke-width="17"/>
+    </g></g>
+    <g id="${id}-reduction1"><g id="${id}-ringgear">${gearset(-180,0)}<path d="M-186 0 H-241" stroke="#8c979b" stroke-width="14"/></g></g>
+    <g id="${id}-reduction2"><g id="${id}-carrier">
+      <path d="M-211 -102 H-173 A52 102 0 0 1 -173 102 H-211Z" fill="url(#${id}-gold)"/>
+      ${gearset(-212,0)}<g id="${id}-cover" opacity="0">${rim(-215,0,99)}<ellipse cx="-218" rx="39" ry="82" fill="#b08c2c" stroke="#e3c260" stroke-width="2"/><ellipse cx="-219" rx="17" ry="34" fill="#a7adb2" stroke="#3e464d" stroke-width="7"/></g>
+    </g></g>
+    <g id="${id}-wheel"><g id="${id}-sun">
+      <path d="M-220 -108 H-170 Q-144 -104 -118 -78 Q-99 -64 -69 -64 H30 Q63 -66 82 -96 L120 -115 A59 115 0 0 1 120 115 L82 96 Q63 66 30 64 H-69 Q-99 64 -118 78 Q-144 104 -170 108 H-220Z" fill="url(#${id}-gold)" stroke="#b59231" stroke-width="2"/>
+      ${rim(-220,0,108)}<ellipse cx="-224" rx="44" ry="92" fill="#ae8b2e" stroke="#e0bd55" stroke-width="2"/><ellipse cx="-225" rx="24" ry="48" fill="#dab33e" stroke="#f8d96c" stroke-width="3"/>
+      <rect x="-25" y="8" width="33" height="16" fill="#e0262b"/><text x="-9" y="20" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#fff">PTT</text>
+    </g></g>
+    <g id="${id}-hubface"/>
+  </g></g>`
+}
+
 export function finalDrive(id = 'fd', r = 260) {
   const teeth = (radius: number, n: number, h: number) => {
     let d = ''
@@ -913,7 +887,7 @@ export const STATIONS_ARMADO: StationSign[] = [
   { code: 'A3', mech: 'Felipe Contreras', part: 'Motor' },
 ]
 export function pttWorkshop(id = 'ws', stations: StationSign[] = STATIONS_DESARME, kind: 'DESARME' | 'ARMADO' = 'DESARME') {
-  const ribs = Array.from({ length: 48 }, (_, i) => `<rect x="${i * 40}" y="0" width="20" height="600" fill="#ffffff" opacity=".035"/>`).join('')
+  const ribs = Array.from({ length: 48 }, (_, i) => `<rect x="${i * 40}" y="0" width="20" height="620" fill="#ffffff" opacity=".035"/>`).join('')
   const trusses = [200, 700, 1200, 1700].map((x) => `<path d="M${x - 250} 130 L${x} 40 L${x + 250} 130 M${x - 250} 130 L${x + 250} 130 M${x - 125} 85 L${x - 125} 130 M${x + 125} 85 L${x + 125} 130 M${x} 40 L${x} 130" stroke="#b9bec6" stroke-width="5" fill="none" opacity=".7"/>`).join('')
   const signs = stations.map((st, i) => { const x = st.x ?? 380 + i * 560; return `<g><rect x="${x - 140}" y="236" width="280" height="104" rx="4" fill="#f4f4f2" stroke="#c9ccd1" stroke-width="2"/><rect x="${x - 140}" y="236" width="8" height="104" fill="#e0262b"/><text x="${x - 118}" y="272" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="34" fill="#111">${st.code}</text><text x="${x - 70}" y="269" font-family="Barlow Condensed, sans-serif" font-weight="600" font-size="16" fill="#555" letter-spacing="1.5">ESTACIÓN DE ${kind}</text><text x="${x - 118}" y="298" font-family="Barlow Condensed, sans-serif" font-weight="600" font-size="19" fill="#222">Mecánico: ${st.mech}</text><text x="${x - 118}" y="324" font-family="Barlow Condensed, sans-serif" font-weight="600" font-size="17" fill="#e0262b" letter-spacing="1">Repara: ${st.part}</text></g>` }).join('')
   const table = (x: number) => `<g><rect x="${x}" y="720" width="340" height="16" fill="#2a2f36"/><rect x="${x + 10}" y="736" width="14" height="120" fill="#1d2229"/><rect x="${x + 316}" y="736" width="14" height="120" fill="#1d2229"/><rect x="${x + 10}" y="800" width="320" height="8" fill="#1d2229"/></g>`
@@ -925,14 +899,14 @@ export function pttWorkshop(id = 'ws', stations: StationSign[] = STATIONS_DESARM
   </defs>
   <rect width="1920" height="1080" fill="url(#${id}-wall)"/>
   ${ribs}
-  <rect width="1920" height="140" fill="#c4c6c3"/>
-  ${trusses}
+  <rect width="1920" height="95" fill="#c4c6c3"/>
+  <g transform="translate(0 -45)">${trusses}</g>
   <!-- puente grúa -->
-  <rect x="0" y="150" width="1920" height="34" fill="#f2c318"/><rect x="0" y="184" width="1920" height="10" fill="#b8860b"/>
-  <g id="${id}-hoist"><rect x="900" y="194" width="140" height="50" fill="#f2c318"/><line id="${id}-cable" x1="970" y1="244" x2="970" y2="360" stroke="#333" stroke-width="4"/><path d="M950 360 L990 360 L970 390Z" fill="#e0262b"/></g>
+  <rect x="0" y="105" width="1920" height="34" fill="#f2c318"/><rect x="0" y="139" width="1920" height="10" fill="#b8860b"/>
+  <g id="${id}-hoist"><rect x="900" y="149" width="140" height="50" fill="#f2c318"/><line id="${id}-cable" x1="970" y1="199" x2="970" y2="360" stroke="#333" stroke-width="4"/><path d="M950 360 L990 360 L970 390Z" fill="#e0262b"/></g>
   <g id="${id}-signs">${signs}</g>
   <rect x="0" y="620" width="1920" height="460" fill="url(#${id}-fl)"/>
-  <rect x="0" y="616" width="1920" height="8" fill="#f2c318" opacity=".6"/>
+  <rect x="0" y="616" width="1920" height="8" fill="#a9aba8" opacity=".6"/>
   ${[-6, -4, -2, 0, 2, 4, 6].map((i) => `<path d="M960 620 L${960 + i * 420} 1080" stroke="#fff" stroke-opacity=".05" stroke-width="2"/>`).join('')}
   <g id="${id}-furniture">${table(120)}${cart(520)}${table(1460)}${cart(1300)}</g>`
 }
@@ -973,32 +947,20 @@ export function mercatorMap(id = 'merc') {
 
 /** Logo institucional PTT · Marubeni Group como SVG (para usar dentro de gráficos). */
 export function pttLogoSvg(id = 'logo', size = 60) {
-  return `
-  <g id="${id}" transform="skewX(-8)" font-family="Barlow Condensed, sans-serif" font-weight="700">
-    <text y="0" font-size="${size}" fill="#e0262b">POWER</text>
-    <line x1="0" y1="${size * 0.14}" x2="${size * 2.85}" y2="${size * 0.14}" stroke="#e0262b" stroke-width="${size * 0.05}"/>
-    <text y="${size * 1.06}" font-size="${size}" fill="#ffffff">TRAIN</text>
-    <line x1="0" y1="${size * 1.2}" x2="${size * 2.85}" y2="${size * 1.2}" stroke="#e0262b" stroke-width="${size * 0.05}"/>
-    <text y="${size * 1.82}" font-size="${size * 0.62}" fill="#8a8f98">TECHNOLOGIES</text>
-    <text x="${size * 1.4}" y="${size * 2.2}" text-anchor="middle" font-family="Inter, sans-serif" font-size="${size * 0.3}" fill="#e0262b">Marubeni Group</text>
-  </g>`
+  return `<g id="${id}" style="color:var(--logo-train,#fff)" transform="translate(0 ${-size}) scale(${size*3.2/800})"><g transform="translate(-90 -40)">${officialLogoPaths.replace('currentColor', '#ffffff')}</g></g>`
 }
 
-
-/* ---------------------------------------------------------------- */
-/* R2 — Ronda 2 de observaciones (docs/referencias/r2-*)              */
-/* ---------------------------------------------------------------- */
-
-/** Mapa de Chile simplificado (caja 260×900). Marcadores: Antofagasta (150,150), Santiago (128,380). */
+/** Chile continental e islas australes; coordenadas de ciudades en s01. */
 export function chileMap(id = 'cl') {
-  const d = 'M118 0 L162 12 L172 60 L166 130 L160 200 L158 270 L152 330 L146 390 L142 450 L138 510 L134 570 L128 630 L118 690 L110 750 L104 810 L120 860 L150 890 L110 900 L70 880 L60 830 L64 770 L72 710 L80 650 L88 590 L94 530 L100 470 L104 410 L110 350 L112 290 L114 220 L112 150 L110 80 Z'
+  const d = 'M151 0 L161 12 L169 18 L171 36 L179 50 L174 74 L180 92 L174 117 L176 140 L163 168 L164 187 L159 204 L156 225 L149 245 L153 268 L148 287 L143 304 L142 325 L139 345 L133 367 L136 388 L130 410 L132 430 L125 451 L129 470 L125 492 L127 511 L131 533 L126 552 L132 570 L125 591 L129 611 L122 630 L127 648 L122 663 L131 680 L126 698 L140 716 L137 731 L149 744 L146 761 L163 772 L158 788 L172 802 L181 814 L195 821 L196 838 L216 850 L219 863 L240 873 L226 886 L208 874 L192 866 L180 855 L164 852 L149 838 L140 825 L132 805 L119 786 L110 761 L103 746 L108 730 L96 713 L103 697 L96 681 L103 663 L99 645 L106 629 L104 610 L111 592 L107 572 L113 554 L109 534 L112 516 L108 494 L112 474 L111 456 L113 438 L115 419 L115 400 L119 380 L118 360 L123 340 L121 322 L126 302 L125 285 L131 264 L131 246 L137 227 L138 207 L141 188 L142 169 L149 150 L148 132 L150 113 L149 93 L152 74 L147 55 L148 36 L145 20Z'
+
   return `
   <defs>
     <linearGradient id="${id}-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4453"/><stop offset="1" stop-color="#1e2530"/></linearGradient>
   </defs>
   <g id="${id}">
     <path d="${d}" fill="url(#${id}-g)" stroke="#8a99ad" stroke-width="2" stroke-opacity=".7"/>
-    <path d="${d}" fill="none" stroke="#e0262b" stroke-width="1" stroke-opacity=".25" transform="translate(6 6)"/>
+    <path d="M102 571 l-7 21 4 24 7 -12Z M97 624 l-8 18 4 21 7 -13Z M89 663 l-8 21 9 18 5 -20Z M91 710 l-12 14 8 16 8 -8Z M108 754 l-12 -5 2 22 18 22 8 -3Z M131 812 l-18 -9 4 16 20 10Z M179 869 l12 20 24 9 11 -8 -16 -13Z" fill="url(#${id}-g)" stroke="#8a99ad" stroke-width="1.5"/>
   </g>`
 }
 
@@ -1015,95 +977,84 @@ export function pin(id = 'pin', label = '') {
 export function fieldWorkshop(id = 'fw') {
   return `
   <g id="${id}">
-    <path d="M0 0 L0 -300 L60 -340 L1040 -340 L1100 -300 L1100 0Z" fill="#c9ccd1"/>
-    <path d="M0 -300 L60 -340 L1040 -340 L1100 -300Z" fill="#9aa0a8"/>
-    ${Array.from({ length: 27 }, (_, i) => `<rect x="${10 + i * 40}" y="-300" width="18" height="300" fill="#fff" opacity=".18"/>`).join('')}
-    <rect x="0" y="-300" width="1100" height="14" fill="#e0262b"/>
-    <rect x="80" y="-250" width="940" height="250" fill="#1a1e24"/>
-    <rect x="80" y="-250" width="940" height="250" fill="url(#${id}-in)"/>
-    <clipPath id="${id}-clip"><rect x="80" y="-250" width="940" height="250"/></clipPath>
-    <g clip-path="url(#${id}-clip)"><g id="${id}-door"><rect x="80" y="-250" width="940" height="250" fill="#3a3f47"/>${Array.from({ length: 6 }, (_, i) => `<rect x="84" y="${-246 + i * 41}" width="932" height="36" fill="#4b525c"/>`).join('')}</g></g>
-    <rect x="360" y="-330" width="380" height="60" rx="4" fill="#f4f4f2"/>
-    <rect x="360" y="-330" width="10" height="60" fill="#e0262b"/>
-    <text x="550" y="-306" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="24" fill="#e0262b" letter-spacing="2">TALLER PTT EN FAENA</text>
-    <text x="550" y="-282" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="600" font-size="15" fill="#444" letter-spacing="1.5">CONTRATO DE MANTENCIÓN · DENTRO DE LA MINERA</text>
+    <path d="M0 0 L0 -430 L60 -470 L1040 -470 L1100 -430 L1100 0Z" fill="#c9ccd1"/>
+    <path d="M0 -430 L60 -470 L1040 -470 L1100 -430Z" fill="#9aa0a8"/>
+    ${Array.from({ length: 27 }, (_, i) => `<rect x="${10 + i * 40}" y="-430" width="18" height="430" fill="#fff" opacity=".18"/>`).join('')}
+    <rect x="0" y="-430" width="1100" height="14" fill="#e0262b"/>
+    <rect x="80" y="-380" width="940" height="380" fill="#1a1e24"/>
+    <rect x="80" y="-380" width="940" height="380" fill="url(#${id}-in)"/>
+    <clipPath id="${id}-clip"><rect x="80" y="-380" width="940" height="380"/></clipPath>
+    <g clip-path="url(#${id}-clip)"><g id="${id}-door"><rect x="80" y="-380" width="940" height="380" fill="#3a3f47"/>${Array.from({ length: 9 }, (_, i) => `<rect x="84" y="${-376 + i * 41}" width="932" height="36" fill="#4b525c"/>`).join('')}</g></g>
+    <rect x="360" y="-460" width="380" height="60" rx="4" fill="#f4f4f2"/>
+    <rect x="360" y="-460" width="10" height="60" fill="#e0262b"/>
+    <text x="550" y="-436" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="24" fill="#e0262b" letter-spacing="2">TALLER MINERA</text>
+    <text x="550" y="-412" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="600" font-size="15" fill="#444" letter-spacing="1.5">CONTRATO MANTENCIÓN PTT</text>
   </g>
   <defs><linearGradient id="${id}-in" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff5d6" stop-opacity=".12"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient></defs>`
 }
 
 /** Motoniveladora (Imagen 4). Ancho ~520, ruedas en y=0. */
 export function motorGrader(id = 'mg') {
-  return `${equipmentPaint(id)}<g id="${id}"><g transform="translate(520 0) scale(-1 1)">
-    <ellipse cx="260" cy="23" rx="270" ry="9" fill="#000" opacity=".28"/>
-    <!-- Frente a la izquierda, tándem motor a la derecha y articulación bajo la cabina. -->
-    <path d="M48 -30 L63 -67 L119 -93 L284 -68 L327 -51 H490 V-27 H323 L274 -53 L108 -74 L77 -27Z" fill="url(#${id}-paint)" stroke="#9a7809" stroke-width="2"/>
-    <path d="M89 -73 L270 -46" stroke="#ffe991" stroke-width="3"/>
-    <path d="M185 -63 L215 -24 M244 -56 L231 -24" stroke="#343d44" stroke-width="6"/>
-    <path d="M188 -61 L204 -38 M244 -56 L237 -40" stroke="#a7b3bb" stroke-width="3"/>
-    <ellipse cx="218" cy="-25" rx="48" ry="8" fill="#887014" stroke="#ffda48" stroke-width="4"/>
-    <path d="M150 -25 Q218 -24 272 -50 L278 -19 Q211 16 145 20Z" fill="url(#${id}-paint)" stroke="#9a7809" stroke-width="2"/>
-    <path d="M145 20 Q211 16 278 -19" fill="none" stroke="#9ca5ac" stroke-width="5"/>
-    <path d="M300 -59 L305 -139 H375 L391 -59Z" fill="url(#${id}-paint)"/>
-    <path d="M314 -131 H365 L377 -82 H310Z" fill="url(#${id}-glass)" stroke="#222c33" stroke-width="5"/>
-    <path d="M342 -132 V-68 M309 -111 L332 -129" stroke="#7f9da6" stroke-width="2"/>
-    <path d="M300 -142 H378" stroke="#ffcd11" stroke-width="9"/>
-    <rect x="311" y="-154" width="8" height="8" rx="2" fill="#f5a623"/>
-    <path d="M387 -112 H477 L502 -95 V-51 H388Z" fill="url(#${id}-paint)" stroke="#987609" stroke-width="2"/>
-    <path d="M390 -112 H475 L484 -103 H390Z" fill="#2d3439"/>
-    ${Array.from({ length: 9 }, (_, i) => `<path d="M${416 + i * 7} -96 v26" stroke="#8b700e" stroke-width="3"/>`).join('')}
-    <path d="M456 -112 V-142 h-6" fill="none" stroke="#363e44" stroke-width="6"/>
-    <path d="M295 -53 H391 M306 -65 v-35 M391 -65 v-38 M294 -92 h12" fill="none" stroke="#333d42" stroke-width="3"/>
-    <path d="M326 -62 v35 M345 -62 v35 M326 -52 h19 M326 -41 h19 M326 -30 h19" fill="none" stroke="#a5afb5" stroke-width="3"/>
-    <path d="M378 -33 H489" stroke="#3d454b" stroke-width="15"/>
-    <path d="M499 -62 l17 8 -1 37 M507 -33 l12 0 -4 23" fill="none" stroke="#c99d05" stroke-width="8"/>
-    ${[60, 400, 470].map((x, i) => equipmentWheel(x, -10, 34, `${id}-wheel${i}`)).join('')}
-    <path d="M39 -43 L75 -39" stroke="#ffcd11" stroke-width="8"/>
-    <path d="M291 -64 V-119 H302 M379 -70 V-125 H396 V-64 M380 -98 H396" fill="none" stroke="#303a3f" stroke-width="2"/>
-    <path d="M165 -56 V-98 M179 -53 V-93" stroke="#303b40" stroke-width="7"/>
-    <path d="M165 -96 V-67 M179 -92 V-63" stroke="#aebabe" stroke-width="3"/>
-    <path d="M498 -42 L513 -23 M505 -40 L520 -21 M510 -35 L525 -16" stroke="#c99d05" stroke-width="4"/>
-    <path d="M389 -61 H481 M398 -106 H476" stroke="#ffe384" stroke-width="2"/>
-    <rect x="395" y="-99" width="17" height="11" fill="#252d32"/>
-  </g></g>`
-}
-
-/** Bulldozer (Imagen 5). Ancho ~480, base en y=0. */
-export function bulldozer(id = 'bz') {
   return `${equipmentPaint(id)}<g id="${id}">
-    <ellipse cx="240" cy="4" rx="250" ry="10" fill="#000" opacity=".28"/>
-    <!-- La referencia es un tractor topador sobre neumáticos. -->
-    <path d="M114 -86 H397 V-40 H120Z" fill="#2a3035"/>
-    <path d="M120 -137 H224 V-88 H117Z" fill="url(#${id}-paint)" stroke="#9a7809" stroke-width="2"/>
-    <rect x="119" y="-128" width="28" height="44" fill="#293237"/>
-    ${Array.from({ length: 7 }, (_, i) => `<path d="M121 ${-122 + i * 5} h23" stroke="#606b72" stroke-width="2"/>`).join('')}
-    <path d="M205 -118 L213 -186 H278 L288 -118Z" fill="#273138"/>
-    <path d="M220 -176 H270 L278 -128 H216Z" fill="url(#${id}-glass)" stroke="#abb0a0" stroke-width="3"/>
-    <path d="M247 -177 V-125 M218 -153 L243 -175" stroke="#89a4aa" stroke-width="2"/>
-    <path d="M204 -188 H282" stroke="#30393e" stroke-width="8"/>
-    <path d="M215 -190 v-12 M274 -188 v-9" stroke="#737b7d" stroke-width="2"/>
-    <path d="M202 -155 h-13 v23 M281 -154 h12 v22" stroke="#303b40" stroke-width="3" fill="none"/>
-    <rect x="185" y="-155" width="8" height="14" rx="2" fill="#29353b"/>
-    <path d="M286 -140 H390 L412 -124 V-85 H283Z" fill="url(#${id}-paint)"/>
-    <path d="M301 -139 v-33 h8 M327 -140 v-26 h8" stroke="#353e44" stroke-width="6" fill="none"/>
-    ${Array.from({length: 12}, (_, i) => `<path d="M${326+i*5} -129 v31" stroke="#9b7b15" stroke-width="1.5"/>`).join('')}
-    <path d="M293 -140 v-19 h93 v36 M320 -159 v19 M353 -159 v19" fill="none" stroke="#3d464b" stroke-width="2.5"/>
-    <path d="M132 -89 Q177 -137 222 -88 M307 -89 Q351 -139 396 -87" stroke="#ffcd11" stroke-width="12" fill="none"/>
-    ${equipmentWheel(175, -48, 49, `${id}-wheel0`)}${equipmentWheel(351, -48, 49, `${id}-wheel1`)}
-    <path d="M252 -111 V-22 M269 -111 V-22 M252 -94 h17 M252 -76 h17 M252 -58 h17 M252 -40 h17 M252 -24 h17" stroke="#8b979d" stroke-width="3" fill="none"/>
-    <path d="M285 -42 L108 -27 L68 -44" fill="none" stroke="#c99d05" stroke-width="12"/>
-    <path d="M161 -120 L86 -65" stroke="#333d44" stroke-width="11"/><path d="M126 -95 L86 -65" stroke="#b7c2c8" stroke-width="6"/>
-    <path d="M99 -142 L72 -73" stroke="#343d43" stroke-width="9"/><path d="M88 -112 L72 -73" stroke="#bec9cd" stroke-width="4"/>
-    <path d="M11 -107 Q57 -126 137 -100 L140 -10 Q62 5 0 -10 L9 -29Z" fill="url(#${id}-paint)" stroke="#aa830b" stroke-width="2"/>
-    <path d="M12 -106 L0 -23 L-2 -3 M137 -100 L140 -10" stroke="#a48217" stroke-width="3" fill="none"/>
-    ${[20, 43, 66, 89, 112].map(x => `<circle cx="${x}" cy="-7" r="1.7" fill="#434a4c"/>`).join('')}
-    <path d="M13 -98 Q64 -111 128 -94 L131 -20 Q61 -8 7 -19" fill="none" stroke="#ffe783" stroke-width="3"/>
-    <path d="M0 -10 Q66 5 140 -10 L145 -3 Q66 14 -2 -3Z" fill="url(#${id}-metal)"/>
-    <path d="M408 -106 L461 -12 M424 -104 L477 -12 M411 -93 h19 M420 -76 h19 M430 -59 h19 M440 -42 h19 M450 -25 h19" fill="none" stroke="#69767c" stroke-width="3"/>
-    <rect x="290" y="-120" width="28" height="16" rx="2" fill="#e0262b"/><text x="304" y="-109" fill="#fff" font-family="Arial" font-size="10" text-anchor="middle" font-weight="700">PTT</text>
+    <ellipse cx="267" cy="8" rx="267" ry="9" fill="#000" opacity=".25"/>
+    <path d="M54 -52 H213 L248 -89 L276 -93 L473 -59 L493 -33" stroke="#242a2d" stroke-width="26" fill="none"/>
+    <path d="M261 -97 L480 -66 L490 -40 L473 -47 L265 -80Z" fill="url(#${id}-paint)" stroke="#b19339" stroke-width="2"/>
+    <path d="M59 -113 H176 L201 -95 V-54 H56Z" fill="url(#${id}-paint)" stroke="#a48629" stroke-width="2"/>
+    <path d="M65 -119 H160 L178 -110 H65Z" fill="#343b3e"/>
+    ${Array.from({length:14},(_,i)=>`<path d="M${70+i*7} -102 v31" stroke="#b39232" stroke-width="2"/>`).join('')}
+    <path d="M110 -118 V-148 l-5 -6 M123 -118 V-143" stroke="#343a3d" stroke-width="6" fill="none"/>
+    <path d="M211 -143 H255 L250 -66 H208Z" fill="#252c2f"/>
+    <path d="M216 -135 H247 L244 -96 H214Z" fill="url(#${id}-glass)" stroke="#7d9696" stroke-width="2"/>
+    <path d="M234 -136 V-94" stroke="#343d40" stroke-width="4"/>
+    <path d="M206 -146 H260" stroke="#252b2e" stroke-width="7"/><rect x="226" y="-162" width="6" height="9" fill="#cd7e3a"/>
+    <path d="M202 -63 H259 M199 -72 V-114 H208 M252 -80 V-111 H271 V-83" fill="none" stroke="#30373a" stroke-width="3"/>
+    <path d="M58 -58 V-121 H179 V-58 M86 -121 V-59 M143 -121 V-59 M174 -121 V-59" fill="none" stroke="#353b3d" stroke-width="2"/>
+    <path d="M54 -54 H179" stroke="#c6a03a" stroke-width="6"/>
+    <path d="M177 -54 L204 -25 M188 -58 L215 -28 M183 -46 h14 M190 -37 h14" stroke="#b5b9b2" stroke-width="2" fill="none"/>
+    ${[91,160,476].map((x,i)=>equipmentWheel(x,-30,36,`${id}-wheel${i===0?2:i===1?1:0}`)).join('')}
+    <path d="M320 -86 L313 -33 M376 -75 L350 -35" stroke="#30383b" stroke-width="8"/><path d="M320 -82 L316 -51 M375 -72 L358 -47" stroke="#b9c3c4" stroke-width="4"/>
+    <ellipse cx="346" cy="-38" rx="46" ry="5" fill="#b29032" stroke="#eecb57" stroke-width="4"/>
+    <path d="M311 -41 Q335 -22 347 -26 L352 11 Q326 6 305 -19Z" fill="url(#${id}-paint)" stroke="#b18e31" stroke-width="2"/>
+    <path d="M305 -19 Q326 6 352 11" fill="none" stroke="#a8b0ac" stroke-width="4"/>
+    <path d="M49 -59 L27 -18 L4 -15 M15 -25 L8 -6 M27 -26 L20 -6 M38 -28 L33 -8" stroke="#d5ac37" stroke-width="7" fill="none"/>
+    <path d="M322 -76 C301 -88 311 -40 327 -39 M375 -68 C390 -77 375 -30 349 -35" stroke="#373d3e" stroke-width="2" fill="none"/>
+    <path d="M450 -64 H494" stroke="#ffcd11" stroke-width="6"/>
+    <rect x="143" y="-107" width="28" height="14" fill="#25292b"/><text x="157" y="-96" text-anchor="middle" font-family="Arial" font-size="11" font-weight="900" fill="#fff">CAT</text><text x="380" y="-72" font-family="Arial" font-size="10" fill="#fff" font-weight="900">24</text>
   </g>`
 }
 
-/** Perforadora de tiro (Imagen 6). Ancho ~300, alto ~460, base en y=0. */
+
+export function bulldozer(id = 'bz') {
+  return `${equipmentPaint(id)}<g id="${id}">
+    <ellipse cx="250" cy="4" rx="250" ry="9" fill="#000" opacity=".25"/>
+    <path d="M98 -83 H454 V-45 H119Z" fill="#282c30"/>
+    <path d="M208 -115 H298 V-67 H190 L140 -78 L126 -97Z" fill="url(#${id}-paint)"/>
+    <path d="M278 -131 H425 Q447 -132 452 -112 L458 -38 H479 V-23 H437 L410 -60 H293Z" fill="url(#${id}-paint)" stroke="#a78a28" stroke-width="2"/>
+    <path d="M436 -125 L449 -122 L455 -47 H436Z" fill="#24272a"/>
+    ${Array.from({length:12},(_,i)=>`<path d="M409 ${-119+i*3} h12" stroke="#514a31"/>`).join('')}
+    ${equipmentWheel(160,-49,50,`${id}-wheel0`)}${equipmentWheel(364,-49,55,`${id}-wheel1`)}
+    <path d="M111 -91 Q150 -114 199 -96 L199 -107 H271 V-119 H139Z M312 -99 Q364 -120 408 -93" fill="url(#${id}-paint)" stroke="#ffdc60" stroke-width="4"/>
+    <path d="M217 -132 V-204 H275 V-132Z" fill="#23272a" stroke="#43484b" stroke-width="3"/>
+    <path d="M226 -194 H246 V-142 H224Z M252 -194 H267 V-142 H253Z" fill="url(#${id}-glass)" stroke="#6c767a" stroke-width="2"/>
+    <path d="M214 -205 H278" stroke="#ffcd11" stroke-width="6"/><rect x="265" y="-218" width="6" height="10" rx="2" fill="#df9139"/>
+    <path d="M221 -187 H211 V-174 M271 -189 H286 V-179" stroke="#32383c" stroke-width="3" fill="none"/>
+    <path d="M210 -134 H363 M210 -143 V-162 H358 V-135 M238 -162 V-134 M272 -162 V-134 M302 -162 V-134 M332 -162 V-134" fill="none" stroke="#292e31" stroke-width="3"/>
+    <path d="M366 -137 L421 -57 V-27 M355 -136 L408 -55 V-27 M367 -112 h15 M378 -96 h15 M389 -80 h15 M400 -64 h15 M408 -42 h13" fill="none" stroke="#33393c" stroke-width="3"/>
+    <path d="M370 -137 V-189 l8 -9 M380 -137 V-186 l8 -9" stroke="#363a3d" stroke-width="6" fill="none"/>
+    <path d="M121 -32 H242 L263 -43" stroke="#e7b929" stroke-width="13" fill="none"/>
+    <path d="M145 -107 L115 -148 L92 -37" stroke="#d6a61c" stroke-width="11" fill="none"/>
+    <path d="M122 -131 L111 -84" stroke="#c5cbd0" stroke-width="6"/>
+    <path d="M22 -90 L66 -123 L100 -104 L77 -9 L4 -13Z" fill="url(#${id}-paint)" stroke="#bd9424" stroke-width="2"/>
+    <path d="M66 -123 L107 -121 L124 -108 L100 -104Z" fill="#ffe388"/>
+    ${[72,82,92,102].map(x=>`<path d="M${x} -119 l9 12 -6 3 -10 -13" fill="#d8ad37"/>`).join('')}
+    <path d="M24 -88 L7 -17 L77 -13 M79 -102 L58 -17" fill="none" stroke="#ffe585" stroke-width="3"/>
+    <path d="M4 -13 L77 -9 L83 -3 L1 -7Z" fill="#aeb3ae"/>
+    <circle cx="241" cy="-32" r="8" fill="#cba536" stroke="#ffe089" stroke-width="2"/><path d="M271 -113 V-62 M293 -130 V-107" stroke="#ac8d29" stroke-width="2"/><path d="M220 -194 V-137 H248" stroke="#151a1c" stroke-width="3" fill="none"/>
+    <path d="M267 -115 H328 L313 -98 H267Z" fill="#242629"/><text x="278" y="-101" font-family="Arial" font-size="14" font-weight="900" fill="#fff">CAT</text><text x="307" y="-108" font-family="Arial" font-size="5" fill="#fff">854K</text>
+  </g>`
+}
+
+
 export function drillRig(id = 'dr') {
   return `${equipmentPaint(id)}<g id="${id}">
     <ellipse cx="150" cy="4" rx="165" ry="10" fill="#000" opacity=".28"/>
@@ -1146,44 +1097,33 @@ export function drillRig(id = 'dr') {
 /** Camión de extracción Komatsu (Imagen 7): cabina cuadrada a la izquierda sobre la plataforma, tolva. Ancho ~560, base y=0. */
 export function komatsuTruck(id = 'km') {
   return `${equipmentPaint(id)}<g id="${id}">
-    <ellipse cx="280" cy="22" rx="292" ry="10" fill="#000" opacity=".28"/>
-    ${equipmentWheel(428, -38, 62, `${id}-wheel-inner`)}
-    <path d="M155 -125 H510 L497 -72 H166Z" fill="#ad870e"/>
-    <path d="M60 -79 H514 V-43 H60Z" fill="#2c343a"/>
-    <path d="M203 -59 L274 -146" stroke="#aab4b9" stroke-width="8"/><path d="M203 -59 L245 -111" stroke="#b48a08" stroke-width="16"/>
-    <path d="M-8 -232 L166 -250 L499 -215 L538 -209 L560 -153 L525 -101 H193 L132 -220 L-8 -221Z" fill="url(#${id}-paint)" stroke="#9c7909" stroke-width="2"/>
-    <path d="M-8 -232 L166 -250 L499 -215 L501 -207 L159 -239 L-8 -223Z" fill="#ffe786"/>
-    <path d="M-8 -222 H132 L151 -186 L114 -208 H-8Z" fill="#a27e08"/>
-    <path d="M169 -218 L524 -190 L536 -151 L510 -126 H211Z" fill="#eabc12"/>
-    ${[212, 285, 358, 431].map(x => `<path d="M${x} ${-215 + (x - 212) * .08} l8 1 19 69 -8 0Z" fill="#ffe068"/>`).join('')}
-    <path d="M194 -116 H534 L525 -101 H193Z" fill="#c09509"/>
-    <rect x="399" y="-185" width="104" height="26" fill="#252f37"/><text x="451" y="-167" fill="#fff" font-family="Arial" font-size="15" font-weight="700" text-anchor="middle">KOMATSU</text>
-    <path d="M26 -218 H112 V-164 H23Z" fill="#ffcd11"/>
-    <path d="M33 -211 H103 V-176 H31Z" fill="url(#${id}-glass)" stroke="#273238" stroke-width="4"/>
-    <path d="M66 -211 V-177 M34 -188 L53 -208" stroke="#89a8b0" stroke-width="2"/>
-    <path d="M72 -214 V-166 M32 -171 V-159 H109 V-171 M92 -164 h11" stroke="#48565b" stroke-width="2" fill="none"/>
-    <path d="M109 -200 h15 v23" stroke="#2d373c" stroke-width="2" fill="none"/><rect x="119" y="-194" width="8" height="18" rx="2" fill="#253039"/>
-    <text x="55" y="-228" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#233c60">KOMATSU</text>
-    <path d="M23 -222 H106" stroke="#283238" stroke-width="6"/>
-    <path d="M130 -169 V-216 h9" fill="none" stroke="#414b50" stroke-width="7"/>
-    <rect x="-9" y="-167" width="170" height="11" fill="#ffcd11"/>
-    <path d="M-8 -168 V-191 H20 M-8 -180 H20 M117 -165 V-190 H159 V-165 M118 -177 H159" fill="none" stroke="#303c42" stroke-width="2.5"/>
-    <rect x="-5" y="-156" width="68" height="102" fill="#ba900b"/>
-    <rect x="2" y="-147" width="56" height="85" fill="#202a30"/>
-    ${Array.from({ length: 10 }, (_, i) => `<path d="M5 ${-142 + i * 8} H55" stroke="#536168" stroke-width="2"/>`).join('')}
-    ${Array.from({length: 9}, (_, i) => `<path d="M${7+i*6} -145 v81" stroke="#637074" stroke-width="1"/>`).join('')}
-    <path d="M67 -153 H179 V-123 Q117 -125 77 -82 H67Z" fill="#ffcd11"/>
-    <path d="M-10 -54 H69 V-42 H-10Z" fill="#ffcd11"/>
-    ${equipmentWheel(112, -42, 66, `${id}-wheel0`)}${equipmentWheel(464, -38, 62, `${id}-wheel1`)}
-    <path d="M-12 -41 L22 -158 M1 -41 L35 -158" stroke="#c6a426" stroke-width="3"/>
-    ${Array.from({ length: 9 }, (_, i) => `<path d="M${-10 + i * 3.5} ${-48 - i * 12} h13" stroke="#ffde6c" stroke-width="3"/>`).join('')}
-    <path d="M57 -153 V-40 M66 -153 V-40 M57 -139 h9 M57 -124 h9 M57 -109 h9 M57 -94 h9 M57 -79 h9 M57 -64 h9 M57 -49 h9" stroke="#ddd9b3" stroke-width="2" fill="none"/>
-    <path d="M-17 -51 V-73 L16 -186 H35" stroke="#d9ded6" stroke-width="2" fill="none"/>
-    <rect x="74" y="-146" width="28" height="10" rx="2" fill="#fff2c8"/>
+    <ellipse cx="280" cy="15" rx="275" ry="10" fill="#000" opacity=".25"/>
+    ${equipmentWheel(432,-60,77,`${id}-wheel-inner`)}
+    <path d="M86 -111 H462 V-59 H101Z" fill="#4c4630"/>
+    <path d="M272 -87 L341 -178" stroke="#969c97" stroke-width="10"/><path d="M272 -87 L312 -138" stroke="#d1ad37" stroke-width="23"/>
+    <path d="M65 -269 L99 -262 H166 L178 -271 H232 L281 -247 H493 L551 -174 L477 -155 L302 -146 L232 -185 L166 -242 H66Z" fill="url(#${id}-paint)" stroke="#aa8b32" stroke-width="2"/>
+    <path d="M67 -263 H168 L181 -266 H231 L280 -242 H491" fill="none" stroke="#ffe899" stroke-width="4"/>
+    <path d="M243 -218 H472 L515 -182 L296 -161Z" fill="#e9c34e"/>
+    <path d="M289 -185 H491 M294 -177 H477" stroke="#c6a33e" stroke-width="3"/>
+    <rect x="287" y="-221" width="81" height="25" fill="#3c4142"/><text x="327" y="-201" text-anchor="middle" font-family="Arial" font-weight="900" font-style="italic" font-size="22" fill="#fff">830E</text><text x="424" y="-201" text-anchor="middle" font-family="Arial" font-size="19" font-weight="900" fill="#254f87">KOMATSU</text>
+    <path d="M62 -157 H247 V-142 H62Z" fill="#e7bd36"/>
+    <path d="M90 -149 H145 L137 -55 H109Z M215 -146 H242 V-55 H221Z" fill="#b38e28"/>
+    ${equipmentWheel(166,-64,81,`${id}-wheel0`)}${equipmentWheel(427,-64,81,`${id}-wheel1`)}
+    <circle cx="427" cy="-64" r="33" fill="#303235"/><circle cx="427" cy="-64" r="27" fill="#393b3c" stroke="#242729" stroke-width="2"/><circle cx="166" cy="-64" r="20" fill="#c1a148"/>
+    <path d="M97 -229 H164 V-169 H94Z" fill="#2d3233"/>
+    <path d="M104 -221 H125 V-187 H102Z M133 -221 H156 V-187 H135Z" fill="url(#${id}-glass)" stroke="#717873" stroke-width="2"/>
+    <path d="M92 -233 H169" stroke="#333737" stroke-width="5"/>
+    <path d="M168 -231 H199 V-171 H166Z" fill="#b5a572"/>
+    <rect x="199" y="-197" width="19" height="30" fill="#9d3030"/><rect x="200" y="-193" width="17" height="5" fill="#bba957"/>
+    <path d="M62 -163 V-197 H230 V-158 M77 -197 V-158 M97 -197 V-158 M127 -197 V-158 M157 -197 V-158 M186 -197 V-158 M218 -197 V-158" fill="none" stroke="#292f31" stroke-width="2"/>
+    <path d="M57 -162 L34 -32 M68 -162 L45 -32 M52 -125 H63 M49 -108 H60 M46 -91 H57 M43 -74 H54 M40 -57 H51 M37 -40 H48" stroke="#303639" stroke-width="3" fill="none"/>
+    <path d="M34 -33 H62 V-23 H29Z" fill="#d5b139"/><path d="M82 -134 V-47" stroke="#262d2e" stroke-width="14"/>
+    <path d="M239 -205 L283 -174 M250 -207 L294 -178" stroke="#ffe489" stroke-width="3"/><rect x="76" y="-226" width="15" height="4" fill="#252c30"/><path d="M229 -149 V-113 H242" fill="none" stroke="#4a4636" stroke-width="3"/>
+    <path d="M92 -163 H224" stroke="#ffe280" stroke-width="3"/>
   </g>`
 }
 
-/** Mesa de laboratorio de Ingeniería y Desarrollo (microscopio + monitor). Origen: borde superior de la mesa, centro. */
+
 export function labBench(id = 'lab') {
   return `<g id="${id}">
     <rect x="-260" y="0" width="520" height="18" fill="#dfe3e8"/>

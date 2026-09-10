@@ -16,10 +16,10 @@ export function empresaScene(): Scene {
     <g id="em-map" transform="translate(1330 100) scale(.95)" opacity="0">
       ${chileMap('clm')}
       <g id="em-pin-anf" transform="translate(150 150)" opacity="0">${pin('pa', 'ANTOFAGASTA')}</g>
-      <g id="em-pin-scl" transform="translate(128 380)" opacity="0">${pin('ps', 'SANTIAGO')}</g>
+      <g id="em-pin-scl" transform="translate(126 380)" opacity="0">${pin('ps', 'SANTIAGO')}</g>
       <text x="196" y="184" font-family="JetBrains Mono, monospace" font-size="14" fill="#9aa7b6" letter-spacing="3" id="em-t1" opacity="0">TALLER PRINCIPAL</text>
       <text x="174" y="414" font-family="JetBrains Mono, monospace" font-size="14" fill="#9aa7b6" letter-spacing="3" id="em-t2" opacity="0">TALLER PRINCIPAL</text>
-      <g id="em-pin-mine" transform="translate(190 250)" opacity="0"><circle r="7" fill="#ffcd11"/><circle r="14" fill="none" stroke="#ffcd11" stroke-width="1.5" opacity=".6"/><text x="26" y="7" font-family="JetBrains Mono, monospace" font-size="14" fill="#ffcd11" letter-spacing="2">CONTRATO EN FAENA</text></g>
+      <g id="em-pin-mine" transform="translate(142 250)" opacity="0"><circle r="7" fill="#e0262b"/><circle r="14" fill="none" stroke="#e0262b" stroke-width="1.5" opacity=".6"/><text x="26" y="7" font-family="JetBrains Mono, monospace" font-size="14" fill="#e0262b" letter-spacing="2">CONTRATO EN FAENA</text></g>
     </g>
   `)
   const dust = new Dust({ count: 60, color: '224, 38, 43', speed: 0.2, size: [1, 2] })

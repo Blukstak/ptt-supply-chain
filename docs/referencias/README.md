@@ -65,3 +65,32 @@ Video de referencia del mando final: https://www.youtube.com/watch?v=j4ulsFhfqaA
 | Archivo | Imagen | Uso en la animación |
 |---|---|---|
 | `r5-01-engranajes-extremo-mando-final.png` | 1 — Render del mando final con el círculo rojo sobre el extremo donde van los engranajes (reduction gear) | Faena 00:34: lupa roja anclada al extremo del `finalDriveSide` desde la que se desprende el corte con engranajes |
+
+## Ronda 6 — Feedback n1 (2026-09-09)
+
+Texto literal con marcadores en posición: [r6-feedback-n1.md](r6-feedback-n1.md). Originales PNG; copias de revisión JPEG ≤1024 px en `r6-small/`. Las 22 imágenes se recibieron y revisaron en este orden.
+
+| Archivo | Descripción |
+|---|---|
+| [r6-01.png](r6-01.png) | Logo oficial PTT · Marubeni Group |
+| [r6-02.png](r6-02.png) | Captura del mapa de Chile a corregir |
+| [r6-03.png](r6-03.png) | Captura del bulldozer actual |
+| [r6-04.png](r6-04.png) | CAT 854K: referencia del bulldozer |
+| [r6-05.png](r6-05.png) | Captura del camión Komatsu actual |
+| [r6-06.png](r6-06.png) | Komatsu 830E: referencia |
+| [r6-07.png](r6-07.png) | Captura de la motoniveladora actual |
+| [r6-08.png](r6-08.png) | CAT 24: referencia de motoniveladora |
+| [r6-09.png](r6-09.png) | Captura del galpón en faena |
+| [r6-10.png](r6-10.png) | 797F y persona: referencia de escala |
+| [r6-11.png](r6-11.png) | Mando final actual a corregir |
+| [r6-12.png](r6-12.png) | Mando final 797B–797F sobre bastidor |
+| [r6-13.png](r6-13.png) | Captura del corte de engranajes anterior |
+| [r6-14.png](r6-14.png) | Base: carcasa, spindle, hub y primera corona |
+| [r6-15.png](r6-15.png) | Montaje de primera reducción |
+| [r6-16.png](r6-16.png) | Carcasa/corona de segunda reducción |
+| [r6-17.png](r6-17.png) | Planetarios de segunda reducción |
+| [r6-18.png](r6-18.png) | Tapa de segunda reducción |
+| [r6-19.png](r6-19.png) | Wheel / aro exterior |
+| [r6-20.png](r6-20.png) | Conjunto dentro de los neumáticos traseros |
+| [r6-21.png](r6-21.png) | Tracto de transporte y persona: escala |
+| [r6-22.png](r6-22.png) | 797 en faena: ruedas → mandos → horas |

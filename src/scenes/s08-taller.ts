@@ -1,7 +1,7 @@
 import { el } from '../core/dom'
-import { pttWorkshop, finalDrive, finalDriveSide, pttWorker, warehouseRack, crate, sparePart, torqueWrench, STATIONS_ARMADO } from '../art'
+import { pttWorkshop, finalDriveLayers, finalDriveSide, pttWorker, warehouseRack, crate, sparePart, torqueWrench, STATIONS_ARMADO } from '../art'
 import { Dust } from '../fx/dust'
-import { Scene, sceneRoot, fullSvg, sceneEnter, sceneLeave, quote, revealQuote, lowerThird, showLowerThird, tag, pop } from '../core/scene'
+import { Scene, sceneRoot, fullSvg, artLayer, artAt, sceneEnter, sceneLeave, quote, revealQuote, lowerThird, showLowerThird, tag, pop } from '../core/scene'
 
 /**
  * ARMADO EN TALLER PTT (v1.2 esc. 7) + ALTERNATIVAS PARA EL CLIENTE (R2 · obs. 11 y 12, reubicadas).
@@ -20,10 +20,10 @@ export function tallerScene(): Scene {
   const bg = fullSvg(`${pttWorkshop('tf', STATIONS_ARMADO, 'ARMADO')}
     <rect id="tl-dim" width="1920" height="1080" fill="#05070a" opacity="0"/>
     <g id="tl-stand" transform="translate(960 660)"><rect x="-260" y="140" width="520" height="30" fill="#2a2f36"/><rect x="-200" y="30" width="26" height="120" fill="#4b525c"/><rect x="174" y="30" width="26" height="120" fill="#4b525c"/></g>
-    <g id="tl-fd" transform="translate(960 560)">${finalDrive('tfd', 250)}</g>
-    <g id="tl-t1" transform="translate(500 760)">${pttWorker('tt1', false)}</g>
-    <g id="tl-t2" transform="translate(1180 760)">${pttWorker('tt2', true)}</g>
-    <g id="tl-boxes"><g class="tl-box" transform="translate(-500 ${BOX.y})">${crate('tlc0', 300, 180, 'PTT')}<text x="150" y="-14" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="22" fill="#fff" letter-spacing="3">REPUESTOS DE BODEGA + COMPRAS</text></g></g>
+    <g id="tl-fd" transform="translate(960 560)">${finalDriveLayers('tfd')}</g>
+    <g id="tl-t1" transform="translate(500 820) scale(.48)">${pttWorker('tt1', false)}</g>
+    <g id="tl-t2" transform="translate(1180 820) scale(.48)">${pttWorker('tt2', true)}</g>
+    <g id="tl-boxes"><g class="tl-box" transform="translate(-500 ${BOX.y})">${crate('tlc0', 300, 180, 'PTT')}<text x="150" y="-14" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="20" fill="#fff" letter-spacing="2">REPUESTOS PTT</text></g></g>
     <g id="tl-parts">${parts.map((p, i) => `<g class="tl-part" data-src="${p.src}" opacity="0" transform="translate(${BOX.x + 150} ${BOX.y + 60}) scale(.1)"><circle r="46" fill="#0a0e14" fill-opacity=".55" stroke="${p.src === 'stock' ? '#4ade80' : '#22d3ee'}" stroke-width="3"/>${sparePart(`tp${i}`, p.kind)}</g>`).join('')}</g>
     <g id="tl-wrench" transform="translate(960 560)" opacity="0"><g id="tl-wrench-in" transform="rotate(-20)">${torqueWrench('tw')}</g></g>
     <g id="tl-right" opacity="0">
@@ -32,6 +32,8 @@ export function tallerScene(): Scene {
     </g>
     <line id="tl-split" x1="960" y1="80" x2="960" y2="1000" stroke="#e0262b" stroke-width="4" opacity="0"/>
   `)
+  const component = artLayer('', 960, 560)
+  component.append(bg.querySelector('#tl-fd')!)
   const sparks = new Dust({ count: 60, color: '255, 200, 87', speed: 1.4, size: [1, 2.5], drift: 1.2, area: { x: 760, y: 400, w: 400, h: 300 } })
   const lt = lowerThird('Armado en taller PTT', 'Estándar de fábrica')
   const steps = el('div', { class: 'steps' })
@@ -44,6 +46,7 @@ export function tallerScene(): Scene {
   Object.assign(prog.style, { left: '750px', top: '880px', opacity: '0' })
   const stamp = el('div', { class: 'abs', html: `<div style="font-family:var(--font-display);font-weight:700;font-size:54px;text-transform:uppercase;letter-spacing:.06em;color:#4ade80;border:6px solid #4ade80;padding:10px 30px;border-radius:10px;transform:rotate(-8deg);background:rgba(0,0,0,.4)">Aprobado · QA</div>` })
   Object.assign(stamp.style, { left: '1180px', top: '360px', opacity: '0' })
+  const layerLabel = tag('Armamos: carcasa y eje → primera reducción → segunda reducción → wheel',470,790,'info')
   const tagOT = tag('OT-4471 · Mando final · Estación A1', 120, 940, 'ok')
   // Opciones para el cliente (R4 · obs. 01:37)
   const hL = el('div', { class: 'abs', html: '<div class="kicker">Opción 1</div><div class="headline" style="font-size:60px;margin-top:8px"><em>Reparación</em></div><div class="sub" style="font-size:24px;margin-top:10px;max-width:720px">Reparamos el componente del cliente en nuestro taller con repuestos de nuestra red internacional.</div>' })
@@ -54,7 +57,7 @@ export function tallerScene(): Scene {
   const tagR = tag('Venta Intercambio · stock propio · entrega inmediata', 1030, 940, 'ok')
   const q1 = quote('2 opciones para nuestros clientes: Reparación y Venta Intercambio', 120, 330, 1600)
   q1.style.fontSize = '72px'
-  root.append(bg, sparks.canvas, lt, steps, tagStock, tagBuy, prog, stamp, tagOT, hL, hR, tagL, tagR, q1)
+  root.append(bg, component, sparks.canvas, lt, steps, tagStock, tagBuy, prog, stamp, tagOT, layerLabel, hL, hR, tagL, tagR, q1)
 
   return {
     id: 'taller', title: 'Taller PTT', root,
@@ -67,11 +70,9 @@ export function tallerScene(): Scene {
       showLowerThird(tl, lt, at + 0.5, 3.4)
       tl.set(steps, { opacity: 1 }, at + 0.6); pop(tl, stepEls, at + 0.8)
       // Piezas fuera de lugar → convergen; la caja consolidada llega desde bodega
-      tl.set(q('#tfd-housing'), { x: -520, y: -60, opacity: 0.9 }, at)
-      tl.set(q('#tfd-ringgear'), { x: -220, y: 240, rotation: 40, transformOrigin: '50% 50%' }, at)
-      tl.set(q('#tfd-carrier'), { x: 260, y: 260, rotation: -50, transformOrigin: '50% 50%' }, at)
-      tl.set(q('#tfd-sun'), { x: 520, y: -100, transformOrigin: '50% 50%' }, at)
-      tl.set(q('#tfd-hubface'), { opacity: 0 }, at)
+      ;['base','reduction1','reduction2','wheel'].forEach((layer,i)=> {
+        tl.set(q(`#tfd-${layer}`), { x:-270-i*30, y:40+i*25, opacity:0 }, at)
+      })
       tl.add(activate(0), at + 0.8)
       const box = q('.tl-box')
       tl.to(box, { attr: { transform: `translate(${BOX.x} ${BOX.y})` }, duration: 1.2, ease: 'power2.out' }, at + 0.3)
@@ -91,10 +92,11 @@ export function tallerScene(): Scene {
       })
       tl.to([box, tagStock, tagBuy], { opacity: 0, duration: 0.4 }, aAt + 0.3)
       tl.add(activate(1), aAt)
-      tl.to(q('#tfd-housing'), { x: 0, y: 0, duration: 1.1, ease: 'power3.inOut' }, aAt)
-      tl.to(q('#tfd-ringgear'), { x: 0, y: 0, rotation: 0, duration: 1.1, ease: 'power3.inOut' }, aAt + 0.35)
-      tl.to(q('#tfd-carrier'), { x: 0, y: 0, rotation: 0, duration: 1.1, ease: 'power3.inOut' }, aAt + 0.7)
-      tl.to(q('#tfd-sun'), { x: 0, y: 0, duration: 1, ease: 'power3.inOut' }, aAt + 1)
+      pop(tl,layerLabel,aAt,3.1)
+      ;['base','reduction1','reduction2','wheel'].forEach((layer,i)=> {
+        tl.to(q(`#tfd-${layer}`), { x:0, y:0, opacity:1, duration:.65, ease:'power3.out' }, aAt+[0,.7,1.4,2.5][i])
+      })
+      tl.to(q('#tfd-cover'), {opacity:1,duration:.3},aAt+2.1)
       tl.to(q('#tf-cable'), { attr: { y2: 420 }, duration: 1, ease: 'power2.inOut' }, aAt)
       // Trabajo sobre el componente: llave de torque apretando + barra de avance (chispas de fondo)
       tl.fromTo(q('#tl-wrench'), { opacity: 0, attr: { transform: 'translate(960 560) scale(.6)' } }, { opacity: 1, attr: { transform: 'translate(960 560) scale(1)' }, duration: 0.4, ease: 'back.out(1.6)' }, aAt + 0.6)
@@ -106,9 +108,7 @@ export function tallerScene(): Scene {
       tl.to(q('#tl-wrench'), { opacity: 0, duration: 0.3 }, aAt + 3.1)
       const pAt = aAt + 2.2
       tl.add(activate(2), pAt)
-      tl.to(q('#tfd-ringgear'), { rotation: 90, transformOrigin: '50% 50%', duration: 3, ease: 'power1.in' }, pAt)
-      tl.to(q('#tfd-carrier'), { rotation: -270, transformOrigin: '50% 50%', duration: 3, ease: 'power1.in' }, pAt)
-      tl.to(q('#tfd-sun'), { rotation: 810, transformOrigin: '50% 50%', duration: 3, ease: 'power1.in' }, pAt)
+      tl.fromTo(component, { scale:1 }, { scale:1.015, duration:.12, repeat:9, yoyo:true }, pAt+.6)
       const cAt = pAt + 1.6
       tl.add(activate(3), cAt)
       tl.to(prog, { opacity: 0, duration: 0.4 }, cAt)
@@ -119,7 +119,7 @@ export function tallerScene(): Scene {
       const altAt = cAt + 2.0
       tl.to([steps, stamp, tagOT, q('#tl-t1'), q('#tl-t2'), q('#tl-stand'), q('#tf-signs')], { opacity: 0, duration: 0.4 }, altAt - 0.3)
       tl.to(q('#tl-dim'), { opacity: 0.62, duration: 0.6 }, altAt)
-      tl.to(q('#tl-fd'), { attr: { transform: 'translate(500 600) scale(.8)' }, duration: 1, ease: 'power3.inOut' }, altAt)
+      tl.to(component, { ...artAt(960,560,500,600,1.25), duration:1, ease:'power3.inOut' }, altAt)
       tl.to(q('#tl-split'), { opacity: 0.6, duration: 0.6 }, altAt + 0.4)
       tl.fromTo(hL, { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out' }, altAt + 0.6)
       pop(tl, tagL, altAt + 1)

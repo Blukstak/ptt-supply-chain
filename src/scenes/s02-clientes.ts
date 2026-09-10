@@ -24,7 +24,7 @@ export function clientesScene(): Scene {
   Object.assign(title.style, { left: '120px', top: '90px', opacity: '0' })
   // R4 · obs. 00:17: se elimina el párrafo; queda solo el título grande.
   const labels = machines.map((m) => tag(m.label, m.x + 30, 930, ''))
-  const tagEq = tag('Equipos que reparamos · camiones de extracción y equipos de apoyo', 120, 400, 'info')
+  const tagEq = tag('Componentes de los siguientes equipos, entre otros.', 120, 400, 'info')
   root.append(bg)
   photoBg(root, 'mine-day.jpg', bg)
   root.append(dust.canvas, art, title, tagEq, ...labels)
