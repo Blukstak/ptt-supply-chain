@@ -9,9 +9,9 @@ import gsap from 'gsap'
 import type { Player } from '../core/player'
 import './dev.css'
 import {
-  DEFAULT_CLIPS, DEFAULT_GAP, VoiceoverTrack, clearSaved, loadSaved, save,
+  VoiceoverTrack, clearSaved, loadSaved, save, shippedState,
   type Clip, type VoiceoverState,
-} from './voiceover'
+} from '../core/voiceover'
 
 const SNAP = 0.25          // rejilla de arrastre, en segundos
 const SNAP_CHAPTER = 0.5   // imán a los capítulos, en segundos
@@ -22,7 +22,8 @@ const fmt = (t: number) => {
   return `${t < 0 ? '-' : ''}${m}:${s.toFixed(1).padStart(4, '0')}`
 }
 
-export function mountEditor(player: Player) {
+export function mountEditor(player: Player, voice: { track: VoiceoverTrack; state: VoiceoverState }) {
+  document.body.classList.add('dev-mode')
   const playerUI = document.querySelector('.player')
   const progress = document.querySelector('.player .progress')
   if (!playerUI || !progress) return
@@ -30,23 +31,16 @@ export function mountEditor(player: Player) {
   const duration = player.master.duration()
   const chapterTimes = player.chapterList.map((c) => c.time)
 
-  const saved = loadSaved()
-  let state: VoiceoverState = saved
-    ? { gap: saved.gap, clips: saved.clips.map((c) => ({ ...c })) }
-    : { gap: DEFAULT_GAP, clips: DEFAULT_CLIPS.map((c) => ({ ...c })) }
+  // Editamos exactamente la pista que suena en el video.
+  const track = voice.track
+  const state: VoiceoverState = voice.state
   let dirty = false
-  let firstLayoutPending = !saved
 
-  const track = new VoiceoverTrack(state.clips, () => {
-    // Con las duraciones ya conocidas, si no había nada guardado dejamos una
-    // disposición inicial razonable: 1..6 en secuencia y la 7 en su minuto 1:49.
-    if (firstLayoutPending) {
-      firstLayoutPending = false
-      sequence(state.clips.filter((c) => c.id !== '07'), 0, state.gap)
-      dirty = false
-    }
-    render()
-  })
+  // Las duraciones llegan de forma asíncrona: repintamos cuando estén.
+  const waitForDurations = () => {
+    if (state.clips.every((c) => track.durations.has(c.id))) render()
+    else setTimeout(waitForDurations, 120)
+  }
 
   // ---------- DOM ----------
   const panel = document.createElement('div')
@@ -58,9 +52,9 @@ export function mountEditor(player: Player) {
       <button class="da-btn" data-act="seq" title="Coloca todos los audios en el orden de la lista, uno tras otro, separados por el delay">Secuenciar</button>
       <span class="da-grow"></span>
       <button class="da-btn da-primary" data-act="save">Guardar</button>
-      <button class="da-btn" data-act="revert" title="Vuelve a lo último guardado">Revertir</button>
-      <button class="da-btn" data-act="defaults" title="Descarta lo guardado y vuelve al orden original">Por defecto</button>
-      <button class="da-btn" data-act="copy" title="Copia el JSON para dejarlo fijo en el proyecto">Copiar JSON</button>
+      <button class="da-btn" data-act="revert" title="Vuelve a lo último guardado en este navegador">Revertir</button>
+      <button class="da-btn" data-act="defaults" title="Descarta lo del navegador y carga src/voiceover.json">Desde archivo</button>
+      <button class="da-btn" data-act="copy" title="Copia el contenido exacto de src/voiceover.json">Copiar JSON</button>
       <span class="da-status"></span>
       <button class="da-btn da-fold" data-act="fold" title="Plegar el panel">▾</button>
     </div>
@@ -96,6 +90,39 @@ export function mountEditor(player: Player) {
     const near = chapterTimes.find((c) => Math.abs(c - t) < SNAP_CHAPTER)
     if (near !== undefined) return near
     return Math.round(t / SNAP) * SNAP
+  }
+
+  /** Contenido exacto de src/voiceover.json. */
+  function fileFormat(): string {
+    return JSON.stringify({
+      _comment: 'Tiempos de la locución publicada. Para cambiarlos: abrir la página con ?dev=1, mover los audios y pulsar Guardar (escribe este archivo si corre el servidor dev). start = segundo del video en que entra el audio; offset/end recortan dentro del archivo.',
+      gap: state.gap,
+      clips: state.clips.map((c) => ({ id: c.id, start: c.start, offset: c.offset, end: c.end })),
+    }, null, 2)
+  }
+
+  /** Escribe src/voiceover.json a través del endpoint del servidor dev. */
+  async function writeToProject(): Promise<boolean> {
+    try {
+      const res = await fetch('/__voiceover', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: fileFormat(),
+      })
+      return res.ok
+    } catch {
+      return false
+    }
+  }
+
+  /** Sustituye el contenido del estado sin cambiar la referencia que usa la pista. */
+  function applyState(next: VoiceoverState) {
+    state.gap = next.gap
+    state.clips.length = 0
+    state.clips.push(...next.clips.map((c) => ({ ...c })))
+    gapInput.value = String(state.gap)
+    track.setClips(state.clips)
+    render()
   }
 
   function sequence(clips: Clip[], from: number, gap: number) {
@@ -260,39 +287,51 @@ export function mountEditor(player: Player) {
       sequence(state.clips, state.clips[0]?.start ?? 0, state.gap)
       render()
     } else if (act === 'save') {
+      // Se guarda en los dos sitios: el archivo del proyecto (persistente, es lo
+      // que se publica) y el navegador (compatible con lo que ya había guardado).
       save(state)
       dirty = false
-      flash('guardado')
+      flash('guardando…')
+      writeToProject().then((ok) => {
+        flash(ok ? 'guardado en src/voiceover.json + navegador' : 'guardado en el navegador (sin servidor dev)')
+      })
     } else if (act === 'revert') {
       const s = loadSaved()
-      state = s ? { gap: s.gap, clips: s.clips.map((c) => ({ ...c })) } : { gap: DEFAULT_GAP, clips: DEFAULT_CLIPS.map((c) => ({ ...c })) }
-      gapInput.value = String(state.gap)
-      track.setClips(state.clips)
+      applyState(s ?? shippedState())
       dirty = false
-      flash(s ? 'revertido a lo guardado' : 'sin nada guardado: valores por defecto')
-      render()
+      flash(s ? 'revertido a lo guardado' : 'sin nada guardado: se usa voiceover.json')
     } else if (act === 'defaults') {
+      // Descarta lo del navegador y vuelve a lo que hay en el archivo del proyecto.
       clearSaved()
-      state = { gap: DEFAULT_GAP, clips: DEFAULT_CLIPS.map((c) => ({ ...c })) }
-      gapInput.value = String(state.gap)
-      sequence(state.clips.filter((c) => c.id !== '07'), 0, state.gap)
-      dirty = false
-      flash('valores por defecto')
-      render()
+      fetch('/__voiceover').then((r) => (r.ok ? r.json() : shippedState())).catch(() => shippedState())
+        .then((data) => {
+          const next = Array.isArray(data?.clips) && data.clips.length
+            ? { gap: typeof data.gap === 'number' ? data.gap : state.gap, clips: data.clips.map((c: Partial<Clip>) => ({ ...state.clips.find((x) => x.id === c.id)!, ...c })) }
+            : shippedState()
+          applyState(next as VoiceoverState)
+          dirty = false
+          flash('cargado desde src/voiceover.json')
+        })
     } else if (act === 'fold') {
       const folded = panel.classList.toggle('folded')
       ;(panel.querySelector('.da-fold') as HTMLElement).textContent = folded ? '▴' : '▾'
     } else if (act === 'copy') {
-      navigator.clipboard?.writeText(JSON.stringify(state, null, 2))
-        .then(() => flash('JSON copiado'))
+      const fileJson = fileFormat()
+      navigator.clipboard?.writeText(fileJson)
+        .then(() => flash('JSON copiado · pégalo en src/voiceover.json'))
         .catch(() => flash('no se pudo copiar'))
+    } else if (act === '__never__') {
+      JSON.stringify({
+        _comment: 'Tiempos de la locución publicada. Para cambiarlos: abrir la página con ?dev=1, mover los audios, pulsar Guardar y luego Copiar JSON, y pegar el resultado aquí. start = segundo del video en que entra el audio; offset/end recortan dentro del archivo.',
+        gap: state.gap,
+        clips: [],
+      }, null, 2)
     }
   })
 
   // ---------- sincronía con la animación ----------
   gsap.ticker.add(() => {
     const t = player.master.time()
-    track.update(t, player.master.paused())
     cursor.style.left = `${pctOf(t)}%`
     if (track.activeId !== lastActive) {
       lastActive = track.activeId
@@ -303,9 +342,6 @@ export function mountEditor(player: Player) {
   })
   let lastActive: string | null = null
 
-  // Handle de depuración: window.__voiceover.track / .state
-  ;(window as unknown as { __voiceover: unknown }).__voiceover = { track, get state() { return state }, render }
-
   window.addEventListener('beforeunload', (e) => {
     if (!dirty) return
     e.preventDefault()
@@ -313,4 +349,5 @@ export function mountEditor(player: Player) {
   })
 
   render()
+  waitForDurations()
 }

@@ -2,6 +2,23 @@
 
 Bitácora de decisiones de diseño y contenido. Lo más reciente arriba.
 
+## 2026-09-10 — La locución suena en el video, no solo en el editor (v2.13)
+
+- El motor de audio pasa de `src/dev/` a `src/core/voiceover.ts` y se enciende siempre: el video
+  publicado lleva locución. Botón de silencio en el reproductor (tecla `M`), preferencia recordada.
+- Los tiempos se publican en **`src/voiceover.json`**. El botón Guardar del editor los escribe de
+  verdad en ese archivo, mediante un endpoint que solo existe con `vite dev` (`vite.config.ts`).
+  Se mantiene además el guardado en `localStorage` por retrocompatibilidad: lo que ya estaba
+  guardado en el navegador sigue teniendo prioridad al arrancar.
+- **Disposición publicada:** los 7 audios en orden, encadenados con 0,3 s de separación. Se
+  descartó dejar la parte 7 en el minuto 1:49 (que era lo que sugería su nombre) porque la parte 6
+  termina en 1:59 y se oían **dos voces a la vez** durante 10 s.
+- **Pendiente de contenido:** la locución dura 2:13,7 y el video 2:04,7. Con el orden respetado, los
+  últimos ~9 s de la parte 7 quedan fuera. Hay que recortar audios o alargar escenas — decisión del
+  cliente.
+- Los `.m4a` dejan de estar en `.gitignore`: el cliente pidió que la locución esté también en la
+  página de GitHub.
+
 ## 2026-09-10 — Modo dev de locución (v2.12)
 
 Llegaron las 7 notas de voz de la narración. Se añade un **editor de locución que solo aparece con

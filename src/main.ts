@@ -2,6 +2,7 @@ import gsap from 'gsap'
 import './styles/main.css'
 import { el } from './core/dom'
 import { Player } from './core/player'
+import { initVoiceover } from './core/voiceover'
 import type { Scene } from './core/scene'
 import { wipe, logoPTT } from './core/scene'
 import { introScene } from './scenes/s00-intro'
@@ -69,11 +70,15 @@ splash.querySelector('.play')!.addEventListener('click', () => {
 })
 app.append(splash)
 
-// Modo dev de locución: ?dev=1 (o #dev) añade el editor de audio sobre la línea de tiempo.
+// Locución: suena siempre, sincronizada con la línea de tiempo (tiempos en src/voiceover.json).
+const voice = initVoiceover(player)
+
+// Modo dev: ?dev=1 (o #dev) añade el editor para recolocar los audios sobre la línea de tiempo.
 const params = new URLSearchParams(location.search)
 if (params.get('dev') === '1' || location.hash === '#dev') {
-  import('./dev/voiceover').then((m) => m.initDev(player))
+  import('./dev/editor').then((m) => m.mountEditor(player, voice))
 }
 
 // Acceso para depuración / automatización (p. ej. render a video con Playwright): window.__player.seek(t)
 ;(window as unknown as { __player: Player }).__player = player
+;(window as unknown as { __voiceover: unknown }).__voiceover = voice

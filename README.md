@@ -51,25 +51,40 @@ Observaciones del cliente y decisiones: `docs/DECISIONES.md`. Referencias visual
 Para exportar a MP4: reproducir en pantalla completa y grabar con OBS/QuickTime, o usar
 `npx playwright` + `ffmpeg` capturando frames (la línea de tiempo es determinista: `player.seek(t)`).
 
-## Modo dev · locución
+## Locución
 
-Abre la página local con `?dev=1` (o `#dev`):
+Las 7 notas de voz viven en `public/audio/01.m4a` … `07.m4a` y **suenan siempre**, sincronizadas
+con la línea de tiempo: respetan pausa, saltos y capítulos. El reproductor tiene botón de
+silencio (tecla `M`), y la preferencia se recuerda.
+
+Los tiempos de entrada de cada audio están en **`src/voiceover.json`**, que es lo que se publica.
+
+### Editor de locución (`?dev=1`)
 
 ```
 http://localhost:5173/?dev=1
 ```
 
-Aparece un editor de locución sobre la línea de tiempo del reproductor:
+Añade una pista sobre la línea de tiempo del reproductor:
 
-- **Arrastrar el bloque** mueve el inicio del audio; **arrastrar los bordes** recorta entrada y salida.
-- **↑ ↓** en la lista reordena; **Secuenciar** coloca todos en ese orden separados por el *delay*.
-- **⤓ aquí** fija el inicio en el punto actual de la animación; **▶** salta la animación al inicio del audio.
-- Imán a los capítulos y a ¼ de segundo. Los solapes (dos voces a la vez) se marcan en ámbar.
-- **Guardar** / **Revertir** persisten en `localStorage`; **Por defecto** vuelve al orden original;
-  **Copiar JSON** entrega la configuración para dejarla fija en el proyecto.
+- **Arrastrar el bloque** mueve el inicio; **arrastrar los bordes** recorta entrada y salida.
+- **↑ ↓** reordena; **Secuenciar** coloca todos en ese orden separados por el *delay*.
+- **⤓ aquí** fija el inicio en el punto actual de la animación; **▶** salta la animación ahí.
+- Imán a capítulos y a ¼ de segundo. Los solapes (dos voces a la vez) se marcan en ámbar.
+- Arriba se lee cuánta locución hay frente a cuánto video dura.
 
-El audio sigue al máster: respeta pausas, saltos y capítulos. Sin `?dev=1` la página no carga
-nada de esto (va en chunks aparte).
+Botones:
 
-Los archivos de locución van en `public/audio/01.m4a` … `07.m4a` y **no se versionan**
-(`.gitignore`): son grabaciones personales y no se publican hasta que el cliente lo apruebe.
+| Botón | Qué hace |
+|---|---|
+| **Guardar** | Escribe `src/voiceover.json` (persistente, es lo que se publica) **y** el navegador |
+| **Revertir** | Vuelve a lo último guardado en este navegador |
+| **Desde archivo** | Descarta lo del navegador y carga `src/voiceover.json` |
+| **Copiar JSON** | Copia el contenido exacto del archivo, por si hay que pegarlo a mano |
+
+La escritura del archivo la hace un endpoint que solo existe con `vite dev`
+(`voiceoverApi` en `vite.config.ts`). En el sitio publicado no hay servidor: ahí el editor
+guarda solo en el navegador.
+
+Orden de prioridad al arrancar: **navegador → `src/voiceover.json` → orden deducido de los
+nombres de archivo**. Así, lo que ya tengas guardado en tu navegador sigue mandando.

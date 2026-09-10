@@ -1,0 +1,48 @@
+{
+  "_comment": "Tiempos de la locución publicada. Para cambiarlos: abrir la página con ?dev=1, mover los audios y pulsar Guardar (escribe este archivo si corre el servidor dev). start = segundo del video en que entra el audio; offset/end recortan dentro del archivo.",
+  "gap": 0.3,
+  "clips": [
+    {
+      "id": "01",
+      "start": 0,
+      "offset": 0,
+      "end": null
+    },
+    {
+      "id": "02",
+      "start": 16.64,
+      "offset": 0,
+      "end": null
+    },
+    {
+      "id": "03",
+      "start": 25.2,
+      "offset": 0,
+      "end": null
+    },
+    {
+      "id": "04",
+      "start": 45.98,
+      "offset": 0,
+      "end": null
+    },
+    {
+      "id": "05",
+      "start": 59.55,
+      "offset": 0,
+      "end": null
+    },
+    {
+      "id": "06",
+      "start": 73.46,
+      "offset": 0,
+      "end": null
+    },
+    {
+      "id": "07",
+      "start": 118.05,
+      "offset": 0,
+      "end": null
+    }
+  ]
+}
