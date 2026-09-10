@@ -1,0 +1,72 @@
+<!doctype html>
+<!--
+  Banco de pruebas de arte vectorial.
+  Uso:  npx vite --port 5173   →   http://localhost:5173/tools/equipos.html
+  Renderiza cada función de src/art/index.ts aislada, sobre fondo claro y sobre el
+  fondo oscuro real de faena, para detectar huecos geométricos y piezas que
+  "desaparecen" contra el fondo del video. NO forma parte del build de producción.
+-->
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>PTT · Banco de pruebas de equipos</title>
+  <style>
+    body { margin: 0; background: #12161c; color: #e9eef4; font: 14px system-ui, sans-serif; }
+    h1 { font-size: 18px; padding: 16px 20px; margin: 0; border-bottom: 1px solid #2a3441; }
+    .row { display: grid; grid-template-columns: 160px 1fr 1fr; align-items: center; border-bottom: 1px solid #2a3441; }
+    .name { padding: 0 20px; font-family: ui-monospace, monospace; letter-spacing: .04em; }
+    .name small { display: block; color: #8a99ad; font-family: system-ui; letter-spacing: 0; margin-top: 4px; }
+    .light { background: #f2f2f0; }
+    .dark  { background: #241d16; } /* mismo tono que el suelo de la escena de faena */
+    svg { display: block; width: 100%; height: auto; }
+    .ref { padding: 10px 20px; color: #8a99ad; font-size: 12px; }
+    .ref a { color: #f5a623; }
+  </style>
+</head>
+<body>
+  <h1>Banco de pruebas de equipos · izquierda fondo claro · derecha fondo de faena</h1>
+  <div id="out"></div>
+  <script type="module">
+    import * as art from '/src/art/index.ts'
+
+    // fn: nombre exportado · ref: imagen de referencia del cliente
+    const ITEMS = [
+      { fn: 'truck797',       id: 't',   ref: 'r4-01-cat-797f-lateral.png' },
+      { fn: 'komatsuTruck',   id: 'km',  ref: 'r6-05.png / r6-06.png' },
+      { fn: 'bulldozer',      id: 'bz',  ref: 'r6-04.png' },
+      { fn: 'motorGrader',    id: 'mg',  ref: 'r6-07.png / r6-08.png' },
+      { fn: 'drillRig',       id: 'dr',  ref: 'r2-06-perforadora.png' },
+      { fn: 'lowboyTruck',    id: 'lb',  ref: '04-transporte-cama-baja.png' },
+      { fn: 'finalDriveSide', id: 'fds', ref: 'r6-12.png' },
+      { fn: 'transmission',   id: 'tx',  ref: 'r4-05-transmision.png' },
+      { fn: 'engine',         id: 'eng', ref: 'r4-06-motor.png' },
+    ]
+
+    const out = document.getElementById('out')
+    const NS = 'http://www.w3.org/2000/svg'
+
+    for (const item of ITEMS) {
+      const factory = art[item.fn]
+      if (typeof factory !== 'function') continue
+
+      // Render oculto para medir el bbox real del grupo.
+      const probe = document.createElementNS(NS, 'svg')
+      probe.setAttribute('style', 'position:absolute;visibility:hidden;width:2000px;height:2000px')
+      probe.innerHTML = factory(item.id)
+      document.body.append(probe)
+      const g = probe.querySelector(`#${item.id}`) ?? probe.querySelector('g')
+      const b = g.getBBox()
+      probe.remove()
+
+      const pad = Math.max(b.width, b.height) * 0.06
+      const vb = `${b.x - pad} ${b.y - pad} ${b.width + pad * 2} ${b.height + pad * 2}`
+      const panel = (cls) => `<div class="${cls}"><svg viewBox="${vb}">${factory(item.id)}</svg></div>`
+
+      const row = document.createElement('div')
+      row.className = 'row'
+      row.innerHTML = `<div class="name">${item.fn}()<small>ref: ${item.ref}</small><small>${Math.round(b.width)}×${Math.round(b.height)}</small></div>${panel('light')}${panel('dark')}`
+      out.append(row)
+    }
+  </script>
+</body>
+</html>
