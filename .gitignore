@@ -1,3 +1,6 @@
 node_modules
 dist
 .DS_Store
+
+# Locuciones: media personal, no se publica hasta que el cliente lo apruebe
+public/audio/*.m4a

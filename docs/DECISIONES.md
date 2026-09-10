@@ -2,6 +2,23 @@
 
 Bitácora de decisiones de diseño y contenido. Lo más reciente arriba.
 
+## 2026-09-10 — Modo dev de locución (v2.12)
+
+Llegaron las 7 notas de voz de la narración. Se añade un **editor de locución que solo aparece con
+`?dev=1`**: pista sobre la línea de tiempo del reproductor donde cada audio es un bloque que se
+arrastra (mover inicio), se estira por los bordes (recortar entrada/salida) y se reordena; campo de
+*delay* + botón Secuenciar; Guardar / Revertir / Por defecto con persistencia en `localStorage`, y
+Copiar JSON para fijar la configuración en el proyecto cuando esté cerrada.
+
+- El orden y la posición por defecto salen del nombre de cada nota: partes 1–6 en secuencia y la 7
+  en el minuto 1:49, que es lo que decía su nombre original.
+- La reproducción se engancha al `gsap.ticker` y sigue al máster: pausas, saltos y capítulos.
+- Los `.m4a` viven en `public/audio/` pero están en `.gitignore`: son grabaciones personales y no se
+  publican hasta que el cliente lo apruebe. En Pages el modo dev mostraría los bloques como
+  "sin archivo".
+- Dato para la próxima ronda: la locución suma **2:11,9** y la animación dura **2:04,7**. Sobran
+  ~7 s de voz, así que habrá que recortar audios o alargar escenas.
+
 ## 2026-09-09 — v2.11: revisión documental y mejora del armado
 
 - **Base:** contraste de Observaciones R1–R4 en Descargas con las revisiones posteriores y Feedback n1; se mantienen las decisiones posteriores que sustituyen pedidos anteriores. El usuario autorizó aplicar los hallazgos y mejorar la animación de taller mostrada en su captura.

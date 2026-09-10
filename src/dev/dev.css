@@ -1,0 +1,97 @@
+/* Editor de locución — solo visible en modo dev (?dev=1) */
+
+/* En modo dev el reproductor no se auto-oculta: el editor vive dentro. */
+body.dev-mode .player.hidden { opacity: 1; transform: none; pointer-events: auto; }
+body.dev-mode .player { background: linear-gradient(to top, rgba(0,0,0,.95), rgba(0,0,0,.75)); }
+
+.dev-audio {
+  margin-bottom: 14px;
+  font-family: var(--font-body);
+  color: var(--ink-2);
+  user-select: none;
+}
+
+/* ---- barra de acciones ---- */
+.da-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+.da-title {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--ink); display: inline-flex; align-items: center; gap: 8px;
+}
+.da-title b {
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em; font-weight: 500;
+  background: var(--ptt-red, #e0262b); color: #fff; padding: 2px 6px; border-radius: 3px;
+}
+.da-grow { flex: 1; }
+.da-field { font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
+.da-field input, .da-num {
+  width: 62px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.16);
+  color: var(--ink); border-radius: 4px; padding: 3px 6px; font-family: var(--font-mono); font-size: 12px;
+}
+.da-btn {
+  appearance: none; border: 1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.06);
+  color: var(--ink); font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em;
+  text-transform: uppercase; padding: 6px 12px; border-radius: 4px; cursor: pointer;
+}
+.da-btn:hover { background: rgba(255,255,255,.14); }
+.da-btn.da-primary { border-color: var(--ptt-red, #e0262b); color: #fff; background: rgba(224,38,43,.25); }
+.da-btn.da-primary:hover { background: rgba(224,38,43,.45); }
+.da-status { font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; min-width: 130px; }
+.da-status.warn { color: var(--amber-2, #ff4d52); }
+.da-status.ok { color: #4ade80; }
+
+/* ---- pista ---- */
+.da-lane {
+  position: relative; height: 56px; border-radius: 5px;
+  background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.09);
+  overflow: hidden;
+}
+.da-ticks { position: absolute; inset: 0; pointer-events: none; }
+.da-tick { position: absolute; top: 0; bottom: 0; }
+.da-tick i { position: absolute; top: 0; width: 1px; height: 6px; background: rgba(255,255,255,.22); }
+.da-tick em {
+  position: absolute; top: 7px; left: 3px; font-style: normal;
+  font-family: var(--font-mono); font-size: 9px; color: var(--ink-3);
+}
+.da-chap { position: absolute; top: 0; bottom: 0; width: 1px; background: rgba(224,38,43,.4); }
+
+.da-clips { position: absolute; inset: 20px 0 4px; }
+.da-clip {
+  position: absolute; top: 0; bottom: 0; min-width: 16px;
+  background: linear-gradient(to bottom, rgba(47,212,200,.4), rgba(47,212,200,.2));
+  border: 1px solid rgba(47,212,200,.65); border-radius: 4px;
+  display: flex; align-items: center; overflow: hidden; cursor: grab;
+}
+.da-clip.active { background: linear-gradient(to bottom, rgba(224,38,43,.55), rgba(224,38,43,.3)); border-color: #ff6b6f; }
+.da-clip.dragging { cursor: grabbing; box-shadow: 0 0 0 1px #fff inset; }
+.da-clip.missing { background: repeating-linear-gradient(45deg, rgba(255,255,255,.08) 0 6px, transparent 6px 12px); border-color: rgba(255,255,255,.3); }
+.da-name {
+  flex: 1; padding: 0 8px; font-size: 11px; color: #fff; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis; pointer-events: none;
+}
+.da-time { padding-right: 8px; font-family: var(--font-mono); font-size: 10px; color: rgba(255,255,255,.75); pointer-events: none; }
+.da-handle { width: 7px; align-self: stretch; cursor: ew-resize; background: rgba(255,255,255,.22); flex: 0 0 auto; }
+.da-handle:hover { background: rgba(255,255,255,.55); }
+.da-cursor { position: absolute; top: 0; bottom: 0; width: 2px; background: #fff; pointer-events: none; box-shadow: 0 0 8px rgba(255,255,255,.7); }
+
+/* ---- lista ---- */
+.da-list { margin-top: 10px; display: grid; gap: 4px; max-height: 150px; overflow-y: auto; }
+.da-row { display: flex; align-items: center; gap: 8px; font-size: 12px; padding: 3px 0; }
+.da-row-name { min-width: 78px; color: var(--ink); }
+.da-row-dur { color: var(--ink-3); font-family: var(--font-mono); font-size: 11px; }
+.da-row label { font-family: var(--font-mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+.da-mini {
+  appearance: none; border: 1px solid rgba(255,255,255,.16); background: rgba(255,255,255,.05);
+  color: var(--ink-2); border-radius: 3px; padding: 2px 7px; font-size: 11px; cursor: pointer;
+}
+.da-mini:hover:not(:disabled) { background: rgba(255,255,255,.14); color: #fff; }
+.da-mini:disabled { opacity: .3; cursor: default; }
+.da-hint { margin-top: 8px; font-size: 11px; color: var(--ink-3); }
+
+/* Dos locuciones sonando a la vez */
+.da-clip.overlap { border-color: #ffb020; box-shadow: inset 0 0 0 1px rgba(255,176,32,.6); }
+.da-warn { color: #ffb020; font-weight: 500; }
+
+/* Panel plegado: deja solo la pista para juzgar el calce contra la imagen */
+.dev-audio.folded .da-list, .dev-audio.folded .da-hint { display: none; }
+.da-fold { padding: 6px 9px; }
+.da-totals { color: var(--ink-2); font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .06em; }

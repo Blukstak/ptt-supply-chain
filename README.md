@@ -50,3 +50,26 @@ Observaciones del cliente y decisiones: `docs/DECISIONES.md`. Referencias visual
 
 Para exportar a MP4: reproducir en pantalla completa y grabar con OBS/QuickTime, o usar
 `npx playwright` + `ffmpeg` capturando frames (la línea de tiempo es determinista: `player.seek(t)`).
+
+## Modo dev · locución
+
+Abre la página local con `?dev=1` (o `#dev`):
+
+```
+http://localhost:5173/?dev=1
+```
+
+Aparece un editor de locución sobre la línea de tiempo del reproductor:
+
+- **Arrastrar el bloque** mueve el inicio del audio; **arrastrar los bordes** recorta entrada y salida.
+- **↑ ↓** en la lista reordena; **Secuenciar** coloca todos en ese orden separados por el *delay*.
+- **⤓ aquí** fija el inicio en el punto actual de la animación; **▶** salta la animación al inicio del audio.
+- Imán a los capítulos y a ¼ de segundo. Los solapes (dos voces a la vez) se marcan en ámbar.
+- **Guardar** / **Revertir** persisten en `localStorage`; **Por defecto** vuelve al orden original;
+  **Copiar JSON** entrega la configuración para dejarla fija en el proyecto.
+
+El audio sigue al máster: respeta pausas, saltos y capítulos. Sin `?dev=1` la página no carga
+nada de esto (va en chunks aparte).
+
+Los archivos de locución van en `public/audio/01.m4a` … `07.m4a` y **no se versionan**
+(`.gitignore`): son grabaciones personales y no se publican hasta que el cliente lo apruebe.

@@ -62,6 +62,9 @@ export class Player {
     })
   }
 
+  /** Capítulos ya registrados (los usa el editor de locución del modo dev). */
+  get chapterList(): readonly Chapter[] { return this.chapters }
+
   play() { this.master.play(); this.updatePlayIcon(); this.wakeUI() }
   pause() { this.master.pause(); this.updatePlayIcon(); this.wakeUI() }
   toggle() { this.master.paused() ? this.play() : this.pause() }

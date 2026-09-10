@@ -69,5 +69,11 @@ splash.querySelector('.play')!.addEventListener('click', () => {
 })
 app.append(splash)
 
+// Modo dev de locución: ?dev=1 (o #dev) añade el editor de audio sobre la línea de tiempo.
+const params = new URLSearchParams(location.search)
+if (params.get('dev') === '1' || location.hash === '#dev') {
+  import('./dev/voiceover').then((m) => m.initDev(player))
+}
+
 // Acceso para depuración / automatización (p. ej. render a video con Playwright): window.__player.seek(t)
 ;(window as unknown as { __player: Player }).__player = player
