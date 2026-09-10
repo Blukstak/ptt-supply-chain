@@ -995,10 +995,13 @@ export function fieldWorkshop(id = 'fw') {
 
 /** Motoniveladora (Imagen 4). Ancho ~520, ruedas en y=0. */
 export function motorGrader(id = 'mg') {
-  return `${equipmentPaint(id)}<g id="${id}">
+  return `<defs>
+    <linearGradient id="${id}-paint" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffdf62"/><stop offset=".42" stop-color="#ffcd11"/><stop offset="1" stop-color="#c99d05"/></linearGradient>
+    <linearGradient id="${id}-glass" x1="0" y1="0" x2=".8" y2="1"><stop offset="0" stop-color="#7fadb8"/><stop offset=".45" stop-color="#354f5b"/><stop offset="1" stop-color="#172933"/></linearGradient>
+  </defs><g id="${id}">
     <ellipse cx="267" cy="8" rx="267" ry="9" fill="#000" opacity=".25"/>
     <path d="M54 -52 H213 L248 -89 L276 -93 L473 -59 L493 -33" stroke="#242a2d" stroke-width="26" fill="none"/>
-    <path d="M261 -97 L480 -66 L490 -40 L473 -47 L265 -80Z" fill="url(#${id}-paint)" stroke="#b19339" stroke-width="2"/>
+    <path d="M244 -94 L265 -101 L480 -66 L490 -40 L473 -47 L265 -80 L244 -72Z" fill="url(#${id}-paint)" stroke="#b19339" stroke-width="2"/>
     <path d="M59 -113 H176 L201 -95 V-54 H56Z" fill="url(#${id}-paint)" stroke="#a48629" stroke-width="2"/>
     <path d="M65 -119 H160 L178 -110 H65Z" fill="#343b3e"/>
     ${Array.from({length:14},(_,i)=>`<path d="M${70+i*7} -102 v31" stroke="#b39232" stroke-width="2"/>`).join('')}
@@ -1006,17 +1009,18 @@ export function motorGrader(id = 'mg') {
     <path d="M211 -143 H255 L250 -66 H208Z" fill="#252c2f"/>
     <path d="M216 -135 H247 L244 -96 H214Z" fill="url(#${id}-glass)" stroke="#7d9696" stroke-width="2"/>
     <path d="M234 -136 V-94" stroke="#343d40" stroke-width="4"/>
-    <path d="M206 -146 H260" stroke="#252b2e" stroke-width="7"/><rect x="226" y="-162" width="6" height="9" fill="#cd7e3a"/>
+    <path d="M206 -146 H260" stroke="#252b2e" stroke-width="7"/><rect x="226" y="-158" width="6" height="9" fill="#cd7e3a"/>
     <path d="M202 -63 H259 M199 -72 V-114 H208 M252 -80 V-111 H271 V-83" fill="none" stroke="#30373a" stroke-width="3"/>
     <path d="M58 -58 V-121 H179 V-58 M86 -121 V-59 M143 -121 V-59 M174 -121 V-59" fill="none" stroke="#353b3d" stroke-width="2"/>
     <path d="M54 -54 H179" stroke="#c6a03a" stroke-width="6"/>
     <path d="M177 -54 L204 -25 M188 -58 L215 -28 M183 -46 h14 M190 -37 h14" stroke="#b5b9b2" stroke-width="2" fill="none"/>
+    <path d="M91 -30 H160 M476 -49 V-30" stroke="#4c4630" stroke-width="12"/>
     ${[91,160,476].map((x,i)=>equipmentWheel(x,-30,36,`${id}-wheel${i===0?2:i===1?1:0}`)).join('')}
     <path d="M320 -86 L313 -33 M376 -75 L350 -35" stroke="#30383b" stroke-width="8"/><path d="M320 -82 L316 -51 M375 -72 L358 -47" stroke="#b9c3c4" stroke-width="4"/>
     <ellipse cx="346" cy="-38" rx="46" ry="5" fill="#b29032" stroke="#eecb57" stroke-width="4"/>
     <path d="M311 -41 Q335 -22 347 -26 L352 11 Q326 6 305 -19Z" fill="url(#${id}-paint)" stroke="#b18e31" stroke-width="2"/>
     <path d="M305 -19 Q326 6 352 11" fill="none" stroke="#a8b0ac" stroke-width="4"/>
-    <path d="M49 -59 L27 -18 L4 -15 M15 -25 L8 -6 M27 -26 L20 -6 M38 -28 L33 -8" stroke="#d5ac37" stroke-width="7" fill="none"/>
+    <path d="M60 -59 L49 -59 L27 -18 L4 -15 M15 -25 L8 -6 M27 -26 L20 -6 M38 -28 L33 -8" stroke="#d5ac37" stroke-width="7" fill="none"/>
     <path d="M322 -76 C301 -88 311 -40 327 -39 M375 -68 C390 -77 375 -30 349 -35" stroke="#373d3e" stroke-width="2" fill="none"/>
     <path d="M450 -64 H494" stroke="#ffcd11" stroke-width="6"/>
     <rect x="143" y="-107" width="28" height="14" fill="#25292b"/><text x="157" y="-96" text-anchor="middle" font-family="Arial" font-size="11" font-weight="900" fill="#fff">CAT</text><text x="380" y="-72" font-family="Arial" font-size="10" fill="#fff" font-weight="900">24</text>
@@ -1025,7 +1029,10 @@ export function motorGrader(id = 'mg') {
 
 
 export function bulldozer(id = 'bz') {
-  return `${equipmentPaint(id)}<g id="${id}">
+  return `<defs>
+    <linearGradient id="${id}-paint" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffdf62"/><stop offset=".42" stop-color="#ffcd11"/><stop offset="1" stop-color="#c99d05"/></linearGradient>
+    <linearGradient id="${id}-glass" x1="0" y1="0" x2=".8" y2="1"><stop offset="0" stop-color="#7fadb8"/><stop offset=".45" stop-color="#354f5b"/><stop offset="1" stop-color="#172933"/></linearGradient>
+  </defs><g id="${id}">
     <ellipse cx="250" cy="4" rx="250" ry="9" fill="#000" opacity=".25"/>
     <path d="M98 -83 H454 V-45 H119Z" fill="#282c30"/>
     <path d="M208 -115 H298 V-67 H190 L140 -78 L126 -97Z" fill="url(#${id}-paint)"/>
@@ -1041,15 +1048,15 @@ export function bulldozer(id = 'bz') {
     <path d="M210 -134 H363 M210 -143 V-162 H358 V-135 M238 -162 V-134 M272 -162 V-134 M302 -162 V-134 M332 -162 V-134" fill="none" stroke="#292e31" stroke-width="3"/>
     <path d="M366 -137 L421 -57 V-27 M355 -136 L408 -55 V-27 M367 -112 h15 M378 -96 h15 M389 -80 h15 M400 -64 h15 M408 -42 h13" fill="none" stroke="#33393c" stroke-width="3"/>
     <path d="M370 -137 V-189 l8 -9 M380 -137 V-186 l8 -9" stroke="#363a3d" stroke-width="6" fill="none"/>
-    <path d="M121 -32 H242 L263 -43" stroke="#e7b929" stroke-width="13" fill="none"/>
-    <path d="M145 -107 L115 -148 L92 -37" stroke="#d6a61c" stroke-width="11" fill="none"/>
-    <path d="M122 -131 L111 -84" stroke="#c5cbd0" stroke-width="6"/>
+    <path d="M76 -27 L121 -32 H242 L263 -43" stroke="#e7b929" stroke-width="13" fill="none"/>
+    <path d="M145 -107 L115 -148 L88 -74" stroke="#d6a61c" stroke-width="11" fill="none"/>
+    <path d="M115 -137 L101 -91" stroke="#c5cbd0" stroke-width="6"/>
     <path d="M22 -90 L66 -123 L100 -104 L77 -9 L4 -13Z" fill="url(#${id}-paint)" stroke="#bd9424" stroke-width="2"/>
     <path d="M66 -123 L107 -121 L124 -108 L100 -104Z" fill="#ffe388"/>
     ${[72,82,92,102].map(x=>`<path d="M${x} -119 l9 12 -6 3 -10 -13" fill="#d8ad37"/>`).join('')}
     <path d="M24 -88 L7 -17 L77 -13 M79 -102 L58 -17" fill="none" stroke="#ffe585" stroke-width="3"/>
     <path d="M4 -13 L77 -9 L83 -3 L1 -7Z" fill="#aeb3ae"/>
-    <circle cx="241" cy="-32" r="8" fill="#cba536" stroke="#ffe089" stroke-width="2"/><path d="M271 -113 V-62 M293 -130 V-107" stroke="#ac8d29" stroke-width="2"/><path d="M220 -194 V-137 H248" stroke="#151a1c" stroke-width="3" fill="none"/>
+    <circle cx="80" cy="-28" r="7" fill="#cba536" stroke="#ffe089" stroke-width="2"/><circle cx="241" cy="-32" r="8" fill="#cba536" stroke="#ffe089" stroke-width="2"/><path d="M271 -113 V-62 M293 -130 V-107" stroke="#ac8d29" stroke-width="2"/><path d="M220 -194 V-137 H248" stroke="#151a1c" stroke-width="3" fill="none"/>
     <path d="M267 -115 H328 L313 -98 H267Z" fill="#242629"/><text x="278" y="-101" font-family="Arial" font-size="14" font-weight="900" fill="#fff">CAT</text><text x="307" y="-108" font-family="Arial" font-size="5" fill="#fff">854K</text>
   </g>`
 }
@@ -1096,10 +1103,16 @@ export function drillRig(id = 'dr') {
 
 /** Camión de extracción Komatsu (Imagen 7): cabina cuadrada a la izquierda sobre la plataforma, tolva. Ancho ~560, base y=0. */
 export function komatsuTruck(id = 'km') {
-  return `${equipmentPaint(id)}<g id="${id}">
+  return `<defs>
+    <linearGradient id="${id}-paint" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffdf62"/><stop offset=".42" stop-color="#ffcd11"/><stop offset="1" stop-color="#c99d05"/></linearGradient>
+    <linearGradient id="${id}-glass" x1="0" y1="0" x2=".8" y2="1"><stop offset="0" stop-color="#7fadb8"/><stop offset=".45" stop-color="#354f5b"/><stop offset="1" stop-color="#172933"/></linearGradient>
+  </defs><g id="${id}">
     <ellipse cx="280" cy="15" rx="275" ry="10" fill="#000" opacity=".25"/>
     ${equipmentWheel(432,-60,77,`${id}-wheel-inner`)}
     <path d="M86 -111 H462 V-59 H101Z" fill="#4c4630"/>
+    <path d="M294 -149 L315 -148 V-104 H292Z M435 -153 H462 V-103 H435Z" fill="url(#${id}-paint)" stroke="#aa8b32" stroke-width="2"/>
+    <path d="M279 -113 H469 V-99 H279Z" fill="url(#${id}-paint)"/>
+    <circle cx="451" cy="-145" r="8" fill="#b38e28" stroke="#ffe280" stroke-width="2"/>
     <path d="M272 -87 L341 -178" stroke="#969c97" stroke-width="10"/><path d="M272 -87 L312 -138" stroke="#d1ad37" stroke-width="23"/>
     <path d="M65 -269 L99 -262 H166 L178 -271 H232 L281 -247 H493 L551 -174 L477 -155 L302 -146 L232 -185 L166 -242 H66Z" fill="url(#${id}-paint)" stroke="#aa8b32" stroke-width="2"/>
     <path d="M67 -263 H168 L181 -266 H231 L280 -242 H491" fill="none" stroke="#ffe899" stroke-width="4"/>

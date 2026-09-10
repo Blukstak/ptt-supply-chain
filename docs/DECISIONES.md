@@ -2,6 +2,14 @@
 
 Bitácora de decisiones de diseño y contenido. Lo más reciente arriba.
 
+## 2026-09-09 — v2.10: corrección de defs en equipos
+
+- **Diagnóstico:** un `url(#id)` sin recurso definido deja el relleno sin pintar en navegador. En el checkout recibido, las tres funciones ya interpolaban `equipmentPaint(id)`, que emitía defs propios; por ello no se pudo atribuir el estado actual a gradientes ausentes ni reproducir esa ausencia. Se elimina esa indirección para cumplir el contrato explícito solicitado: `bulldozer`, `komatsuTruck` y `motorGrader` declaran dentro de su propio retorno `<defs>` con `${id}-paint` y `${id}-glass`, conservando la paleta. No necesitan otros recursos.
+- **Geometría:** bulldozer con brazo inferior extendido hasta la hoja, pasador en la unión y cilindro de elevación alineado; Komatsu con apoyos delantero/trasero de tolva, larguero y pivote trasero, conservando visera sobre cabina y eje bajo la tolva; motoniveladora con bastidor unido a la cabina, conexión de ejes, baliza sobre el techo y escarificador conectado al cuerpo. Comparación visual con r6-04…08.
+- **Auditoría SVG:** markup generado de cada uno de los cinco equipos de Clientes revisado por `url(#...)`, `href`/`xlink:href` e IDs. Todas las referencias se definen en el mismo equipo; ningún `use`, clipPath o mask pendiente; sin IDs duplicados dentro de los equipos ni entre ellos con los prefijos de la escena. Firmas e IDs animados preservados. Funciones protegidas y escenas sin cambios.
+- **Verificación en navegador:** HTML con los cuatro equipos juntos en un único SVG, generado desde `src/art/index.ts`, cargado y ejecutado mediante **WebKit WebView clásico** (AppleWebKit/605.1.15). Captura del documento renderizado por WebKit, no rasterización SVG mediante NSImage: `docs/revisiones/r6fix-clientes-webkit.png` (1600×1000). AppKit se usa únicamente para guardar el bitmap de la vista del navegador. Rellenos y conexiones inspeccionados visualmente.
+- **Checks:** `npx tsc --noEmit` y `npm run build` correctos. Sin commit. Temporales de verificación eliminados de `/tmp/r6fix`.
+
 ## 2026-09-09 — v2.9: ajustes de proporción tras R6 (Claude)
 
 Sobre el trabajo de Astra en R6 se corrigieron dos proporciones que habían quedado exageradas por la instrucción inicial:
