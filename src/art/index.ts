@@ -1000,7 +1000,9 @@ export function motorGrader(id = 'mg') {
     <linearGradient id="${id}-glass" x1="0" y1="0" x2=".8" y2="1"><stop offset="0" stop-color="#7fadb8"/><stop offset=".45" stop-color="#354f5b"/><stop offset="1" stop-color="#172933"/></linearGradient>
   </defs><g id="${id}">
     <ellipse cx="267" cy="8" rx="267" ry="9" fill="#000" opacity=".25"/>
-    <path d="M54 -52 H213 L248 -89 L276 -93 L473 -59 L493 -33" stroke="#242a2d" stroke-width="26" fill="none"/>
+    <path d="M54 -52 H207 Q220 -55 239 -77 L269 -98 L473 -59 L493 -33" stroke="#555b52" stroke-width="30" fill="none"/>
+    <path d="M201 -61 Q220 -66 240 -88 L267 -104" stroke="#909787" stroke-width="3" fill="none"/>
+    <path d="M293 -46 L444 -57 L466 -51 L349 -28 H307Z" fill="#c9a542" stroke="#ffe28a" stroke-width="3"/>
     <path d="M244 -94 L265 -101 L480 -66 L490 -40 L473 -47 L265 -80 L244 -72Z" fill="url(#${id}-paint)" stroke="#b19339" stroke-width="2"/>
     <path d="M59 -113 H176 L201 -95 V-54 H56Z" fill="url(#${id}-paint)" stroke="#a48629" stroke-width="2"/>
     <path d="M65 -119 H160 L178 -110 H65Z" fill="#343b3e"/>
@@ -1034,21 +1036,29 @@ export function bulldozer(id = 'bz') {
     <linearGradient id="${id}-glass" x1="0" y1="0" x2=".8" y2="1"><stop offset="0" stop-color="#7fadb8"/><stop offset=".45" stop-color="#354f5b"/><stop offset="1" stop-color="#172933"/></linearGradient>
   </defs><g id="${id}">
     <ellipse cx="250" cy="4" rx="250" ry="9" fill="#000" opacity=".25"/>
-    <path d="M98 -83 H454 V-45 H119Z" fill="#282c30"/>
+    <path d="M98 -83 H454 V-45 H119Z" fill="#726841" stroke="#b9a76c" stroke-width="2"/>
+    <path d="M188 -103 H249 V-45 L223 -37 H190Z" fill="#c29c34" stroke="#edca64" stroke-width="2"/>
+    <path d="M251 -121 H304 V-42 H277 L254 -56Z" fill="#b49130" stroke="#e5c367" stroke-width="2"/>
+    <path d="M221 -89 H277 M221 -57 H277" stroke="#f3d27a" stroke-width="8"/>
+    <path d="M236 -95 V-51" stroke="#777c76" stroke-width="10"/>
     <path d="M208 -115 H298 V-67 H190 L140 -78 L126 -97Z" fill="url(#${id}-paint)"/>
     <path d="M278 -131 H425 Q447 -132 452 -112 L458 -38 H479 V-23 H437 L410 -60 H293Z" fill="url(#${id}-paint)" stroke="#a78a28" stroke-width="2"/>
     <path d="M436 -125 L449 -122 L455 -47 H436Z" fill="#24272a"/>
     ${Array.from({length:12},(_,i)=>`<path d="M409 ${-119+i*3} h12" stroke="#514a31"/>`).join('')}
     ${equipmentWheel(160,-49,50,`${id}-wheel0`)}${equipmentWheel(364,-49,55,`${id}-wheel1`)}
     <path d="M111 -91 Q150 -114 199 -96 L199 -107 H271 V-119 H139Z M312 -99 Q364 -120 408 -93" fill="url(#${id}-paint)" stroke="#ffdc60" stroke-width="4"/>
+    <path d="M211 -136 H289 V-119 H209Z" fill="#e4bc43" stroke="#ffe093" stroke-width="2"/>
+    <path d="M223 -123 H278 V-99 H227Z" fill="#b99a48" stroke="#d9c17c" stroke-width="2"/>
     <path d="M217 -132 V-204 H275 V-132Z" fill="#23272a" stroke="#43484b" stroke-width="3"/>
     <path d="M226 -194 H246 V-142 H224Z M252 -194 H267 V-142 H253Z" fill="url(#${id}-glass)" stroke="#6c767a" stroke-width="2"/>
     <path d="M214 -205 H278" stroke="#ffcd11" stroke-width="6"/><rect x="265" y="-218" width="6" height="10" rx="2" fill="#df9139"/>
     <path d="M221 -187 H211 V-174 M271 -189 H286 V-179" stroke="#32383c" stroke-width="3" fill="none"/>
-    <path d="M210 -134 H363 M210 -143 V-162 H358 V-135 M238 -162 V-134 M272 -162 V-134 M302 -162 V-134 M332 -162 V-134" fill="none" stroke="#292e31" stroke-width="3"/>
+    <path d="M210 -134 H363 M210 -143 V-162 H358 V-135 M238 -162 V-134 M272 -162 V-134 M302 -162 V-134 M332 -162 V-134" fill="none" stroke="#8b958e" stroke-width="3"/>
     <path d="M366 -137 L421 -57 V-27 M355 -136 L408 -55 V-27 M367 -112 h15 M378 -96 h15 M389 -80 h15 M400 -64 h15 M408 -42 h13" fill="none" stroke="#33393c" stroke-width="3"/>
     <path d="M370 -137 V-189 l8 -9 M380 -137 V-186 l8 -9" stroke="#363a3d" stroke-width="6" fill="none"/>
-    <path d="M76 -27 L121 -32 H242 L263 -43" stroke="#e7b929" stroke-width="13" fill="none"/>
+    <path d="M76 -27 L121 -32 H242 L263 -56" stroke="#987b30" stroke-width="19" fill="none"/>
+    <path d="M76 -27 L121 -32 H242 L263 -56" stroke="#e7be4f" stroke-width="13" fill="none"/>
+    <path d="M81 -33 L120 -38 H239 L258 -59" stroke="#ffe399" stroke-width="3" fill="none"/>
     <path d="M145 -107 L115 -148 L88 -74" stroke="#d6a61c" stroke-width="11" fill="none"/>
     <path d="M115 -137 L101 -91" stroke="#c5cbd0" stroke-width="6"/>
     <path d="M22 -90 L66 -123 L100 -104 L77 -9 L4 -13Z" fill="url(#${id}-paint)" stroke="#bd9424" stroke-width="2"/>
@@ -1109,7 +1119,15 @@ export function komatsuTruck(id = 'km') {
   </defs><g id="${id}">
     <ellipse cx="280" cy="15" rx="275" ry="10" fill="#000" opacity=".25"/>
     ${equipmentWheel(432,-60,77,`${id}-wheel-inner`)}
-    <path d="M86 -111 H462 V-59 H101Z" fill="#4c4630"/>
+    <!-- Bastidor continuo bajo la tolva, depósito y guardabarros; no rellenar el espacio bajo el chasis. -->
+    <path d="M86 -155 H232 L290 -153 H465 L473 -109 L443 -91 H297 L276 -58 H229 L214 -105 H101Z" fill="#b39443" stroke="#e5c773" stroke-width="3"/>
+    <path d="M111 -137 H240 V-74 H108Z" fill="#8b793f" stroke="#cbae61" stroke-width="2"/>
+    <path d="M244 -147 H288 V-59 H247Z" fill="#dab444" stroke="#ffe28a" stroke-width="2"/>
+    <path d="M254 -138 V-69 M273 -138 V-69" stroke="#a58532" stroke-width="3"/>
+    <path d="M293 -145 H441 L461 -121 H310Z" fill="#d2aa3f" stroke="#edcc75" stroke-width="2"/>
+    <path d="M86 -111 H462 V-76 H101Z" fill="#8d7944"/>
+    <path d="M92 -122 Q159 -172 225 -125 M352 -120 Q425 -174 492 -120" fill="none" stroke="#d6b65a" stroke-width="12"/>
+    <path d="M94 -128 Q159 -178 223 -131 M353 -126 Q425 -179 490 -126" fill="none" stroke="#ffe18b" stroke-width="3"/>
     <path d="M294 -149 L315 -148 V-104 H292Z M435 -153 H462 V-103 H435Z" fill="url(#${id}-paint)" stroke="#aa8b32" stroke-width="2"/>
     <path d="M279 -113 H469 V-99 H279Z" fill="url(#${id}-paint)"/>
     <circle cx="451" cy="-145" r="8" fill="#b38e28" stroke="#ffe280" stroke-width="2"/>
@@ -1129,7 +1147,7 @@ export function komatsuTruck(id = 'km') {
     <path d="M168 -231 H199 V-171 H166Z" fill="#b5a572"/>
     <rect x="199" y="-197" width="19" height="30" fill="#9d3030"/><rect x="200" y="-193" width="17" height="5" fill="#bba957"/>
     <path d="M62 -163 V-197 H230 V-158 M77 -197 V-158 M97 -197 V-158 M127 -197 V-158 M157 -197 V-158 M186 -197 V-158 M218 -197 V-158" fill="none" stroke="#292f31" stroke-width="2"/>
-    <path d="M57 -162 L34 -32 M68 -162 L45 -32 M52 -125 H63 M49 -108 H60 M46 -91 H57 M43 -74 H54 M40 -57 H51 M37 -40 H48" stroke="#303639" stroke-width="3" fill="none"/>
+    <path d="M57 -162 L34 -32 M68 -162 L45 -32 M52 -125 H63 M49 -108 H60 M46 -91 H57 M43 -74 H54 M40 -57 H51 M37 -40 H48" stroke="#a4aaa3" stroke-width="3" fill="none"/>
     <path d="M34 -33 H62 V-23 H29Z" fill="#d5b139"/><path d="M82 -134 V-47" stroke="#262d2e" stroke-width="14"/>
     <path d="M239 -205 L283 -174 M250 -207 L294 -178" stroke="#ffe489" stroke-width="3"/><rect x="76" y="-226" width="15" height="4" fill="#252c30"/><path d="M229 -149 V-113 H242" fill="none" stroke="#4a4636" stroke-width="3"/>
     <path d="M92 -163 H224" stroke="#ffe280" stroke-width="3"/>

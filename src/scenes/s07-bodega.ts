@@ -19,13 +19,13 @@ export function bodegaScene(): Scene {
     <text x="960" y="218" text-anchor="middle" font-family="Barlow Condensed" font-weight="700" font-size="34" fill="#e0262b" letter-spacing="6">BODEGA · PTT</text>
     <g id="bd-semi" transform="translate(-1000 560) scale(.85)">${lowboyTruck('bds', true)}</g>
     <g id="bd-people" opacity="0">
-      <g transform="translate(980 530)">${pttWorker('bw1', true)}</g>
-      <g transform="translate(1090 540) scale(.95)">${pttWorker('bw2', false)}</g>
+      <g transform="translate(1020 715) scale(.42)">${pttWorker('bw1', true)}</g>
+      <g transform="translate(1140 715) scale(.42)">${pttWorker('bw2', false)}</g>
     </g>
-    <g id="bd-picker" transform="translate(1690 560)" opacity="0">${pttWorker('bw3', true)}</g>
+    <g id="bd-picker" transform="translate(1690 760) scale(.42)" opacity="0">${pttWorker('bw3', true)}</g>
     <g id="bd-scanfx" opacity="0"><rect x="350" y="645" width="268" height="118" rx="6" fill="#fff"/></g>
-    <g id="bd-beam" opacity="0"><line x1="1010" y1="580" x2="560" y2="660" stroke="#f0503c" stroke-width="3"/><circle cx="560" cy="660" r="16" fill="none" stroke="#f0503c" stroke-width="3"/></g>
-    <g id="bd-beam2" opacity="0"><line x1="1700" y1="600" x2="1510" y2="420" stroke="#f0503c" stroke-width="3"/><circle cx="1510" cy="420" r="16" fill="none" stroke="#f0503c" stroke-width="3"/></g>
+    <g id="bd-beam" opacity="0"><line x1="1040" y1="735" x2="560" y2="660" stroke="#f0503c" stroke-width="3"/><circle cx="560" cy="660" r="16" fill="none" stroke="#f0503c" stroke-width="3"/></g>
+    <g id="bd-beam2" opacity="0"><line x1="1710" y1="780" x2="1510" y2="420" stroke="#f0503c" stroke-width="3"/><circle cx="1510" cy="420" r="16" fill="none" stroke="#f0503c" stroke-width="3"/></g>
     <g id="bd-pallet" opacity="0" transform="translate(${PAL.x} ${PAL.y})">
       <rect x="-20" y="0" width="340" height="14" fill="#7b5a3a"/><rect x="-20" y="14" width="340" height="10" fill="#5e422a"/>
       <rect x="-20" y="-170" width="340" height="170" fill="none" stroke="#e0262b" stroke-width="2" stroke-dasharray="8 6" opacity=".7"/>
@@ -79,7 +79,7 @@ export function bodegaScene(): Scene {
       // Flujo (b) — 05 Picking: repuestos que ya estaban en bodega salen del rack
       const pickAt = scanAt + 1.9
       tl.add(activate(4), pickAt)
-      tl.fromTo(q('#bd-picker'), { opacity: 0, attr: { transform: 'translate(1730 560)' } }, { opacity: 1, attr: { transform: 'translate(1690 560)' }, duration: 0.5, ease: 'power3.out' }, pickAt)
+      tl.fromTo(q('#bd-picker'), { opacity: 0, attr: { transform: 'translate(1730 760) scale(.42)' } }, { opacity: 1, attr: { transform: 'translate(1690 760) scale(.42)' }, duration: 0.5, ease: 'power3.out' }, pickAt)
       tl.to(q('#bd-beam2'), { opacity: 1, duration: 0.12, repeat: 5, yoyo: true }, pickAt + 0.3)
       pop(tl, tagPick, pickAt + 0.2)
       const picks = Array.from(root.querySelectorAll('.bd-pick')) as SVGGElement[]

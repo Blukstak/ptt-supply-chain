@@ -9,8 +9,17 @@ export function faenaScene(): Scene {
   const bg = fullSvg(minePit('mine1'))
   const dust = new Dust({ count:100, color:'201, 162, 122', speed:.5, size:[1,4] })
   const shedSvg = fullSvg(`<g id="fw-wrap" transform="translate(300 900) scale(1.3)">${fieldWorkshop('fw')}</g>
-    <g id="fw-people" opacity="0"><g transform="translate(470 775) scale(.5)">${pttWorker('fwp1',true)}</g><g transform="translate(1560 775) scale(.5)">${pttWorker('fwp2',false)}</g></g>`)
-  const truckSvg = artLayer(`<g id="truck-wrap" transform="translate(300 390) scale(.95)">${truck797('t')}</g>`,300,390)
+    <g id="fw-people" opacity="0"><g transform="translate(470 837.5) scale(.25)">${pttWorker('fwp1',true)}</g><g transform="translate(1560 837.5) scale(.25)">${pttWorker('fwp2',false)}</g></g>`)
+  const truckSvg = artLayer(`<g id="truck-wrap" transform="translate(300 390) scale(.95)">${truck797('t')}
+    <g id="truck-components" opacity="0" font-family="Barlow Condensed, sans-serif" font-size="25" font-weight="600" fill="#f5f6f2">
+      ${[
+        {label:'Motor',x:335,y:154,tx:100,ty:32},
+        {label:'Transmisión',x:474,y:265,tx:325,ty:-32},
+        {label:'Diferencial',x:631,y:323,tx:588,ty:18},
+        {label:'Mandos finales',x:756,y:370,tx:824,ty:156},
+        {label:'Maza / suspensión',x:286,y:312,tx:8,ty:252},
+      ].map(p=>`<g><path d="M${p.x} ${p.y} L${p.x} ${p.ty+12} H${p.tx}" fill="none" stroke="#e0262b" stroke-width="2"/><circle cx="${p.x}" cy="${p.y}" r="9" fill="#e0262b" stroke="#fff" stroke-width="2"/><rect x="${p.tx-8}" y="${p.ty-24}" width="230" height="34" rx="5" fill="#111923"/><text x="${p.tx}" y="${p.ty}">${p.label}</text></g>`).join('')}
+    </g></g>`,300,390)
   // Centros de los dos neumáticos traseros de truck797; exterior e interior.
   const hubs = [{x:1018.2,y:741.9},{x:996.2,y:741.9}]
   const positions = [{x:590,y:620},{x:1320,y:620}]
@@ -24,7 +33,7 @@ export function faenaScene(): Scene {
   const semiSvg = artLayer(`<g transform="translate(420 736) scale(.55)">${lowboyTruck('semi')}<g transform="translate(330 140) scale(.42)">${finalDriveSide('cr','PTT')}</g></g>`,667,818)
   const lt = lowerThird('Personal PTT en faena','Contrato de Mantención dentro de la minera')
   ;(lt.querySelector('.headline') as HTMLElement).style.fontSize='64px'
-  const tagParts = tag('Reparamos motores, transmisiones, diferenciales, mandos finales y mazas',120,130,'info')
+  const tagParts = tag('Componentes que reparamos',120,130,'info')
   const tagOut = tag('Retiramos los mandos finales de las ruedas traseras',120,100,'info')
   const tagLife = tag('Cambio programado · horas máximas: 18.000 h',590,900)
   const tagGD = tag('Trasladamos el componente a nuestro taller PTT',120,150,'ok')
@@ -42,6 +51,8 @@ export function faenaScene(): Scene {
     tl.fromTo(truckSvg,artAt(300,390,2100,601,.6/.95),{...artAt(300,390,676,601,.6/.95),duration:2.6,ease:'power2.out'},at+.6)
     tl.to(wheels,{rotation:-720,transformOrigin:'50% 50%',duration:2.8,ease:'power2.out'},at+.6)
     pop(tl,tagParts,at+3.6,2.4)
+    tl.to(q('#truck-components'),{opacity:1,duration:.4},at+4.1)
+    tl.to(q('#truck-components'),{opacity:0,duration:.3},at+6.7)
     tl.to(truckSvg,{...artAt(300,390,300,390,1),duration:1.2,ease:'power2.inOut'},at+4.2)
     tl.to([shedSvg,bg,dust.canvas],{opacity:.3,duration:.8},at+4.2)
     // Aprox. 00:30: primero giran las ruedas, luego salen los mandos desde sus centros.

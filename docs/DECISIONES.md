@@ -2,6 +2,17 @@
 
 Bitácora de decisiones de diseño y contenido. Lo más reciente arriba.
 
+## 2026-09-09 — v2.11: revisión documental y mejora del armado
+
+- **Base:** contraste de Observaciones R1–R4 en Descargas con las revisiones posteriores y Feedback n1; se mantienen las decisiones posteriores que sustituyen pedidos anteriores. El usuario autorizó aplicar los hallazgos y mejorar la animación de taller mostrada en su captura.
+- **Equipos:** se refuerzan el chasis bajo la tolva del Komatsu, las conexiones de cabina y brazos del bulldozer y el bastidor de la motoniveladora. Se conservan las aberturas propias de la maquinaria. El problema restante era geométrico: los gradientes estaban definidos.
+- **Proporciones y transporte:** personal reducido en Faena y Bodega; mando final dimensionado y alineado sobre la cama baja en Entrega, con desplazamiento solidario al camión y posterior instalación.
+- **Faena:** se recuperan cinco rótulos con líneas hacia motor, transmisión, diferencial, mandos finales y maza/suspensión antes de la extracción.
+- **Taller:** montaje por capas alineadas al eje, seis fases legibles, herramienta en primer plano que gira sobre un perno después de colocar el cuerpo exterior, apoyos de banco ajustados y verificación final. Se retira el gancho que cruzaba el componente. Las dos alternativas comerciales aparecen juntas, con descripciones breves plenamente visibles durante 4,65 s.
+- **Verificación:** TypeScript y build correctos; `git diff --check` sin errores. Comparación de markup confirma las siete fábricas protegidas sin cambios; IDs y recursos SVG de los tres equipos modificados conservados. Revisión visual en navegador de equipos, Faena, Bodega, armado, alternativas y entrega; reproducción completa hasta 124,65 s y consola sin errores ni advertencias. No se certifica rendimiento en otros dispositivos.
+- **Herramienta local:** `tools/revision.html` permite buscar por segundo y reproducir para QA; no forma parte del build de producción.
+- **Pendientes:** nombres de mecánicos y textos comerciales siguen sujetos a confirmación del cliente; el mapa conserva su estilo vectorial simplificado. Publicada mediante el workflow de GitHub Pages.
+
 ## 2026-09-09 — v2.10: corrección de defs en equipos
 
 - **Diagnóstico:** un `url(#id)` sin recurso definido deja el relleno sin pintar en navegador. En el checkout recibido, las tres funciones ya interpolaban `equipmentPaint(id)`, que emitía defs propios; por ello no se pudo atribuir el estado actual a gradientes ausentes ni reproducir esa ausencia. Se elimina esa indirección para cumplir el contrato explícito solicitado: `bulldozer`, `komatsuTruck` y `motorGrader` declaran dentro de su propio retorno `<defs>` con `${id}-paint` y `${id}-glass`, conservando la paleta. No necesitan otros recursos.

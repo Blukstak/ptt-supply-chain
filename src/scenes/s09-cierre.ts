@@ -31,7 +31,7 @@ export function cierreScene(): Scene {
   // El mando final instalado se fija a la rueda: pasa a ser hijo del grupo de la rueda trasera (rota y se traslada con ella).
   art.querySelector('#c7-w3')!.append(art.querySelector('#cl-fd')!)
   // Componente que llega en la cama baja y sube a la rueda (capa GPU propia)
-  const COMP = { x: 506, y: 828, s: 0.084 }
+  const COMP = { x: 285.5, y: 792, s: 0.231 }
   const compSvg = artLayer(`<g transform="translate(${COMP.x} ${COMP.y}) scale(${COMP.s})">${finalDriveSide('clc', 'PTT')}</g>`, COMP.x, COMP.y)
   compSvg.style.opacity = '0'
   // Cierre I+D: otro mando final llega al taller; la pieza mejorada vuelve con brillo y se arma; sale otro mando final a la mina
@@ -121,7 +121,7 @@ export function cierreScene(): Scene {
       // Cama baja con el componente llega; el 797 entra
       tl.to(q('#cl-semi'), { attr: { transform: 'translate(60 686) scale(.55)' }, duration: 2, ease: 'power2.out' }, at + 0.2)
       tl.to(['#cls-w0', '#cls-w1', '#cls-w2', '#cls-w3', '#cls-w4'].map(q), { rotation: 900, transformOrigin: '50% 50%', duration: 2, ease: 'power2.out' }, at + 0.2)
-      tl.set(compSvg, { opacity: 1, ...artAt(COMP.x, COMP.y, -700, COMP.y, 1) }, at)
+      tl.set(compSvg, { opacity: 1, ...artAt(COMP.x, COMP.y, COMP.x - 1160, COMP.y, 1) }, at)
       tl.to(compSvg, { ...artAt(COMP.x, COMP.y, COMP.x, COMP.y, 1), duration: 2, ease: 'power2.out' }, at + 0.2)
       pop(tl, tagDel, at + 1.2, 2.4)
       tl.to(q('#cl-797'), { attr: { transform: 'translate(760 500) scale(.72)' }, duration: 2.2, ease: 'power2.out' }, at + 1)

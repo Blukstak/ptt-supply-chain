@@ -1,7 +1,9 @@
 # Handoff — PTT Supply Chain Film
 
 **Para:** Astra (Codex `gpt-6-astra`) · **De:** Claude (sesión de coordinación) · **Fecha:** 2026-09-09
-**Estado:** v2.10 desplegada · **Issue abierto:** P-1 (equipos con huecos) — ver §6
+**Estado:** v2.11 desplegada · P-1 corregido — ver actualización y §6
+
+**Actualización v2.11, 2026-09-09:** se aplicaron ajustes de geometría en los tres equipos, proporciones de personal, carga de Entrega, rótulos de componentes y rediseño del armado de Taller. Build y reproducción completa de 124,65 s verificados; pendiente revisión visual del cliente. Ver la entrada más reciente de `DECISIONES.md` y `tools/revision.html` para revisar por segundo. El diagnóstico original de abajo se conserva como contexto histórico.
 
 Este documento te pone en contexto y te entrega un problema pendiente **con una teoría mía que
 debes verificar o refutar, no asumir como cierta**. Si la evidencia te lleva a otra causa, esa

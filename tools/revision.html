@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="es"><head><meta charset="UTF-8"><title>PTT · Revisión de animación</title><link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" /></head>
+<body><div id="app"></div>
+<script type="module">
+import '/src/main.ts'
+const player=window.__player
+const form=document.createElement('form')
+form.style.cssText='position:fixed;right:12px;top:12px;z-index:999;background:#111e;padding:8px;color:white;font:12px monospace;display:flex;gap:8px;align-items:center'
+form.innerHTML='<label>Segundo <input aria-label="Segundo" type="number" min="0" step="0.1" value="0" style="width:65px"></label><button>Ir</button><button type="button" id="qa-play">Reproducir</button><output id="qa-status"></output>'
+document.body.append(form)
+const input=form.querySelector('input'),out=form.querySelector('output')
+let frames=[],last=0,lastReport=0
+function reset(){frames=[];last=0}
+form.onsubmit=e=>{e.preventDefault();player.pause();player.seek(Number(input.value));reset();report()}
+form.querySelector('#qa-play').onclick=()=>{reset();player.play()}
+function report(){const a=frames.slice().sort((a,b)=>a-b);out.textContent=`${player.master.time().toFixed(2)} / ${player.master.duration().toFixed(2)} s · ${a.length} frames · p95 ${a.length?a[Math.floor(a.length*.95)].toFixed(1):'—'} ms`}
+function tick(t){if(!player.master.paused() && player.master.time()<player.master.duration()){if(last)frames.push(t-last);last=t}else last=0;if(t-lastReport>250){report();lastReport=t}requestAnimationFrame(tick)}
+requestAnimationFrame(tick)
+// Only this development page removes the splash and hides player controls while reviewing.
+document.querySelector('.splash').remove()
+document.querySelector('.player').style.display='none'
+player.pause();report()
+</script></body></html>
