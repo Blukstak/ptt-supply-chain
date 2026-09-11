@@ -98,6 +98,7 @@ export function tallerScene(): Scene {
     tl.to(component,{...artAt(960,535,495,620,1.15),duration:.8,ease:'power3.inOut'},alt)
     tl.to(q('#tl-split'),{opacity:.6,duration:.6},alt+.2)
     tl.to([optionsTitle,hL,hR,q('#tl-right')],{opacity:1,duration:.6},alt+.3)
+    // La escena corta en 1:42 (arranca en 1:27,3 → at+14,7) y da paso al cierre.
     tl.to([component,q('#tl-right'),hL,hR,optionsTitle],{opacity:0,duration:.5},at+14.65)
     sceneLeave(tl,root,at+14.7,.9)
     return 15.6

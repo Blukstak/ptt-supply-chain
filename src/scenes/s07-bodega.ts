@@ -23,7 +23,6 @@ export function bodegaScene(): Scene {
       <g transform="translate(1140 715) scale(.42)">${pttWorker('bw2', false)}</g>
     </g>
     <g id="bd-picker" transform="translate(1690 760) scale(.42)" opacity="0">${pttWorker('bw3', true)}</g>
-    <g id="bd-scanfx" opacity="0"><rect x="350" y="645" width="268" height="118" rx="6" fill="#fff"/></g>
     <g id="bd-beam" opacity="0"><line x1="1040" y1="735" x2="560" y2="660" stroke="#f0503c" stroke-width="3"/><circle cx="560" cy="660" r="16" fill="none" stroke="#f0503c" stroke-width="3"/></g>
     <g id="bd-beam2" opacity="0"><line x1="1710" y1="780" x2="1510" y2="420" stroke="#f0503c" stroke-width="3"/><circle cx="1510" cy="420" r="16" fill="none" stroke="#f0503c" stroke-width="3"/></g>
     <g id="bd-pallet" opacity="0" transform="translate(${PAL.x} ${PAL.y})">
@@ -65,8 +64,9 @@ export function bodegaScene(): Scene {
       tl.fromTo(q('#bd-people'), { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: 0.6, ease: 'power3.out' }, at + 2.4)
       const scanAt = at + 3.0
       tl.to(q('#bd-beam'), { opacity: 1, duration: 0.12, repeat: 7, yoyo: true }, scanAt)
-      // R5 · fluidez: destello por opacidad en vez de `filter: brightness()` sobre el grupo de carga
-      tl.fromTo(q('#bd-scanfx'), { opacity: 0.55 }, { opacity: 0, duration: 0.6 }, scanAt + 0.6)
+      // R7 · obs. 3: se elimina el destello blanco sobre las cajas de la cama baja (el cliente lo veía
+      // como un "cuadro blanco con transparencia": `fromTo` tiene immediateRender, así que el estado
+      // inicial opacity .55 quedaba pintado desde el inicio de la escena y no solo durante el flash).
       pop(tl, tagChk, scanAt + 0.8)
       // Flujo (a): la carga internacional baja del camión a la zona de consolidación
       tl.to(q('#bd-pallet'), { opacity: 1, duration: 0.5 }, scanAt + 1)

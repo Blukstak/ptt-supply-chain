@@ -2,6 +2,64 @@
 
 Bitácora de decisiones de diseño y contenido. Lo más reciente arriba.
 
+## 2026-09-10 — R7 · Feedback n1 · Tab 2 (v2.14)
+
+Fuente: `referencias/r7/r7-feedback-n1-tab2.md` (de `Feedback_n1_tab2_2026-09-10.docx`). Se confirmó
+acceso visual a las **8 capturas antes de modificar archivos**. Verificación de cada punto en
+`revisiones/r7-01…r7-08.png` (capturas WebKit del navegador, no rasterizado de SVG).
+
+*(La numeración salta a v2.14: v2.12 y v2.13 ya estaban usadas por las dos entradas de locución de
+esta misma fecha.)*
+
+| # | Observación | Decisión / implementación | Estado |
+|---|---|---|---|
+| 1 | Eliminar el tag "Lo retomamos al cierre: mejoras de Ingeniería y Desarrollo" de la primera diapo | `s01-empresa.ts`: se elimina el `tag()` y su `pop()`. El resto de la escena (kicker, logo, mapa, 4 ideas, destacado en rojo de "Ingeniería y Desarrollo") queda igual; la escena mantiene sus 10,2 s | Implementado · `r7-01-empresa-sin-tag.png` (13 s) |
+| 2 | La pantalla "2 opciones para nuestros clientes" debe mantenerse hasta el minuto 1:46, alargando la sección | `s08-taller.ts`: la salida pasa de `at+14,65` a `at+19,05` y la escena de 15,6 s a **20,0 s** (+4,4 s). Se usaron 4,4 y no 4,05 para que el *wipe* hacia el cierre arranque en 1:46,2 y en el segundo 106,0 exacto la pantalla esté **limpia**, sin la barra de transición. Cierre pasa de 1:42,3 a 1:46,7 | Implementado · `r7-02-opciones-1m46.png` (106,0 s) |
+| 3 | Eliminar el cuadro blanco con transparencia sobre las cajas de la cama baja | `s07-bodega.ts`: se elimina `#bd-scanfx`. **Causa real:** era un `fromTo(..., {opacity:.55}, {opacity:0})` y GSAP aplica el estado *from* con `immediateRender`, así que el rectángulo quedaba pintado desde el inicio de la escena y no solo durante el destello del escaneo. El haz rojo del escáner se conserva | Implementado · `r7-03-bodega-sin-cuadro.png` (81,2 s) |
+| 4 | Eliminar la elipse blanca sobre el mando final en sus caballetes | `s09-cierre.ts`: se elimina `#id-flash` (misma causa que el punto 3). El halo rojo `#id-glow` de "la pieza vuelve con una mejora" se conserva | Implementado · `r7-04-cierre-sin-elipse.png` (116,5 s) |
+| 5 | Sacar el círculo blanco de detrás del engranaje en la mesa del laboratorio | `s05-recepcion.ts`: se elimina `#rc-part-flash` (misma causa). El engranaje (`loosePart`) y su giro sobre el banco quedan igual | Implementado · `r7-05-lab-sin-circulo.png` (62,5 s) |
+| 6 | El engranaje asoma por fuera del cuerpo del mando final; debe quedar dentro, o sea no visible | `s05-recepcion.ts`: la pieza ya no vuelve a `(700 600)` —posición en reposo que quedaba fuera de la silueta, entre el cilindro y la brida— sino a `(650 520) scale(.42)`, dentro del cuerpo, y **se apaga antes de alcanzarlo** (opacidad 0 en `labAt+3,1`, con la pieza aún en x ≈ 940, despejada del componente). Revisado cuadro a cuadro entre 64,1 y 66,0 s: ningún frame con el engranaje asomando | Implementado · `r7-06-pieza-dentro.png` (64,6 s) |
+| 7 | Mantener "Tres lugares, una sola cadena" hasta el final de la presentación | `s09-cierre.ts`: se elimina el fundido de salida de `placesWrap`. La pantalla entra en 1:58,9 y **es el último frame del video** (2:05,0); el recorrido del componente por el sistema y las líneas animadas terminan dentro de ese tramo | Implementado · `r7-07-tres-lugares-final.png` (124,9 s) |
+| 8 | Eliminar el cierre de marca que viene después | `s09-cierre.ts`: se eliminan `endCard`, `ringSvg` (planetario `ecfd`), el bloque `brand` (logo PTT · Marubeni + "Reparamos componentes…" + la línea de componentes) y sus cinco tweens; sobra el import de `logoPTT`. El reproductor no dependía del cierre (`onEnd` solo repinta el botón de play), el splash usa su propio `logoPTT` | Implementado · `r7-08-sin-cierre-marca.png` (125,0 s) |
+
+### Duración y estructura resultantes
+
+**2:05,0 (125,00 s)** — dentro del objetivo 120 ± 5 s, en el borde alto: la obs. 2 añade +4,4 s y el
+cierre de marca eliminado solo devolvía 3,5 s. Para cuadrar se recortaron **0,8 s del bloque de I+D**
+del cierre (`idAt` de `iAt+3,6` a `iAt+3,2` y `pAt` de `idAt+6,0` a `idAt+5,6`, con el fundido del
+titular "Mejoras de Ingeniería y Desarrollo" adelantado en la misma medida) y 0,7 s de la cola de la
+pantalla final. Ningún beat aprobado por el cliente se acortó.
+
+| # | Capítulo | Inicio |
+|---|---|---|
+| 0 | Portada | 0:00,0 |
+| 1 | Quiénes somos | 0:06,3 |
+| 2 | Nuestros clientes | 0:15,9 |
+| 3 | Contrato en faena | 0:23,9 |
+| 4 | Red de interacción | 0:43,5 |
+| 5 | Recepción e ingeniería | 0:54,3 |
+| 6 | Abastecimiento | 1:06,5 |
+| 7 | Bodega | 1:18,0 |
+| 8 | Taller PTT | 1:27,8 |
+| 9 | Entrega y cierre | 1:47,2 |
+
+Hitos dentro de los capítulos: "2 opciones para nuestros clientes" 1:36,7 → 1:46,4 · "Tres lugares,
+una sola cadena" 1:58,9 → 2:05,0 (fin).
+
+### Locución (`src/voiceover.json`) — sin cambios de inicio, y por qué
+
+Se revisó el desplazamiento de los audios que arrancan después del punto alargado y **no había
+ninguno**: las partes 1–6 empiezan antes de 1:46 y la parte 7 no está anclada a un plano, sino
+**encadenada 0,3 s después del final de la parte 6** (que empieza en 1:13,5 y no se movió). Moverla
++4,4 s solo habría abierto 4,4 s de silencio y recortado aún más su cola, que es justo lo contrario
+de lo que pide el punto 8. Se deja en 1:58,05, donde arranca casi exactamente con la pantalla final.
+
+**Pendiente del cliente (ya abierto desde la entrada de v2.13, ahora con cifras nuevas):** la
+locución suma 2:11,9 y el video dura 2:05,0. La parte 7 dura 15,6 s y solo caben 6,95 s antes del
+final. Cubrirla entera exigiría terminar en 2:14, trece segundos fuera del objetivo. Opciones para
+Romina: (a) recortar/regrabar la parte 7 a ≤7 s, (b) aceptar un cierre más largo fuera de 120 ± 5 s,
+o (c) redistribuir el texto entre las partes 6 y 7. No se decidió por ella.
+
 ## 2026-09-10 — La locución suena en el video, no solo en el editor (v2.13)
 
 - El motor de audio pasa de `src/dev/` a `src/core/voiceover.ts` y se enciende siempre: el video

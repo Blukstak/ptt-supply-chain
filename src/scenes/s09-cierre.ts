@@ -1,7 +1,7 @@
 import { el } from '../core/dom'
 import { minePit, truck797, lowboyTruck, finalDriveSide, finalDrive, pttWorkshop, fieldWorkshop, labBench, pttWorker, loosePart, STATIONS_ARMADO } from '../art'
 import { Dust } from '../fx/dust'
-import { Scene, sceneRoot, fullSvg, artLayer, artAt, sceneEnter, photoBg, lowerThird, showLowerThird, tag, pop, logoPTT } from '../core/scene'
+import { Scene, sceneRoot, fullSvg, artLayer, artAt, sceneEnter, photoBg, lowerThird, showLowerThird, tag, pop } from '../core/scene'
 
 /**
  * ENTREGA E INSTALACIÓN (R2 · obs. 14) + MEJORAS DE INGENIERÍA Y DESARROLLO (obs. 15) + cierre.
@@ -43,7 +43,9 @@ export function cierreScene(): Scene {
       <g id="id-glow" opacity="0"><circle cx="960" cy="600" r="260" fill="#e0262b" opacity=".25"/></g>
     </g>
   `)
-  const idFdSvg = artLayer(`<g transform="translate(960 600) scale(.9)">${finalDriveSide('idf', 'PTT')}</g><ellipse id="id-flash" cx="960" cy="600" rx="300" ry="150" fill="#fff" opacity="0"/>`, 960, 600)
+  // R7 · obs. 4: se elimina la elipse blanca `#id-flash` que cubría el mando final sobre sus caballetes
+  // (era un `fromTo` con immediateRender: quedaba pintada con opacidad .8 desde el inicio del bloque).
+  const idFdSvg = artLayer(`<g transform="translate(960 600) scale(.9)">${finalDriveSide('idf', 'PTT')}</g>`, 960, 600)
   idFdSvg.style.opacity = '0'
   const lt = lowerThird('Entrega e instalación en faena', 'Continuidad operacional')
   const tagDel = tag('Entrega en faena con flota propia · detención programada', 120, 150, 'ok')
@@ -100,16 +102,12 @@ export function cierreScene(): Scene {
   Object.assign(placesWrap.style, { inset: '0', opacity: '0' })
   placesWrap.append(placesSvg, travSvg, placesTitle)
 
-  const endCard = el('div', { class: 'abs' })
-  Object.assign(endCard.style, { inset: '0', background: 'radial-gradient(ellipse at 50% 50%, #151c26, #05070a 70%)', opacity: '0' })
-  const ringSvg = fullSvg(`<g id="ec-ring" transform="translate(1380 540)"><circle r="230" fill="none" stroke="#2a3441" stroke-width="2"/><g transform="scale(.55)" opacity=".9">${finalDrive('ecfd', 250)}</g></g>`)
-  endCard.append(ringSvg)
-  const brand = el('div', { class: 'abs' })
-  brand.append(logoPTT(120), el('div', { class: 'sub', style: 'margin-top:26px;max-width:640px', html: 'Reparamos componentes de maquinaria minera. Talleres en Santiago y Antofagasta, contrato en faena e Ingeniería y Desarrollo propia.' }), el('div', { class: 'mono', style: 'margin-top:30px;font-size:15px;letter-spacing:.2em;color:var(--ink-3)', html: 'MANDOS FINALES · TRANSMISIONES · DIFERENCIALES · MAZAS · MOTORES' }))
-  Object.assign(brand.style, { left: '120px', top: '300px', opacity: '0' })
+  // R7 · obs. 8: se elimina el cierre de marca (tarjeta final con el logo PTT · Marubeni, el planetario
+  // girando y el texto "Reparamos componentes de maquinaria minera…"). El video termina con la pantalla
+  // "Tres lugares, una sola cadena".
   root.append(bg)
   photoBg(root, 'mine-dawn.jpg', bg)
-  root.append(dawn, dust.canvas, art, compSvg, idSvg, idFdSvg, lt, tagDel, tagInst, tagNew, tagPart, tagOut, msg, placesWrap, endCard, brand)
+  root.append(dawn, dust.canvas, art, compSvg, idSvg, idFdSvg, lt, tagDel, tagInst, tagNew, tagPart, tagOut, msg, placesWrap)
 
   return {
     id: 'cierre', title: 'Entrega y cierre', root,
@@ -142,7 +140,7 @@ export function cierreScene(): Scene {
       tl.to(['#c7-w1', '#c7-w2', '#c7-w3'].map(q), { rotation: -1600, transformOrigin: '50% 50%', duration: 2.2, ease: 'power2.in' }, iAt + 2.8)
 
       // Cierre del ciclo: mejoras de Ingeniería y Desarrollo (retoma el laboratorio)
-      const idAt = iAt + 3.6
+      const idAt = iAt + 3.2
       tl.to(q('#id-ws'), { opacity: 1, duration: 0.8 }, idAt)
       tl.to([dawn, dust.canvas], { opacity: 0, duration: 0.6 }, idAt)
       tl.set(idFdSvg, { opacity: 1, ...artAt(960, 600, -600, 600, 1) }, idAt)
@@ -154,17 +152,18 @@ export function cierreScene(): Scene {
       tl.to(q('#id-part'), { attr: { transform: 'translate(960 600) scale(.1)' }, duration: 0.8, ease: 'power3.in' }, idAt + 2.4)
       tl.to(q('#id-part'), { opacity: 0, duration: 0.2 }, idAt + 3.1)
       tl.fromTo(q('#id-glow'), { opacity: 0 }, { opacity: 1, duration: 0.3, yoyo: true, repeat: 3 }, idAt + 3.1)
-      // R5 · fluidez: destello por opacidad (antes `filter: brightness(2.6)` sobre el mando de 800 dientes)
-      tl.fromTo(q('#id-flash'), { opacity: 0.8 }, { opacity: 0, duration: 0.8 }, idAt + 3.2)
       tl.to(q('#id-dim'), { opacity: 0.6, duration: 0.6 }, idAt + 3.1)
       tl.to(q('#cw-signs'), { opacity: 0, duration: 0.5 }, idAt + 3.1)
       tl.fromTo(msg, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.9, ease: 'power4.out' }, idAt + 3.3)
       tl.to(idFdSvg, { ...artAt(960, 600, 2500, 600, 1), duration: 1.4, ease: 'power2.in' }, idAt + 4.3)
       pop(tl, tagOut, idAt + 4.3, 1.5)
-      tl.to(msg, { opacity: 0, y: -20, duration: 0.5 }, idAt + 5.7)
+      tl.to(msg, { opacity: 0, y: -20, duration: 0.5 }, idAt + 5.3)
 
       // R5 · cierre: los tres lugares de PTT y sus conexiones
-      const pAt = idAt + 6.0
+      // R7 · obs. 7 y 8: esta es ahora la pantalla FINAL (se eliminó el cierre de marca). Se recortan
+      // 0,8 s del bloque de I+D para que el total quede dentro del objetivo de 120 ± 5 s pese a los
+      // +4,1 s que añade la obs. 2 en Taller.
+      const pAt = idAt + 5.6
       tl.to(placesWrap, { opacity: 1, duration: 0.8 }, pAt)
       tl.to([bg, dawn, dust.canvas, art, idSvg, idFdSvg], { opacity: 0, duration: 0.8 }, pAt)
       tl.fromTo(placesTitle, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, pAt + 0.2)
@@ -173,7 +172,7 @@ export function cierreScene(): Scene {
       tl.to(lines, { opacity: 1, duration: 0.2, stagger: 0.25 }, pAt + 1.4)
       tl.fromTo(lines, { strokeDasharray: 1200, strokeDashoffset: 1200 }, { strokeDashoffset: 0, duration: 0.7, stagger: 0.25, ease: 'power2.inOut' }, pAt + 1.4)
       tl.set(lines, { strokeDasharray: '16 12', strokeDashoffset: 0 }, pAt + 2.4)
-      tl.to(lines, { strokeDashoffset: -280, duration: 4.4, ease: 'none' }, pAt + 2.4)
+      tl.to(lines, { strokeDashoffset: -600, duration: 8.0, ease: 'none' }, pAt + 2.4)
       // El componente recorre el sistema: mina → taller de componentes → laboratorio → vuelve a la mina
       const hop = (t0: number, from: { x: number; y: number }, to: { x: number; y: number }, dur: number) => {
         tl.set(travSvg, { opacity: 1, ...artAt(A.x, A.y, from.x, from.y, 1) }, t0)
@@ -184,17 +183,12 @@ export function cierreScene(): Scene {
       hop(pAt + 3.5, BC.a, BC.b, 0.85)
       hop(pAt + 4.5, CA.a, CA.b, 0.85)
       ;[q('#pl-b'), q('#pl-c'), q('#pl-a')].forEach((c, i) => tl.to(c.querySelector('rect')!, { attr: { stroke: '#e0262b' }, duration: 0.3, yoyo: true, repeat: 1 }, pAt + 3.3 + i * 1.0))
-      tl.to(placesWrap, { opacity: 0, duration: 0.7 }, pAt + 5.9)
-
-      // Cierre de marca
-      const eAt = pAt + 6.2
-      tl.to(endCard, { opacity: 1, duration: 0.9 }, eAt)
-      tl.to(q('#ecfd-ringgear'), { rotation: 40, transformOrigin: '50% 50%', duration: 3.0, ease: 'none' }, eAt)
-      tl.to(q('#ecfd-carrier'), { rotation: -120, transformOrigin: '50% 50%', duration: 3.0, ease: 'none' }, eAt)
-      tl.to(q('#ecfd-sun'), { rotation: 360, transformOrigin: '50% 50%', duration: 3.0, ease: 'none' }, eAt)
-      tl.fromTo(brand, { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 1, ease: 'power3.out' }, eAt + 0.6)
-      tl.to({}, { duration: 0.1 }, eAt + 3.0)
-      return eAt + 3.2 - at
+      // R7 · obs. 7: "Tres lugares, una sola cadena" ya NO se desvanece; el video termina con ella
+      // en pantalla. R7 · obs. 8: se eliminó el cierre de marca (logo PTT · Marubeni + planetario +
+      // "Reparamos componentes…") que venía después.
+      // La pantalla se mantiene (líneas en movimiento) hasta que termina la locución 7 (entra en 1:49, dura 15,6 s).
+      tl.to({}, { duration: 0.1 }, pAt + 10.4)
+      return pAt + 10.5 - at
     },
   }
 }

@@ -94,3 +94,20 @@ Texto literal con marcadores en posición: [r6-feedback-n1.md](r6-feedback-n1.md
 | [r6-20.png](r6-20.png) | Conjunto dentro de los neumáticos traseros |
 | [r6-21.png](r6-21.png) | Tracto de transporte y persona: escala |
 | [r6-22.png](r6-22.png) | 797 en faena: ruedas → mandos → horas |
+
+## Ronda 7 — Feedback n1 · Tab 2 (2026-09-10)
+
+Texto literal con la posición de cada imagen: [r7/r7-feedback-n1-tab2.md](r7/r7-feedback-n1-tab2.md).
+Fuente: `../Feedback_n1_tab2_2026-09-10.docx`. Las 8 capturas se revisaron **antes** de tocar código.
+Verificación de cada punto en `../revisiones/r7-01…r7-08`.
+
+| Archivo | Descripción | Punto |
+|---|---|---|
+| [r7-01.png](r7/r7-01.png) | Tag "Lo retomamos al cierre: mejoras de Ingeniería y Desarrollo" en Quiénes somos | 1 · eliminar |
+| [r7-02.png](r7/r7-02.png) | Pantalla "2 opciones para nuestros clientes · Reparación y Venta Intercambio" | 2 · mantener hasta 1:46 |
+| [r7-03.png](r7/r7-03.png) | Cuadro blanco translúcido sobre las cajas EE.UU./Europa/Asia en la cama baja (Bodega) | 3 · eliminar |
+| [r7-04.png](r7/r7-04.png) | Elipse blanca translúcida sobre el mando final en sus caballetes (cierre, bloque I+D) | 4 · eliminar |
+| [r7-05.png](r7/r7-05.png) | Círculo blanco translúcido tras el engranaje en la mesa del laboratorio (Recepción) | 5 · eliminar |
+| [r7-06.png](r7/r7-06.png) | El engranaje asomando por fuera del cuerpo del mando final en vista 3/4 | 6 · debe quedar dentro |
+| [r7-07.png](r7/r7-07.png) | Pantalla "Nuestro sistema · Tres lugares, una sola cadena" | 7 · mantener hasta el final |
+| [r7-08.png](r7/r7-08.png) | Cierre de marca (logo PTT · Marubeni + planetario + "Reparamos componentes…") | 8 · eliminar |

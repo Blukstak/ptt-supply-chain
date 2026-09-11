@@ -1,7 +1,7 @@
 import { el } from '../core/dom'
 import { chileMap, pin } from '../art'
 import { Dust } from '../fx/dust'
-import { Scene, sceneRoot, fullSvg, sceneEnter, sceneLeave, tag, pop, logoPTT } from '../core/scene'
+import { Scene, sceneRoot, fullSvg, sceneEnter, sceneLeave, logoPTT } from '../core/scene'
 
 /**
  * QUIÉNES SOMOS (R2 · obs. 1) — presentación de la compañía antes de la operación.
@@ -35,8 +35,8 @@ export function empresaScene(): Scene {
     ['04', 'Un área de <em>Ingeniería y Desarrollo</em> que genera mejoras en los componentes.'],
   ].map(([n, t]) => el('div', { class: 'abs', html: `<div style="display:flex;gap:22px;align-items:flex-start"><span class="mono" style="color:var(--amber);font-size:18px;letter-spacing:.2em;padding-top:12px">${n}</span><div class="headline" style="font-size:46px;line-height:1.02;max-width:1000px;text-transform:none;letter-spacing:0">${t}</div></div>` }))
   bullets.forEach((b, i) => Object.assign(b.style, { left: '120px', top: `${470 + i * 108}px`, opacity: '0' }))
-  const tagID = tag('Lo retomamos al cierre: mejoras de Ingeniería y Desarrollo', 120, 930, 'info')
-  root.append(bg, dust.canvas, kicker, logo, ...bullets, tagID)
+  // R7 · obs. 1: el cliente pidió quitar el tag "Lo retomamos al cierre…" de esta pantalla.
+  root.append(bg, dust.canvas, kicker, logo, ...bullets)
 
   return {
     id: 'empresa', title: 'Quiénes somos', root,
@@ -56,8 +56,7 @@ export function empresaScene(): Scene {
       tl.fromTo(q('#em-pin-mine'), { opacity: 0, scale: 0.3, transformOrigin: '0 0' }, { opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(2)' }, at + 4.2)
       // Ingeniería: se destaca
       tl.fromTo(bullets[3].querySelectorAll('em'), { color: '#ffffff' }, { color: '#e0262b', duration: 0.6 }, at + 5.8)
-      pop(tl, tagID, at + 6.4)
-      tl.to([kicker, logo, ...bullets, tagID], { opacity: 0, y: -20, duration: 0.5, stagger: 0.03, ease: 'power2.in' }, at + 8.8)
+      tl.to([kicker, logo, ...bullets], { opacity: 0, y: -20, duration: 0.5, stagger: 0.03, ease: 'power2.in' }, at + 8.8)
       sceneLeave(tl, root, at + 9.3, 0.9)
       return 10.2
     },
